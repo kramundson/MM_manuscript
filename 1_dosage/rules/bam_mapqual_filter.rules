@@ -1,0 +1,9 @@
+rule bam_mapqual_filter:
+    input:
+        "data/dedup/{sample}.bam"
+    output:
+        "data/mapQ-filter/{sample}.bam"
+    params:
+        config["params"]["map_qual_filter"]
+    shell:
+        "samtools view -b {params} -o {output} {input}"

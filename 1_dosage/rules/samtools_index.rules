@@ -1,0 +1,7 @@
+rule samtools_index:
+    input:
+        "data/mapQ-filter/{sample}.bam"
+    output:
+        "data/mapQ-filter/{sample}.bam.bai"
+    shell:
+        "samtools index {input}"

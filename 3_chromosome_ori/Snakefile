@@ -1,0 +1,65 @@
+shell.executable("bash")
+import os, re
+import pandas as pd
+from Bio import SeqIO
+
+configfile: "config.yaml"
+units = pd.read_table(config["units"], index_col=["sample","unit"], dtype=str)
+units.index = units.index.set_levels([i.astype(str) for i in units.index.levels])
+
+MOMS=units[[mother]].drop_duplicates().dropna()
+DADS=units[[inducer]].drop_duplicates().dropna()
+
+rule all:
+    input:
+        expand("families/{mother}-{inducer}-1Mb-alleles.txt", mother=MOMS, inducer=DADS)
+
+rule bin_by_geno:
+    input:
+        alleles="{mother}-{inducer}-alleles.txt",
+        snplist="{mother}-{inducer}-snplist.txt"
+    output:
+        "{mother}-{inducer}-1Mb-alleles.txt"
+    params:
+        binsize=config["params"]["binsize"]
+    shell: """
+        python2 scripts/bin-by-genotypeC.py {input.alleles} {output} {params.binsize} {input.snplist}
+    """
+
+rule call_alleles:
+    input:
+        pmpup="parsed_{mother}-{inducer}-pileup.txt",
+        snplist="{mother}-{inducer}-snplist.txt"
+    output:
+        "{mother}-{inducer}-alleles.txt"
+    shell: """
+        python2 scripts/CallAllelesAB.py {input.pmpup} {output} {input.snplist}
+    """
+
+rule parse_mpup:
+    input:
+        "{mother}-{inducer}-mpup.txt"
+    output:
+        "parsed_{mother}-{inducer}-mpup.txt"
+    threads:
+    shell: """
+        python2 scripts/mpileup-parser-v2.py {input} {output} {threads}
+    """"
+
+# function that returns all sample names with a given parental combination, parsed from wildcards?
+def get_bams(tetraploid_parent, hi_parent):
+    tmp=units[['mother' = tetraploid_parent, 'inducer' = hi_parent]]
+    
+rule run_mpup:
+    input:
+        ref=config["genome"],
+        bams=get_bams()
+    output:
+        "{mother}-{inducer}-mpup.txt"
+    params:
+        config["params"]["run_mpup"]["map_qual"],
+        config["params"]["run_mpup"]["base_qual"],
+        config["params"]["run_mpup"]["max_depth"]
+    shell: """
+        samtools mpileup -l -d {params.maxdepth} -f {output?} {input.bams}
+    """

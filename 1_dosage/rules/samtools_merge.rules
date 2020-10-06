@@ -1,0 +1,16 @@
+# rule samtools_merge:
+#     input:
+#         "fofn/{sample}-units.fofn",
+#         lambda x: [line.rstrip('\n') for line in open("fofn/{}-units.fofn".format(x.sample))]
+#     output:
+#         "data/merged/{sample}.bam"
+#     shell:
+#         "samtools merge -b {input[0]} {output}"
+
+rule samtools_merge:
+    input:
+        lambda x: samples[x.sample] # this accesses all files and wildcards properly
+    output:
+        "data/merged/{sample}.bam"
+    shell:
+        "samtools merge {output} {input}"

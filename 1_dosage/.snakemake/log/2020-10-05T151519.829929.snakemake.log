@@ -1,0 +1,3 @@
+KeyError in line 7 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/1_dosage/Snakefile:
+'dosage_units'
+  File "/Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/1_dosage/Snakefile", line 7, in <module>

@@ -1,0 +1,4 @@
+FileNotFoundError in line 59 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/2_parent_snps/Snakefile:
+[Errno 2] No such file or directory: 'data/intervals/scaffold_intervals.txt'
+  File "/Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/2_parent_snps/Snakefile", line 111, in <module>
+  File "/Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/2_parent_snps/Snakefile", line 59, in get_intervals

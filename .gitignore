@@ -1,0 +1,7 @@
+data/
+1_dosage/data/
+1_dosage/.snakemake
+2_parent_snps/data/
+2_parent_snps/.snakemake
+3_chromosome_ori/data/
+3_chromosome_ori/.snakemake

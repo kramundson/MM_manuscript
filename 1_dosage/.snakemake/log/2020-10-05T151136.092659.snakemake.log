@@ -1,0 +1,3 @@
+WorkflowError in line 6 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/1_dosage/Snakefile:
+Config file config.yaml not found.
+  File "/Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/1_dosage/Snakefile", line 6, in <module>

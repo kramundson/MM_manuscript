@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 1 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/1_dosage/rules/cutadapt.rules:
+Missing input files for rule cutadapt:
+data/reads/KFRAG_00714_b.fq.gz
