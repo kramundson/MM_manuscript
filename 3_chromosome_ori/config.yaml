@@ -1,0 +1,10 @@
+units: "../1_dosage/units.tsv"
+
+genome: "../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta"
+
+params:
+    run_mpup:
+        map_qual: 20
+        base_qual: 20
+        max_depth: 8000 
+    binsize: 1000000
