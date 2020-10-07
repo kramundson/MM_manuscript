@@ -1,0 +1,46 @@
+Building DAG of jobs...
+MissingInputException in line 20 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/3_chromosome_ori/Snakefile:
+Missing input files for rule all:
+Y84_027-IVP101-1Mb-alleles.txt
+C93_154-PL4-1Mb-alleles.txt
+C90_170-IVP101-1Mb-alleles.txt
+93_003-IVP35-1Mb-alleles.txt
+Desiree-IVP35-1Mb-alleles.txt
+LRY_3_57-IVP35-1Mb-alleles.txt
+WA_104-IVP101-1Mb-alleles.txt
+C01_020-PL4-1Mb-alleles.txt
+458-IVP101-1Mb-alleles.txt
+C92_172-PL4-1Mb-alleles.txt
+LR00_014-PL4-1Mb-alleles.txt
+Atlantic-IVP101-1Mb-alleles.txt
+LR00_014-IVP35-1Mb-alleles.txt
+WA_104-IVP35-1Mb-alleles.txt
+LR93_073-IVP101-1Mb-alleles.txt
+WA_077-IVP101-1Mb-alleles.txt
+Y84_027-IVP35-1Mb-alleles.txt
+Y84_027-PL4-1Mb-alleles.txt
+C90_170-PL4-1Mb-alleles.txt
+WA_077-IVP35-1Mb-alleles.txt
+458-IVP35-1Mb-alleles.txt
+LRY_21_25-IVP101-1Mb-alleles.txt
+C93_154-IVP101-1Mb-alleles.txt
+C93_154-IVP35-1Mb-alleles.txt
+C91_640-IVP35-1Mb-alleles.txt
+LR00_026-IVP35-1Mb-alleles.txt
+93_003-PL4-1Mb-alleles.txt
+LR00_022-IVP101-1Mb-alleles.txt
+C91_640-PL4-1Mb-alleles.txt
+LR00_022-IVP35-1Mb-alleles.txt
+Desiree-PL4-1Mb-alleles.txt
+93_003-IVP101-1Mb-alleles.txt
+Atlantic-PL4-1Mb-alleles.txt
+458-PL4-1Mb-alleles.txt
+LR00_026-IVP101-1Mb-alleles.txt
+WA_104-PL4-1Mb-alleles.txt
+WA_073-PL4-1Mb-alleles.txt
+LR00_022-PL4-1Mb-alleles.txt
+C91_640-IVP101-1Mb-alleles.txt
+LR00_014-IVP101-1Mb-alleles.txt
+WA_077-PL4-1Mb-alleles.txt
+C01_020-IVP101-1Mb-alleles.txt
+LR00_026-PL4-1Mb-alleles.txt

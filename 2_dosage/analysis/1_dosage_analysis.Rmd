@@ -1,0 +1,717 @@
+---
+title: "1_dosage_analysis"
+author: Kirk Amundson
+date: 2020_1007
+output: html_notebook
+---
+
+Aim: Analyses pertaining to Figure 2 in the MM manuscript.
+
+## Packages:
+```{r}
+library(tidyverse)
+library(grid)
+library(ggpubr)
+library(ggbeeswarm)
+library(viridis)
+```
+
+## Functions:
+```{r}
+melt_bin_alleles <- function(x) {
+  df <- read_tsv(x, na = ".")
+  
+  nhi <- str_extract(x, "alleles_[A-Za-z0-9]+") %>% 
+    str_remove("alleles_") %>% 
+    str_remove("x.+$") %>% 
+    str_replace("93003", "93.003")
+  
+  hi <- str_extract(x, "alleles_[A-Za-z0-9]+") %>%
+    str_remove("alleles_") %>% 
+    str_remove("^[A-Za-z0-9.]+x") 
+  
+  ObsHI <- df %>% 
+    dplyr::select(Chrom,Start,End,Max,matches("Obs%A$")) %>% 
+    mutate(chrbin = floor(Start/df$End[1])) %>% 
+    gather(Ind, ObsPerHI, -Chrom, -Start, -End, -Max, -chrbin) %>% 
+    mutate(Ind = str_replace_all(Ind, "v-(.+)-Obs%A", "\\1"))
+  
+  CalcHI <- df %>% 
+    dplyr::select(Chrom, Start, End, Max, matches('Calc%A$')) %>% 
+    mutate(chrbin = floor(Start/df$End[1])) %>% 
+    gather(Ind, CalcPerHI, -Chrom, -Start, -End, -Max, -chrbin) %>% 
+    mutate(Ind = str_replace_all(Ind, "v-(.+)-Calc%A", "\\1")) 
+  
+  Cov <- df %>% 
+    dplyr::select(Chrom, Start, End, Max, matches('Cov$')) %>% 
+    mutate(chrbin = floor(Start/df$End[1])) %>% 
+    gather(Ind, Cov, -Chrom, -Start, -End, -Max, -chrbin) %>% 
+    mutate(Ind = str_replace_all(Ind, "v-(.+)-Cov", "\\1"))
+  
+  df2 <- ObsHI %>% 
+    inner_join(.,Cov) %>% 
+    mutate(HIcalls = round(Cov * ObsPerHI / 100)) %>% 
+    filter(Chrom %in% sprintf("chr%0.2d", 1:12)) %>% 
+    # filter(!grepl("sub", Ind)) %>% 
+    # mutate(prenducer = str_extract(Ind, "(SRR6123031)|(SRR6123183)")) %>% 
+    # mutate(Inducer = ifelse(prenducer == "SRR6123031", "PL4", NA)) %>% 
+    # mutate(Inducer = ifelse(prenducer == "SRR6123183", "IVP101", Inducer)) %>% 
+    mutate(ObsPerHI_filt = ifelse(Cov >= 10, ObsPerHI, NA)) %>% 
+    mutate(start_cen = Start + (End-Start)/2) %>% 
+    mutate(Non_inducer = nhi,
+           Inducer = hi)
+  # print(head(df2))
+  
+  return(df2)
+}
+```
+```{r}
+# maps midpoints for plotting
+chrom_midpoints <- function(x) {
+  n=floor(nrow(x)/2)
+  return(x$bin2[n])
+}
+```
+```{r}
+call_aneuploids <- function(df, parent, min_readcount = 2.5e5, bad_samples) {
+
+  fam <- df %>% 
+    filter(!UCD_Sample_Code %in% bad_samples) %>% 
+    filter(sample_tot >= min_readcount) %>% 
+    filter(Non_inducer == parent) %>% 
+    filter(snp_ploidy == "2x" | is.na(snp_ploidy)) %>% 
+    mutate(manual_fp = ifelse(is.na(manual_fp), "tp", "fp")) %>%
+    mutate(chromshort = str_remove(chrom, "chr")) %>% 
+    mutate(chromshort = str_remove(chromshort, "^0")) %>% 
+    dplyr::select(UCD_Sample_Code, UCD_Sample_Numeric, chrom, sample_tot, Non_inducer, manual_fp, chrom_normcov, ctrl_CIP, snp_ploidy) %>% 
+    distinct() %>% 
+    arrange(UCD_Sample_Numeric) %>% 
+    mutate(sample_num_recode = floor( (seq(1:nrow(.)) -0.01)  / length(unique(.$chrom)) ))
+
+  
+  cut_hi <- mean(fam$chrom_normcov) + 3 * sd(fam$chrom_normcov)
+  cut_lo <- mean(fam$chrom_normcov) - 3 * sd(fam$chrom_normcov)
+  
+  tris <- fam$sample_num_recode[which(fam$chrom_normcov >= cut_hi)]
+  mons <- fam$sample_num_recode[which(fam$chrom_normcov <= cut_lo)]
+  
+  fam_plot <- fam %>% 
+    filter(between(chrom_normcov, cut_lo, cut_hi)) %>% 
+    ggplot(., aes(x = sample_num_recode, y = chrom_normcov)) +
+    geom_vline(xintercept = tris, color = "gray70") +
+    geom_vline(xintercept = mons, color = "gray70") +
+    geom_point() +
+    geom_point(data = filter(fam, manual_fp == "fp"), color = "red") +
+    geom_text(data = filter(fam, chrom_normcov <= cut_lo & manual_fp != "fp"), aes(label = chromshort), size = 6) +
+    geom_text(data = filter(fam, chrom_normcov >= cut_hi & manual_fp != "fp"), aes(label = chromshort), size = 6) +
+    geom_line(y = mean(fam$chrom_normcov), color = "green") +
+    geom_line(y = cut_hi, color = "red") +
+    geom_line(y = cut_lo, color = "red") +
+    ggtitle(paste0(unique(fam$ctrl_CIP), " Dihaploids")) +
+    scale_x_continuous(limits = c(0,length(unique(fam$UCD_Sample_Code))-1), breaks = c(0,length(unique(fam$UCD_Sample_Code))-1), labels = c(1,length(unique(fam$UCD_Sample_Code))), expand = c(0.01,0.01)) +
+    labs(x = "Individual", y = "Standardized Chromosome\nCopy Number") +
+    theme_bw() +
+    theme(
+      panel.grid.minor = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.background=element_rect(fill="white",color="black"),
+      axis.title.x=element_text(size=18),
+      axis.title.y=element_text(size=18,angle= 90, vjust=0.5),
+      plot.title=element_text(size=20,face="bold",hjust=0,color="black"),
+      axis.text.x=element_text(size=18,color="black"),
+      axis.text.y=element_text(size=18,color="black"),
+      # plot.margin = margin(5.5, -10, 5.5, 5.5, "pt")
+      plot.margin = margin(5.5, 10, 5.5, 5.5, "pt")
+    )
+ 
+  # print(fam_plot)
+  # ggsave call here to save plot to disk
+  # outname <- paste(Sys.Date(), parent, "chrompop.png", sep = "-")
+  # ggsave(outname, plot = fam_plot, width = 18, height = 4, units = "in", device = "png")
+  
+  # last thing, have this function return a table of aneuploids from the selected cohort
+  out <- fam %>%
+    filter(chrom_normcov <= cut_lo | chrom_normcov >= cut_hi) %>% 
+    mutate(call = ifelse(chrom_normcov >= cut_hi, 1, -1))
+  return(out)
+}
+```
+```{r}
+# makes one dosage plot like bin by sam would in JMP
+tidy_dosage_plot <- function(df, sample_to_plot, spacer_size=30, chroms=sprintf("chr%0.2d", 1:12), breaks1=NA, breaks2=NA, breaks3=NA) {
+
+  # initiate empty spacer data frame
+  # stuffer <- as.data.frame(matrix(NA, nrow = spacer_size, ncol = ncol(df)))
+  # colnames(stuffer) <- colnames(df)
+  
+  # tidyverse pipe generates data frame for plotting single samples
+  processed_df <- df %>% 
+    filter(UCD_Sample_Code == sample_to_plot) %>% # Pick only the sample you want to plot
+    filter(chrom %in% chroms) %>% 
+    split(.$chrom) %>% # Split dataframe by chromosome. Returns a list of dataframes for each chromosome.
+    map(function(x) mutate(x, bin_start = floor(start/end[1]))) %>% # For each dataframe in list, add a 0-based index column called bin_start 
+    map(function(x) mutate(x, is_midpoint = ifelse(bin_start == floor(max(x$bin_start)/2), TRUE, FALSE))) %>% # For each dataframe in list, add a logical column that indciates whether bin is the midpoint of a chromosome
+    map(function(x) add_row(x, chrom = rep(NA, spacer_size))) %>% 
+    bind_rows() %>% # Combine list of modified dataframes into one list
+    mutate(plot_start = 0:(nrow(.)-1)) %>% # Add a 0-based index column for the modified dataframe called plot_start. This will be the x-axis of the plot
+    head(-spacer_size) # remove the last spacer rows
+
+  # x axis breaks should be chromosome midpoints, but they need to be specified in plot_start coordinates
+  plot_breaks <- processed_df$plot_start[which(processed_df$is_midpoint == TRUE)]
+  
+  # x axis labels should be every non-missing level of chromosome in the processed data frame
+  chroms <- unique(na.omit(processed_df$chrom))
+  
+  # draw plot
+  plt <- ggplot(processed_df, aes(x = plot_start, y = normcov)) +
+    geom_rect(xmin = breaks1[1], xmax = breaks1[2], ymin = 0, ymax = 8, fill = "#73D055", alpha = 0.009) +
+    geom_rect(xmin = breaks2[1], xmax = breaks2[2], ymin = 0, ymax = 8, fill = "#73D055", alpha = 0.009) +
+    geom_rect(xmin = breaks3[1], xmax = breaks3[2], ymin = 0, ymax = 8, fill = "#73D055", alpha = 0.009) +
+    geom_line(size = 0.6, color = "#008080", alpha = 1) +
+    geom_point(size = 1, color = "black") +
+    scale_x_continuous(breaks = plot_breaks, labels = chroms) +
+    scale_y_continuous(limits = c(0,5)) +
+    labs(x = "Chromosome", y = "Relative Coverage") +
+    ggtitle(sample_to_plot) +
+    theme_bw() +
+    theme(panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          panel.grid.major.y = element_line(linetype="dashed", color = "black"),
+          panel.grid.minor.y = element_blank(),
+          panel.background = element_rect(fill = "white", color = "black"),
+          axis.text.x=element_text(size = 14, color = "black"),
+          axis.text.y=element_text(size=14,color="black"),
+          axis.title.x = element_blank(),
+          axis.title.y=element_text(size=14,angle=90,vjust=-0.5),
+          axis.ticks=element_blank(),
+          plot.title=element_text(face="bold",hjust=0),
+          plot.margin = margin(20,5.5,5.5,5.5, "pt")
+      )
+  
+  return(plt)
+}
+```
+```{r}
+# makes one SNP plot like bin by SNP would in JMP
+tidy_snp_plot <- function(df, sample_to_plot, spacer_size=30, chroms=sprintf("chr%0.2d", 1:12), plot_title="", breaks1=NA, breaks2=NA, breaks3=NA) {
+
+  # tidyverse pipe generates data frame for plotting single samples
+  processed_df <- df %>% 
+    filter(chrom %in% chroms) %>% 
+    filter(UCD_Sample_Code == sample_to_plot) %>% # Pick only the sample you want to plot
+    split(list(.$chrom)) %>% # Split dataframe by chromosome. Returns a list of dataframes for each chromosome.
+    # map(function(x) pivot_wider(x, names_from = Parent, values_from = c(Max, ObsPerHI, Cov, HIcalls, ObsPerHI_filt))) %>% # spread here
+    map(function(x) mutate(x, bin_start = floor(start/end[1]))) %>% # For each dataframe in list, add a 0-based index column called bin_start 
+    map(function(x) mutate(x, is_midpoint = ifelse(bin_start == floor(max(x$bin_start)/2), TRUE, FALSE))) %>% # For each dataframe in list, add a logical column that indciates whether bin is the midpoint of a chromosome
+    map(function(x) add_row(x, chrom = rep(NA, spacer_size))) %>% # For each dataframe in list, add an empty 15 rows at the end of the dataframe
+    bind_rows() %>% # Combine list of modified dataframes into one list
+    mutate(plot_start = 0:(nrow(.)-1)) %>% # Add a 0-based index column for the modified dataframe called plot_start. This will be the x-axis of the plot
+    mutate(ObsPerHI_filt = ifelse(Cov >= 30, ObsPerHI, NA)) %>% 
+    head(-spacer_size) # remove the last spacer rows
+  
+  # View(processed_df)
+  
+  # x axis breaks should be chromosome midpoints, but they need to be specified in plot_start coordinates
+  plot_breaks <- processed_df$plot_start[which(processed_df$is_midpoint == TRUE)] # breaks down when data points are missing due to lack of markers or coverage
+  # x axis labels should be every non-missing level of chromosome in the processed data frame
+  # chroms <- unique(na.omit(processed_df$Chrom))
+  
+  # draw plot
+  plt <- ggplot(processed_df, aes(x = plot_start, y = ObsPerHI_filt)) +
+    geom_rect(xmin = breaks1[1], xmax = breaks1[2], ymin = 0, ymax = 100, fill = "#73D055FF", alpha = 0.009) +
+    geom_rect(xmin = breaks2[1], xmax = breaks2[2], ymin = 0, ymax = 100, fill = "#73D055FF", alpha = 0.009) +
+    geom_rect(xmin = breaks3[1], xmax = breaks3[2], ymin = 0, ymax = 100, fill = "#73D055FF", alpha = 0.009) +
+    geom_line(size = 0.6, color = "#008080", alpha = 1) +
+    geom_point(size = 1, color = "black") +
+    # scale_x_continuous(breaks = plot_breaks, labels = chroms) +
+    scale_y_continuous(limits = c(0,100)) +
+    labs(x = "", y = "% HI allele") +
+    # ggtitle(paste(sample_to_plot, plot_title, sep = " ")) +
+    theme_bw() +
+    theme(panel.grid.minor.x=element_blank(),
+          panel.grid.minor.y=element_blank(),
+          panel.grid.major.x=element_blank(),
+          panel.grid.major.y=element_line(color="black",linetype="dashed"),
+          panel.background=element_rect(fill="white",color="black"),
+          axis.text.x=element_blank(),
+          axis.text.y=element_text(size=14,color="black"),
+          axis.title.x = element_text(size=14, angle=0, vjust=0.5),
+          axis.title.y=element_text(size=14,angle=90, vjust=-0.5),
+          plot.title = element_text(face = "bold"),
+          axis.ticks=element_blank(),
+          plot.margin = margin(5.5, 5.5, 20, 5.5, "pt")
+        )
+
+  return(plt)
+}
+```
+```{r}
+# nicely stack dosage and SNP plots atop one another
+stack_plots <- function(sample_to_plot, dosage_dataset, snp_dataset) {
+  top <- tidy_dosage_plot(dosage_dataset, sample_to_plot)
+  bottom <- tidy_snp_plot(snp_dataset, sample_to_plot)
+  combo <- ggarrange(top, bottom, align = "v", ncol = 1)
+  return(combo)
+  # ggsave(paste0(Sys.Date(), "-", sample_to_plot, "-combo.png"), plot = combo, width = 18, height = 6, units = "in", device = "png")
+}
+```
+```{r}
+family.overlay <- function(dataset, non_inducer, ploidy = "2x", minimum_count = 2e4, chroms_to_plot = sprintf("chr%0.2d", 1:12)) {
+  
+  plot_data <- dataset %>% 
+    filter(Non_inducer == non_inducer,
+           Monica_ploidy == ploidy,
+           sample_tot >= minimum_count,
+           chrom %in% chroms_to_plot)
+  
+  plt <- ggplot(plot_data, aes(x = start, y = normcov, fill = UCD_Sample_Code)) +
+    geom_line(size = 0.4, alpha = 0.4) +
+    facet_wrap(~chrom, nrow = 6, strip.position = "r") +
+    guides(fill = F) +
+    theme_bw()
+  
+  return(plt)
+  # wig <- ggplotly(plt)
+  # print(plt)
+  # return(wig)
+}
+```
+```{r}
+underlay_one_bbs <- function(df, overlay_guy, nhi, ploidy = "2x", readcount_min = 2e4, spacer_size=10, chroms=sprintf("chr%0.2d", 1:12), box1 = NA, box1_fill = F, box2 = NA, box2_fill = F, box3 = NA, box3_fill = F) {
+
+  processed_df <- bin_alleles %>% 
+    filter(Monica_ploidy == ploidy) %>%
+    filter(Non_inducer == nhi) %>%
+    filter(sample_tot >= readcount_min) %>% 
+    filter(chrom %in% chroms) %>% 
+    rename(bioid = UCD_Sample_Code) %>% 
+    split(interaction(.$bioid, .$chrom)) %>%
+    map(function(x) mutate(x, bin_start = floor(start/end[1]))) %>%
+    map(function(x) mutate(x, is_midpoint = ifelse(bin_start == floor(max(x$bin_start)/2), TRUE, FALSE))) %>%
+    map(function(x) add_row(x, bioid = rep(unique(x$bioid), spacer_size))) %>%
+    bind_rows() %>%
+    split(.$bioid) %>%
+    map(function(x) mutate(x, plot_start = 0:(nrow(x)-1))) %>%
+    map(function(x) head(x, -spacer_size)) %>%
+    bind_rows() %>% 
+    mutate(facet_strip = overlay_guy)
+  
+  plot_breaks <- unique(processed_df$plot_start[which(processed_df$is_midpoint == TRUE)])
+  
+  # hi up and hi dn look too similar
+  dot_color <- "#CE016A"
+  hi_up <- "#FDE725"
+  hi_dn <- "#00BEEF"
+  nhi_up <- "#2172AA"
+  nhi_dn <- "#00BB08"
+  
+  if (box1_fill == "inducer_gain") {
+    box1_color <- hi_up
+  } else if (box1_fill == "inducer_loss") {
+    box1_color <- hi_dn
+  } else if (box1_fill == "noninducer_gain") {
+    box1_color <- nhi_up
+  } else if (box1_fill == "noninducer_loss") {
+    box1_color <- nhi_dn
+  } else {box1_color <- NULL}
+  
+  
+  if (box2_fill == "inducer_gain") {
+    box2_color <- hi_up
+  } else if (box2_fill == "inducer_loss") {
+    box2_color <- hi_dn
+  } else if (box2_fill == "noninducer_gain") {
+    box2_color <- nhi_up
+  } else if (box2_fill == "noninducer_loss") {
+    box2_color <- nhi_dn
+  } else {box2_color <- NULL}
+  
+  if (box3_fill == "inducer_gain") {
+    box3_color <- hi_up
+  } else if (box3_fill == "inducer_loss") {
+    box3_color <- hi_dn
+  } else if (box3_fill == "noninducer_gain") {
+    box3_color <- nhi_up
+  } else if (box3_fill == "noninducer_loss") {
+    box3_color <- nhi_dn
+  } else {box3_color <- NULL}
+  
+  plot_part_1 <- processed_df %>%
+    filter(bioid != overlay_guy)
+  
+  plot_part_2 <- processed_df %>%
+    filter(bioid == overlay_guy)
+  
+  View(plot_part_2)
+  
+  plt <- ggplot(plot_part_1, aes(x = plot_start, y = 2*normcov, fill = bioid)) +
+    annotate("rect", xmin=box1[1], xmax=box1[2], ymin=-20, ymax=20, fill = box1_color, alpha = 0.8) +
+    # annotate("rect", xmin=box2[1], xmax=box2[2], ymin=-20, ymax=20, fill = box2_color, alpha = 0.8) +
+    # annotate("rect", xmin=box3[1], xmax=box3[2], ymin=-20, ymax=20, fill = box3_color, alpha = 0.8) +
+    geom_line(data = plot_part_2, color = dot_color, size = 0.3, alpha = 0.8) +
+    geom_point(data = plot_part_2, color = dot_color, size = 0.3, alpha = 0.8) +
+    geom_line(size = 0.05, alpha = 0.2) +
+    geom_point(size = 0.05, alpha = 0.2) +
+    scale_x_continuous(breaks = plot_breaks, labels = chroms) +
+    scale_y_continuous(breaks = seq(0,10,by=2), labels=seq(0,10,by=2)) +
+    coord_cartesian(ylim =c(0,10)) +
+    # labs(x=NULL, y="Relative\nCoverage") +
+    labs(x="",y="") +
+    facet_wrap(~facet_strip, strip.position = "r") +
+    guides(fill = F, color = F) +
+    theme_bw() +
+    theme(
+      panel.grid.minor.x = element_blank(),
+      strip.background = element_rect(fill = "white"),
+      plot.margin = margin(0.1,2,0.1,6, "pt")
+    )
+  
+  # outfile <- paste0(Sys.Date(),"-",overlay_guy,"-1M-bbs.png")
+  # ggsave(outfile, plot = plt, width = 8, height = 2, units = "in", device = "png")
+  # return(plt)
+  # plt <- ggplotly(plt)
+  return(plt)
+}
+```
+```{r}
+bin_snp_plot <- function(df, sample_to_plot, new_binsize = 4e6, chroms = sprintf("chr%0.2d", 1:12), spacer_size = 5) {
+  
+  processed_df <- df %>% 
+    filter(chrom %in% chroms) %>% 
+    filter(UCD_Sample_Code == sample_to_plot) %>% # Pick only the sample you want to plot
+    mutate(chrombin = ifelse(binsize < .$binsize[1], NA, floor(start / new_binsize))) %>% 
+    mutate(chrombin = ifelse(is.na(chrombin), lag(chrombin), chrombin)) %>% 
+    group_by(chrom, chrombin) %>% 
+    summarize(chrombin_Cov = sum(Cov, na.rm = T),
+              chrombin_HIcalls = sum(HIcalls, na.rm = T)) %>%
+    ungroup() %>% 
+    mutate(chrombin_ObsPerHI = 100 * chrombin_HIcalls / chrombin_Cov) %>% 
+    split(list(.$chrom)) %>% # Split dataframe by chromosome. Returns a list of dataframes for each chromosome.
+    map(function(x) mutate(x, is_midpoint = ifelse(chrombin == floor(max(x$chrombin)/2), TRUE, FALSE))) %>% # For each dataframe in list, add a logical column that indciates whether bin is the midpoint of a chromosome
+    map(function(x) add_row(x, chrom = rep(NA, spacer_size))) %>% # For each dataframe in list, add an empty 15 rows at the end of the dataframe
+    bind_rows() %>% # Combine list of modified dataframes into one list
+    mutate(plot_start = 0:(nrow(.)-1)) %>% # Add a 0-based index column for the modified dataframe called plot_start. This will be the x-axis of the plot
+    mutate(chrombin_ObsPerHI_filt = ifelse(chrombin_Cov >= 30, chrombin_ObsPerHI, NA)) %>%
+    head(-spacer_size) # remove the last spacer rows
+  
+  plot_breaks <- processed_df$plot_start[which(processed_df$is_midpoint == TRUE)]
+  
+  # draw plot
+  plt <- ggplot(processed_df, aes(x = plot_start, y = chrombin_ObsPerHI_filt)) +
+    geom_line(size = 0.6, color = "#008080", alpha = 1) +
+    geom_point(size = 1, color = "black") +
+    scale_x_continuous(breaks = plot_breaks, labels = chroms) +
+    scale_y_continuous(limits = c(0,100)) +
+    labs(x = "", y = "% HI allele") +
+    # ggtitle(paste(sample_to_plot, plot_title, sep = " ")) +
+    theme_bw() +
+    theme(panel.grid.minor.x=element_blank(),
+          panel.grid.minor.y=element_blank(),
+          panel.grid.major.x=element_blank(),
+          panel.grid.major.y=element_line(color="black",linetype="dashed"),
+          panel.background=element_rect(fill="white",color="black"),
+          axis.text.x=element_text(size = 14, color="black"),
+          axis.text.y=element_text(size=14,color="black"),
+          axis.title.x = element_text(size=14, angle=0, vjust=0.5),
+          axis.title.y=element_text(size=14,angle=90, vjust=-0.5),
+          plot.title = element_text(face = "bold"),
+          axis.ticks=element_blank(),
+          plot.margin = margin(5.5, 5.5, 20, 5.5, "pt")
+    )
+  return(plt)
+}
+```
+
+## Data preprocessing:
+### Read in annotations from MM dataset from Monica. Mostly I need this for the ploidy of each sample, obtained via flow cytometry:
+MD5 (2020_0624_MM_annotated.tsv) = 9becfb4ba49589e961e4eaa01adce61f
+```{r}
+mm <- read_tsv("2020_0624_MM_annotated.tsv", na = c("NA", "."))
+```
+### Get mapped read counts in non-overlapping 1Mb bins for each sample in the MM population:
+```{r}
+bedfiles <- dir(pattern = ".bed",
+                path = "~/Desktop/mount/share/comailab/kramundson/MM_read_preprocessing/data/bedtools_coverage_old/",
+                full.names = T)
+
+names(bedfiles) <- str_remove(basename(bedfiles), ".bed")
+
+# specify column names
+bedcols <- c("chrom", "start", "end", "readcount", "bases_covered", "binsize", "breadth")
+
+# specify column types
+bedcol_types <- cols(
+  chrom = col_character(),
+  start = col_double(),
+  end = col_double(),
+  readcount = col_double(),
+  bases_covered = col_double(),
+  binsize = col_double(),
+  breadth = col_double()
+)
+
+# Read in files. Requires filesystem mount to local via sshfs.
+bed <- plyr::ldply(bedfiles, function(x) read_tsv(x, col_names = bedcols, col_types = bedcol_types)) %>% 
+  rename(UCD_Sample_Code = .id) %>% 
+  bind_rows() %>%
+  full_join(., mm) %>% 
+  mutate(ctrl = case_when(
+      Non_inducer == "LR00014" ~ "MM293",
+      Non_inducer == "LR00026" ~ "MM294",
+      Non_inducer == "Y84027" ~ "MM295",
+      Non_inducer == "C90170" ~ "MM296",
+      Non_inducer == "93.003" ~ "MM297",
+      Non_inducer == "458" ~ "MM298",
+      Non_inducer == "C92172" ~ "MM299",
+      Non_inducer == "WA104" ~ "MM301",
+      Non_inducer == "WA077" ~ "MM302",
+      Non_inducer == "Desiree" ~ "MM303",
+      Non_inducer == "Atlantic" ~ "MM304",
+      Non_inducer == "C93154" ~ "C93154", # todo make or extract from existing data
+      Non_inducer == "LR00022" ~ "LR00022", # todo make or extract from existing data 
+      Non_inducer == "C01020" ~ "C01020", # todo make or extract from existing data 
+      Non_inducer == "C91640" ~ "C91640", # todo make or extract from existing data 
+      Non_inducer == "LRY2125" ~ "LRY2125", # todo make or extract from existing data 
+      Non_inducer == "LR93073" ~ "LR93073", # todo make or extract from existing data 
+      Non_inducer == "LRY357" ~ "global", # not enough dihaploids to make a conclusion, could all-population aggregate counts here?
+      Non_inducer == "WA073" ~ "global") # not enough dihaploids to make a conclusion, could use all-population aggregate counts here?)
+      ) %>% 
+  mutate(
+    ctrl_CIP = case_when(
+      Non_inducer == "LR00014" ~ "CIP300056.33",
+      Non_inducer == "LR00026" ~ "CIP300093.14",
+      Non_inducer == "Y84027" ~ "CIP388676.1",
+      Non_inducer == "C90170" ~ "CIP390478.9",
+      Non_inducer == "93.003" ~ "CIP390637.1",
+      Non_inducer == "458" ~ "CIP391931.1",
+      Non_inducer == "C92172" ~ "CIP392780.1",
+      Non_inducer == "WA104" ~ "CIP397073.16",
+      Non_inducer == "WA077" ~ "CIP397077.16",
+      Non_inducer == "Desiree" ~ "CIP800048",
+      Non_inducer == "Atlantic" ~ "CIP800827",
+      Non_inducer == "C93154" ~ "CIP392820.1", # todo make or extract from existing data
+      Non_inducer == "LR00022" ~ "CIP300072.1", # todo make or extract from existing data 
+      Non_inducer == "C01020" ~ "CIP301023.15", # todo make or extract from existing data 
+      Non_inducer == "C91640" ~ "CIP388615.22", # todo make or extract from existing data 
+      Non_inducer == "LRY2125" ~ "CIP313065.25", # todo make or extract from existing data 
+      Non_inducer == "LR93073" ~ "CIP392822.3", # todo make or extract from existing data 
+      Non_inducer == "LRY357" ~ "CIP313047.57", # not enough dihaploids to make a conclusion, could all-population aggregate counts here?
+      Non_inducer == "WA073" ~ "CIP397099.4" # not enough dihaploids to make a conclusion, could use all-population aggregate counts here? 
+    )
+  )
+```
+### Remove organellar sequences before computing total and bin read counts for each individual
+```{r}
+# remove counts corresponding to organellar DNA
+bed_genomic <- bed %>% 
+  filter(chrom %in% c(sprintf("chr%0.2d", 0:12), "ChrUn")) %>%
+  group_by(UCD_Sample_Code) %>% 
+  mutate(sample_tot = sum(readcount)) %>% 
+  ungroup()
+```
+
+### Aggregate binned read counts by individual. For samples without a tetraploid control, also aggregate all dihaploids extrated from the same tetraploid with any haploid inducer:
+```{r}
+# aggregates bined read counts for uniparental dihaploids without a tetraploid control
+# then adds binned read counts to get totals for each dihaploid pool
+pooled_ctrl_totals <- bed_genomic %>% 
+  filter(Non_inducer %in% c("C93154", "LR00022", "C01020", "C91640", "LRY2125", "LR93073", "LRY357", "WA073") | is.na(UCD_Sample_Code)) %>%
+  group_by(ctrl, chrom, start, end) %>% 
+  summarize(ctrl_readcount = sum(readcount)) %>% 
+  ungroup() %>% 
+  group_by(ctrl) %>% 
+  mutate(ctrl_tot = sum(ctrl_readcount)) %>% 
+  ungroup() %>% 
+  dplyr::select(chrom, start, end, ctrl, ctrl_readcount, ctrl_tot)
+
+pooled_single_ctrls <- bed_genomic %>% 
+  filter(is.na(CIP_Sample_Code)) %>% 
+  mutate(ctrl = UCD_Sample_Code) %>% 
+  dplyr::select(chrom, start, end, ctrl, readcount, sample_tot) %>% 
+  rename(ctrl_readcount = readcount,
+         ctrl_tot = sample_tot) %>% 
+  bind_rows(., pooled_ctrl_totals) %>% 
+  left_join(bed_genomic, .) %>% 
+  mutate(normcov = 2 * (readcount / sample_tot) / (ctrl_readcount / ctrl_tot))
+```
+
+### Deal with large deletions in the 4x parents:
+
+These inflate standardized coverage, particularly in centromeres.
+This can lead to false positive trisomy and monosomy calls, even when averaging up to chromosome.
+For example, C93154 has most of CEN 12 in apparent duplex dosage, which makes the
+standardized coverage values more extreme than their actual copy number. Enough
+of the chromosome is affected to lead to a large number of trisomy calls for chromosome
+12 in dihaploids from C93154, LR00022, LR00026, 93003, and Y84027. I manually corrected these
+calls after observing that CEN12 showed large deletions in C93154, LR00022, LR00026 and 93003.
+
+Read in manual false positive trisomy annotations.
+In the same pipe, left join to chromosome-aggregated data:
+
+```{r}
+with_man_fp <- left_join(pooled_single_ctrls,
+                         read_tsv("2020_0612_chrom_fps.txt", col_names = T, comment = "#"))
+```
+
+### Call whole chromosome aneuploids by aggregating read depth up to individual, then standardizing to tetraploid parent as a control:
+```{r}
+# left off here
+with_aneu_calls <- lapply(unique(with_man_fp$Non_inducer[!is.na(with_man_fp$Non_inducer)]), function(x) call_aneuploids(with_man_fp, x, bad_samples = "MM155")) %>%
+  bind_rows() %>% 
+  dplyr::select(UCD_Sample_Code, chrom, call) %>% 
+  left_join(with_man_fp, .) %>%
+  mutate(manual_fp = case_when(
+    manual_fp == "fp" ~ "fp",
+    manual_fp == "tp" ~ "tp",
+    is.na(manual_fp) ~ "tp"
+  )) %>%
+  mutate(chromshort = str_remove(chrom, "chr")) %>%
+  mutate(chromshort = str_remove(chromshort, "^0"))
+```
+
+### Read in estimated centromere coordinates from Bourke et al. (2015) Genetics.
+Centromere estimated from recombination-suppressed regions in a tetraploid F1
+mapping population (Altus x Colomba), n=235.
+```{r}
+# made a BED file of coords from Bourke et al (2015) Table S2
+bourke_cen <- read_tsv("bourke_cen.bed", col_names = c("chrom", "cen_start", "cen_end"))
+bourke_cen
+```
+
+```{r}
+with_cen <- left_join(with_aneu_calls, bourke_cen) %>% 
+  mutate(is_cen = ifelse(start >= cen_start & end <= cen_end, "cen", "not_cen"))
+```
+
+```{r}
+with_cen %>% 
+  dplyr::select(Non_inducer, ctrl_CIP, Inducer, UCD_Sample_Code, snp_ploidy) %>% 
+  distinct() %>% 
+  group_by(Non_inducer, Inducer, snp_ploidy) %>% 
+  tally() %>% 
+  split(.$snp_ploidy) %>% 
+  map(function(x) pivot_wider(x, names_from = Inducer, values_from=n)) %>% 
+  map(function(x) dplyr::select(x, Non_inducer, snp_ploidy, IVP101, IVP35, PL4))
+```
+
+
+## Figure 2A: Estimated chromosome copy number for all WA077-derived dihaploids:
+```{r}
+fig2a_data <- with_cen %>% 
+  filter(Non_inducer == "WA077") %>% 
+  filter(snp_ploidy == "2x") %>% 
+  filter(sample_tot >= 2e4) %>%
+  filter(manual_fp == "tp") %>%
+  # filter(KRA_ploidy == "hap") %>%
+  filter(UCD_Sample_Code != "MM155") %>% 
+  filter(chrom %in% sprintf("chr%0.2d", 1:12)) %>% 
+  dplyr::select(chrom, UCD_Sample_Code, UCD_Sample_Numeric, chromshort, chrom_normcov, chrom_ObsPerHI) %>% 
+  distinct() %>% 
+  arrange(UCD_Sample_Numeric) %>%
+  mutate(sample_num_recode = floor( (seq(1:nrow(.)) -0.01)  / length(unique(.$chrom)))) %>%
+  mutate(chromshort = str_remove(chrom, "chr")) %>%
+  mutate(sample_num_recode = case_when(
+    UCD_Sample_Numeric == 247 ~ 160,
+    UCD_Sample_Numeric == 817 ~ 91,
+    TRUE ~ sample_num_recode)) %>%
+  mutate(chromshort = str_remove(chromshort, "^0")) %>%
+  group_by(UCD_Sample_Code) %>%
+  ungroup()
+
+cut_alleles_lo <- 20
+cut_hi <- mean(fig2a_data$chrom_normcov) + 3 * sd(fig2a_data$chrom_normcov)
+cut_lo <- mean(fig2a_data$chrom_normcov) - 3 * sd(fig2a_data$chrom_normcov)
+tris <- fig2a_data$sample_num_recode[which(fig2a_data$chrom_normcov >= cut_hi)]
+mons <- fig2a_data$sample_num_recode[which(fig2a_data$chrom_normcov <= cut_lo)]
+adds <- fig2a_data$sample_num_recode[which(fig2a_data$chrom_ObsPerHI >= cut_alleles_lo)]
+
+fig2a <- fig2a_data %>% 
+  filter(between(chrom_normcov, cut_lo, cut_hi)) %>% 
+  ggplot(., aes(x = sample_num_recode, y = chrom_normcov)) +
+    geom_vline(xintercept = tris, color = "gray70") +
+    geom_vline(xintercept = mons, color = "gray70") +
+    geom_point(size = 0.3) +
+    geom_text(data = filter(fig2a_data, chrom_normcov <= cut_lo), aes(label = chromshort), size = 2.8) +
+    geom_text(data = filter(fig2a_data, chrom_normcov >= cut_hi & UCD_Sample_Code != "MM1114"), aes(label = chromshort), size = 2.8) +
+    geom_point(data = filter(fig2a_data, chrom_normcov >= cut_hi & UCD_Sample_Code == "MM1114"), size = 0.5) +
+    geom_line(y = mean(fig2a_data$chrom_normcov), color = "green") +
+    geom_line(y = cut_hi, color = "red") +
+    geom_line(y = cut_lo, color = "red") +
+    # geom_vline(xintercept = 160) +
+    annotate("segment", x=209, y=2.68, xend=217, yend=2.629554, linetype = "dashed") + # chromosome 3
+    annotate("text", x=207, y=2.7, label="3", size=2.8) + # chromosome 3
+    annotate("segment", x=209, y=2.82, xend=217, yend=2.646788, linetype = "dashed") + # chromosome 8
+    annotate("text", x=207, y=2.84, label="8", size=2.8) + # chromosome 8  
+    annotate("segment", x=209, y =2.54, xend=217, yend=2.618737, linetype = "dashed") + # chromosome 9
+    annotate("text", x =207, y =2.55, label="9", size=2.8) + # chromosome 9
+    # ggtitle(paste0(unique(snpfam$ctrl_CIP), " Dihaploids")) +
+    scale_x_continuous(limits = c(0,length(unique(fig2a_data$UCD_Sample_Code))-1),
+                       breaks = c(0,length(unique(fig2a_data$UCD_Sample_Code))-1),
+                       labels = c(1,length(unique(fig2a_data$UCD_Sample_Code))),
+                       expand = c(0.01,0.01)) +
+    labs(x = "Individual", y = "Standardized Chrom.\nCopy Number") +
+    theme_bw() +
+    theme(
+      panel.grid.minor = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.background=element_rect(fill="white",color="black"),
+      # axis.title.x=element_text(size=18, margin = margin(-10,5,0,0)),
+      # axis.title.y=element_text(size=18,angle= 90, vjust=2),
+      # plot.title=element_text(size=20,face="bold",hjust=0,color="black"),
+      # axis.text.x=element_text(size=18,color="black"),
+      # axis.text.y=element_text(size=18,color="black"),
+      plot.margin = margin(20, 5.5, 5.5, 5.5, "pt"))
+fig2a
+```
+## Figure 2C: Bar chart of chromosome counts, MM hybrids excluded
+```{r}
+fig2c_data <- with_cen %>%
+  filter(sample_tot >= 2e4) %>% 
+  filter(snp_ploidy == "2x" | is.na(snp_ploidy)) %>%
+  filter(Monica_ploidy == "2x" | is.na(Monica_ploidy)) %>% 
+  filter(!is.na(ctrl_CIP)) %>% 
+  # filter(!is.na(snp_ploidy) | !is.na(Monica_ploidy)) %>% 
+  dplyr::select(chrom,
+                UCD_Sample_Code,
+                manual_fp,
+                call,
+                sample_tot,
+                Non_inducer,
+                Inducer,
+                ctrl_CIP,
+                Predicted_chrom_number,
+                Parent_assoc_aneuploidy,
+                Monica_ploidy,
+                snp_ploidy) %>% 
+  distinct() %>%
+  filter(manual_fp != "fp") %>% 
+  group_by(UCD_Sample_Code) %>% 
+  mutate(chrnum = 24 + sum(call, na.rm = T)) %>% 
+  ungroup() %>%
+  mutate(Parent_assoc_aneuploidy = ifelse(chrnum == 24, "euploid", Parent_assoc_aneuploidy)) %>% 
+  dplyr::select(-chrom, -call, -manual_fp) %>% 
+  distinct()
+
+fig2c_data %>%
+  group_by(chrnum) %>%
+  tally
+
+fig2c <- ggplot(fig2c_data, aes(x = factor(chrnum), fill = factor(chrnum))) +
+  geom_bar() +
+  geom_text(stat='count', aes(label=..count..), vjust=-0.2, size = 3) +
+  scale_fill_viridis(discrete = T) +
+  scale_y_continuous(limits = c(0, 1000)) +
+  guides(fill = F) +
+  labs(x = "Chromosome Number", y = "Count") +
+  theme_bw() +
+  theme(
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.background=element_rect(fill="white",color="black"),
+      axis.ticks = element_blank(),
+      plot.margin=margin(20, 20, 5.5, 5.5, "pt")
+  )
+fig2c
+```
+## Supplemental Fig. S2: Aneuploidy frequency, grouped by tetraploid parent:
+## Identify euploid dihaploids to pool as a stand-in for the tetraploid parent:

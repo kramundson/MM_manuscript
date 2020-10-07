@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 25 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/ref/Snakefile:
+Missing input files for rule all:
+potato_dm_v404_all_pm_un_chloro_mito_1M_windows.bed

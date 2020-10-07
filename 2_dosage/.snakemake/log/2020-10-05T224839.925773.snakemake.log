@@ -1,0 +1,19 @@
+Building DAG of jobs...
+Job counts:
+	count	jobs
+	1	all
+	43	bin_by_geno
+	43	call_alleles
+	43	run_mpup
+	130
+
+[Mon Oct  5 22:48:41 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta
+    output: mpup/parsed-C01_020-IVP101-mpup.txt
+    jobid: 111
+    reason: Missing output files: mpup/parsed-C01_020-IVP101-mpup.txt
+    wildcards: mother=parsed-C01_020, inducer=IVP101
+
+RuleException in line 63 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/3_chromosome_ori/Snakefile:
+'Params' object has no attribute 'maxdepth'

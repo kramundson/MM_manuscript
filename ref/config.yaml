@@ -1,0 +1,34 @@
+# path or URL to sequencing unit sheet (TSV format, columns: sample, unit, fq1, fq2)
+# Units are technical replicates (e.g., lanes or resequencing of the same biological
+# sample).
+
+genome: "potato_dm_v404_all_pm_un_chloro_mito.fasta"
+windows: "potato_dm_v404_all_pm_un_chloro_mito_10k_windows.bed"
+
+# junk_scaffolds: ["ChrUn"]
+good_chroms: ["chr01", "chr02", "chr03", "chr04", "chr05", "chr06",
+              "chr07", "chr08", "chr09", "chr10", "chr11", "chr12"]
+
+organelle_genomes: ["potato_dm_v404_all_pm_un.fasta",
+                    "S_tuberosum_Group_Phureja_chloroplast_DM1-3-516-R44.fasta",
+                    "S_tuberosum_Group_Phureja_mitochondrion_DM1-3-516-R44.fasta"]
+                    
+genomelinks: ["http://solanaceae.plantbiology.msu.edu/data/potato_dm_v404_all_pm_un.fasta.zip",
+              "http://solanaceae.plantbiology.msu.edu/data/S_tuberosum_Group_Phureja_chloroplast_DM1-3-516-R44.fasta.zip",
+              "http://solanaceae.plantbiology.msu.edu/data/S_tuberosum_Group_Phureja_mitochondrion_DM1-3-516-R44.fasta.zip"]
+
+intervals: "data/intervals/scaffold_intervals.txt"
+
+params:
+
+    mark_duplicates:
+        jarpath: "/share/comailab/kramundson/miniconda3/envs/ximena/share/picard-2.18.27-0/picard.jar"
+        java_heap: "-Xms512m -Xmx4g -XX:ParallelGCThreads=1"
+        opt: "REMOVE_DUPLICATES=true TMP_DIR=./tmp ASSUME_SORT_ORDER=coordinate MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000"
+
+    depth:
+        mq: 20
+        bin: 10000
+
+    bedtools:
+        window: 1000000

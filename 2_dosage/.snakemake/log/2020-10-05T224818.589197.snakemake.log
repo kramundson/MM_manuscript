@@ -1,0 +1,12 @@
+Building DAG of jobs...
+AmbiguousRuleException:
+Rules parse_mpup and run_mpup are ambiguous for the file mpup/parsed_C90_170-PL4-mpup.txt.
+Consider starting rule output with a unique prefix, constrain your wildcards, or use the ruleorder directive.
+Wildcards:
+	parse_mpup: inducer=PL4,mother=C90_170
+	run_mpup: inducer=PL4,mother=parsed_C90_170
+Expected input files:
+	parse_mpup: mpup/C90_170-PL4-mpup.txt
+	run_mpup: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fastaExpected output files:
+	parse_mpup: mpup/parsed_C90_170-PL4-mpup.txt
+	run_mpup: mpup/parsed_C90_170-PL4-mpup.txt

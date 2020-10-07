@@ -1,0 +1,29 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	bedtools_genome_windows
+	2
+
+[Mon Oct  5 15:20:59 2020]
+rule bedtools_genome_windows:
+    input: potato_dm_v404_all_pm_un_chloro_mito.fasta, potato_dm_v404_all_pm_un_chloro_mito.fasta.fai
+    output: potato_dm_v404_all_pm_un_chloro_mito.genome, potato_dm_v404_all_pm_un_chloro_mito_1M_windows.bed
+    jobid: 4
+
+[Mon Oct  5 15:20:59 2020]
+Finished job 4.
+1 of 2 steps (50%) done
+
+[Mon Oct  5 15:20:59 2020]
+localrule all:
+    input: potato_dm_v404_all_pm_un_chloro_mito.fasta, potato_dm_v404_all_pm_un_chloro_mito.fasta.bwt, potato_dm_v404_all_pm_un_chloro_mito.fasta.fai, potato_dm_v404_all_pm_un_chloro_mito.genome, potato_dm_v404_all_pm_un_chloro_mito_1M_windows.bed, potato_dm_v404_all_pm_un_chloro_mito.dict
+    jobid: 0
+
+[Mon Oct  5 15:20:59 2020]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/ref/.snakemake/log/2020-10-05T152058.478473.snakemake.log

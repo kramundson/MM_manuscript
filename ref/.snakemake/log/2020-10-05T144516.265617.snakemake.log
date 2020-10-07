@@ -1,0 +1,97 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	bedtools_genome_windows
+	1	bwa_index
+	3	clean_genomes
+	1	combine_genomes
+	1	create_sequence_dictionary
+	1	get_genome
+	1	samtools_faidx
+	10
+
+[Mon Oct  5 14:45:16 2020]
+rule get_genome:
+    output: potato_dm_v404_all_pm_un.fasta, S_tuberosum_Group_Phureja_chloroplast_DM1-3-516-R44.fasta, S_tuberosum_Group_Phureja_mitochondrion_DM1-3-516-R44.fasta
+    jobid: 9
+
+[Mon Oct  5 14:45:55 2020]
+Finished job 9.
+1 of 10 steps (10%) done
+
+[Mon Oct  5 14:45:55 2020]
+rule clean_genomes:
+    input: potato_dm_v404_all_pm_un.fasta
+    output: cleaned_potato_dm_v404_all_pm_un.fasta
+    jobid: 7
+    wildcards: prefix=potato_dm_v404_all_pm_un
+
+[Mon Oct  5 14:46:22 2020]
+Finished job 7.
+2 of 10 steps (20%) done
+
+[Mon Oct  5 14:46:22 2020]
+rule clean_genomes:
+    input: S_tuberosum_Group_Phureja_mitochondrion_DM1-3-516-R44.fasta
+    output: cleaned_S_tuberosum_Group_Phureja_mitochondrion_DM1-3-516-R44.fasta
+    jobid: 6
+    wildcards: prefix=S_tuberosum_Group_Phureja_mitochondrion_DM1-3-516-R44
+
+[Mon Oct  5 14:46:24 2020]
+Finished job 6.
+3 of 10 steps (30%) done
+
+[Mon Oct  5 14:46:24 2020]
+rule clean_genomes:
+    input: S_tuberosum_Group_Phureja_chloroplast_DM1-3-516-R44.fasta
+    output: cleaned_S_tuberosum_Group_Phureja_chloroplast_DM1-3-516-R44.fasta
+    jobid: 8
+    wildcards: prefix=S_tuberosum_Group_Phureja_chloroplast_DM1-3-516-R44
+
+[Mon Oct  5 14:46:25 2020]
+Finished job 8.
+4 of 10 steps (40%) done
+
+[Mon Oct  5 14:46:25 2020]
+rule combine_genomes:
+    input: cleaned_potato_dm_v404_all_pm_un.fasta, cleaned_S_tuberosum_Group_Phureja_chloroplast_DM1-3-516-R44.fasta, cleaned_S_tuberosum_Group_Phureja_mitochondrion_DM1-3-516-R44.fasta
+    output: potato_dm_v404_all_pm_un_chloro_mito.fasta
+    jobid: 2
+
+[Mon Oct  5 14:46:32 2020]
+Finished job 2.
+5 of 10 steps (50%) done
+
+[Mon Oct  5 14:46:32 2020]
+rule create_sequence_dictionary:
+    input: potato_dm_v404_all_pm_un_chloro_mito.fasta
+    output: potato_dm_v404_all_pm_un_chloro_mito.dict
+    jobid: 5
+
+[Mon Oct  5 14:46:43 2020]
+Finished job 5.
+6 of 10 steps (60%) done
+
+[Mon Oct  5 14:46:43 2020]
+rule samtools_faidx:
+    input: potato_dm_v404_all_pm_un_chloro_mito.fasta
+    output: potato_dm_v404_all_pm_un_chloro_mito.fasta.fai
+    jobid: 3
+
+[Mon Oct  5 14:46:43 2020]
+Error in rule samtools_faidx:
+    jobid: 3
+    output: potato_dm_v404_all_pm_un_chloro_mito.fasta.fai
+
+RuleException:
+CalledProcessError in line 7 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/ref/rules/samtools_faidx.rules:
+Command ' set -euo pipefail;  samtools faidx potato_dm_v404_all_pm_un_chloro_mito.fasta ' returned non-zero exit status 134.
+  File "/Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/ref/rules/samtools_faidx.rules", line 7, in __rule_samtools_faidx
+  File "/Users/Kirk/miniconda3/envs/ximena/lib/python3.6/concurrent/futures/thread.py", line 56, in run
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/ref/.snakemake/log/2020-10-05T144516.265617.snakemake.log

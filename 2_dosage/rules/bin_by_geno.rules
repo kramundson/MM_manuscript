@@ -1,0 +1,11 @@
+rule bin_by_geno:
+    input:
+        alleles="alleles/{mother}-{inducer}-alleles.txt",
+        #snplist="{mother}-{inducer}-snplist.txt"
+    output:
+        "bin_alleles/{mother}-{inducer}-1Mb-alleles.txt"
+    params:
+        binsize=config["params"]["binsize"]
+    shell: """
+        python2 scripts/bin-by-genotypeC.py {input.alleles} {output} {params.binsize}
+    """

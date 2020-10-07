@@ -1,0 +1,20 @@
+Building DAG of jobs...
+Job counts:
+	count	jobs
+	1	all
+	43	bin_by_geno
+	43	call_alleles
+	43	parse_mpup
+	43	run_mpup
+	173
+
+[Mon Oct  5 22:52:48 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM851.bam, ../1_dosage/data/mapQ-filter/MM91.bam, ../1_dosage/data/mapQ-filter/MM93.bam, ../1_dosage/data/mapQ-filter/MM92.bam, ../1_dosage/data/mapQ-filter/MM95.bam, ../1_dosage/data/mapQ-filter/MM94.bam, ../1_dosage/data/mapQ-filter/MM90.bam, ../1_dosage/data/mapQ-filter/MM852.bam, ../1_dosage/data/mapQ-filter/MM853.bam
+    output: mpup/Y84_027-PL4-mpup.txt
+    jobid: 146
+    reason: Missing output files: mpup/Y84_027-PL4-mpup.txt
+    wildcards: mother=Y84_027, inducer=PL4
+
+RuleException in line 63 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/3_chromosome_ori/Snakefile:
+NameError: The name 'output?' is unknown in this context. Please make sure that you defined that variable. Also note that braces not used for variable access have to be escaped by repeating them, i.e. {{print $1}}

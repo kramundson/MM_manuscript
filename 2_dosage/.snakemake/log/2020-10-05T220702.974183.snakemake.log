@@ -1,0 +1,5 @@
+Building DAG of jobs...
+MissingInputException in line 31 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/3_chromosome_ori/Snakefile:
+Missing input files for rule call_alleles:
+families/LRY_3_57-IVP35-1Mb-snplist.txt
+parsed_families/LRY_3_57-IVP35-1Mb-pileup.txt

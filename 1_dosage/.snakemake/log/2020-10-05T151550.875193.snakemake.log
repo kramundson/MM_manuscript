@@ -1,5 +1,0 @@
-Building DAG of jobs...
-InputFunctionException in line 1 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/1_dosage/rules/samtools_merge.rules:
-FileNotFoundError: [Errno 2] No such file or directory: 'fofn/MM370-units.fofn'
-Wildcards:
-sample=MM370

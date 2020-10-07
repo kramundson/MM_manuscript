@@ -1,0 +1,3 @@
+TypeError in line 60 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/3_chromosome_ori/Snakefile:
+get_bams() missing 2 required positional arguments: 'tetraploid_parent' and 'hi_parent'
+  File "/Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/3_chromosome_ori/Snakefile", line 60, in <module>

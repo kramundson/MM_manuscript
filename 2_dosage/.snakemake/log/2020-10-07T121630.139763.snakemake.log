@@ -1,0 +1,10 @@
+Building DAG of jobs...
+MissingInputException in line 1 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/3_chromosome_ori/rules/run_mpup.rules:
+Missing input files for rule run_mpup:
+../1_dosage/data/mapQ-filter/MM658.bam
+../1_dosage/data/mapQ-filter/MM154.bam
+../1_dosage/data/mapQ-filter/MM151.bam
+../1_dosage/data/mapQ-filter/MM780.bam
+../1_dosage/data/mapQ-filter/MM150.bam
+../1_dosage/data/mapQ-filter/MM152.bam
+../1_dosage/data/mapQ-filter/MM153.bam

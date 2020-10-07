@@ -1,0 +1,4 @@
+
+        awk -v OFS='	' '{print $1,$2}' potato_dm_v404_all_pm_un_chloro_mito.fasta.fai > potato_dm_v404_all_pm_un_chloro_mito.genome ;
+        bedtools makewindows -g potato_dm_v404_all_pm_un_chloro_mito.genome -w 1000000 > potato_dm_v404_all_pm_un_chloro_mito1M_windows.bed
+    

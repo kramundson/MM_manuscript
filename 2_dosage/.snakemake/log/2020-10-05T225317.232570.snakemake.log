@@ -1,0 +1,1052 @@
+Building DAG of jobs...
+Job counts:
+	count	jobs
+	1	all
+	43	bin_by_geno
+	43	call_alleles
+	43	parse_mpup
+	43	run_mpup
+	173
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM618.bam
+    output: mpup/WA_104-IVP101-mpup.txt
+    jobid: 133
+    reason: Missing output files: mpup/WA_104-IVP101-mpup.txt
+    wildcards: mother=WA_104, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/WA_104-IVP101-mpup.txt ../1_dosage/data/mapQ-filter/MM618.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM56.bam, ../1_dosage/data/mapQ-filter/MM285.bam, ../1_dosage/data/mapQ-filter/MM1228.bam, ../1_dosage/data/mapQ-filter/MM57.bam, ../1_dosage/data/mapQ-filter/MM66.bam, ../1_dosage/data/mapQ-filter/MM281.bam, ../1_dosage/data/mapQ-filter/MM60.bam, ../1_dosage/data/mapQ-filter/MM73.bam, ../1_dosage/data/mapQ-filter/MM284.bam, ../1_dosage/data/mapQ-filter/MM70.bam, ../1_dosage/data/mapQ-filter/MM1226.bam, ../1_dosage/data/mapQ-filter/MM69.bam, ../1_dosage/data/mapQ-filter/MM68.bam, ../1_dosage/data/mapQ-filter/MM283.bam, ../1_dosage/data/mapQ-filter/MM59.bam, ../1_dosage/data/mapQ-filter/MM72.bam, ../1_dosage/data/mapQ-filter/MM1232.bam, ../1_dosage/data/mapQ-filter/MM62.bam, ../1_dosage/data/mapQ-filter/MM289.bam, ../1_dosage/data/mapQ-filter/MM71.bam, ../1_dosage/data/mapQ-filter/MM282.bam, ../1_dosage/data/mapQ-filter/MM288.bam, ../1_dosage/data/mapQ-filter/MM1231.bam, ../1_dosage/data/mapQ-filter/MM65.bam, ../1_dosage/data/mapQ-filter/MM58.bam, ../1_dosage/data/mapQ-filter/MM61.bam, ../1_dosage/data/mapQ-filter/MM67.bam, ../1_dosage/data/mapQ-filter/MM1225.bam, ../1_dosage/data/mapQ-filter/MM287.bam, ../1_dosage/data/mapQ-filter/MM1230.bam, ../1_dosage/data/mapQ-filter/MM1227.bam, ../1_dosage/data/mapQ-filter/MM1229.bam, ../1_dosage/data/mapQ-filter/MM63.bam, ../1_dosage/data/mapQ-filter/MM286.bam, ../1_dosage/data/mapQ-filter/MM64.bam
+    output: mpup/LR00_026-PL4-mpup.txt
+    jobid: 157
+    reason: Missing output files: mpup/LR00_026-PL4-mpup.txt
+    wildcards: mother=LR00_026, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/LR00_026-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM56.bam ../1_dosage/data/mapQ-filter/MM285.bam ../1_dosage/data/mapQ-filter/MM1228.bam ../1_dosage/data/mapQ-filter/MM57.bam ../1_dosage/data/mapQ-filter/MM66.bam ../1_dosage/data/mapQ-filter/MM281.bam ../1_dosage/data/mapQ-filter/MM60.bam ../1_dosage/data/mapQ-filter/MM73.bam ../1_dosage/data/mapQ-filter/MM284.bam ../1_dosage/data/mapQ-filter/MM70.bam ../1_dosage/data/mapQ-filter/MM1226.bam ../1_dosage/data/mapQ-filter/MM69.bam ../1_dosage/data/mapQ-filter/MM68.bam ../1_dosage/data/mapQ-filter/MM283.bam ../1_dosage/data/mapQ-filter/MM59.bam ../1_dosage/data/mapQ-filter/MM72.bam ../1_dosage/data/mapQ-filter/MM1232.bam ../1_dosage/data/mapQ-filter/MM62.bam ../1_dosage/data/mapQ-filter/MM289.bam ../1_dosage/data/mapQ-filter/MM71.bam ../1_dosage/data/mapQ-filter/MM282.bam ../1_dosage/data/mapQ-filter/MM288.bam ../1_dosage/data/mapQ-filter/MM1231.bam ../1_dosage/data/mapQ-filter/MM65.bam ../1_dosage/data/mapQ-filter/MM58.bam ../1_dosage/data/mapQ-filter/MM61.bam ../1_dosage/data/mapQ-filter/MM67.bam ../1_dosage/data/mapQ-filter/MM1225.bam ../1_dosage/data/mapQ-filter/MM287.bam ../1_dosage/data/mapQ-filter/MM1230.bam ../1_dosage/data/mapQ-filter/MM1227.bam ../1_dosage/data/mapQ-filter/MM1229.bam ../1_dosage/data/mapQ-filter/MM63.bam ../1_dosage/data/mapQ-filter/MM286.bam ../1_dosage/data/mapQ-filter/MM64.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM1155.bam, ../1_dosage/data/mapQ-filter/MM1150.bam, ../1_dosage/data/mapQ-filter/MM952.bam, ../1_dosage/data/mapQ-filter/MM955.bam, ../1_dosage/data/mapQ-filter/MM628.bam, ../1_dosage/data/mapQ-filter/MM51.bam, ../1_dosage/data/mapQ-filter/MM1145.bam, ../1_dosage/data/mapQ-filter/MM943.bam, ../1_dosage/data/mapQ-filter/MM950.bam, ../1_dosage/data/mapQ-filter/MM1163.bam, ../1_dosage/data/mapQ-filter/MM55.bam, ../1_dosage/data/mapQ-filter/MM1135.bam, ../1_dosage/data/mapQ-filter/MM946.bam, ../1_dosage/data/mapQ-filter/MM46.bam, ../1_dosage/data/mapQ-filter/MM954.bam, ../1_dosage/data/mapQ-filter/MM42.bam, ../1_dosage/data/mapQ-filter/MM1140.bam, ../1_dosage/data/mapQ-filter/MM1162.bam, ../1_dosage/data/mapQ-filter/MM630.bam, ../1_dosage/data/mapQ-filter/MM1143.bam, ../1_dosage/data/mapQ-filter/MM1149.bam, ../1_dosage/data/mapQ-filter/MM54.bam, ../1_dosage/data/mapQ-filter/MM44.bam, ../1_dosage/data/mapQ-filter/MM953.bam, ../1_dosage/data/mapQ-filter/MM45.bam, ../1_dosage/data/mapQ-filter/MM626.bam, ../1_dosage/data/mapQ-filter/MM1139.bam, ../1_dosage/data/mapQ-filter/MM1146.bam, ../1_dosage/data/mapQ-filter/MM41.bam, ../1_dosage/data/mapQ-filter/MM948.bam, ../1_dosage/data/mapQ-filter/MM956.bam, ../1_dosage/data/mapQ-filter/MM1148.bam, ../1_dosage/data/mapQ-filter/MM624.bam, ../1_dosage/data/mapQ-filter/MM53.bam, ../1_dosage/data/mapQ-filter/MM627.bam, ../1_dosage/data/mapQ-filter/MM1134.bam, ../1_dosage/data/mapQ-filter/MM944.bam, ../1_dosage/data/mapQ-filter/MM52.bam, ../1_dosage/data/mapQ-filter/MM50.bam, ../1_dosage/data/mapQ-filter/MM623.bam, ../1_dosage/data/mapQ-filter/MM945.bam, ../1_dosage/data/mapQ-filter/MM38.bam, ../1_dosage/data/mapQ-filter/MM1153.bam, ../1_dosage/data/mapQ-filter/MM1159.bam, ../1_dosage/data/mapQ-filter/MM1130.bam, ../1_dosage/data/mapQ-filter/MM1158.bam, ../1_dosage/data/mapQ-filter/MM951.bam, ../1_dosage/data/mapQ-filter/MM39.bam, ../1_dosage/data/mapQ-filter/MM40.bam, ../1_dosage/data/mapQ-filter/MM48.bam, ../1_dosage/data/mapQ-filter/MM1138.bam, ../1_dosage/data/mapQ-filter/MM1144.bam, ../1_dosage/data/mapQ-filter/MM1164.bam, ../1_dosage/data/mapQ-filter/MM1132.bam, ../1_dosage/data/mapQ-filter/MM1154.bam, ../1_dosage/data/mapQ-filter/MM1137.bam, ../1_dosage/data/mapQ-filter/MM1161.bam, ../1_dosage/data/mapQ-filter/MM629.bam, ../1_dosage/data/mapQ-filter/MM1142.bam, ../1_dosage/data/mapQ-filter/MM1136.bam, ../1_dosage/data/mapQ-filter/MM37.bam, ../1_dosage/data/mapQ-filter/MM47.bam, ../1_dosage/data/mapQ-filter/MM1131.bam, ../1_dosage/data/mapQ-filter/MM1151.bam, ../1_dosage/data/mapQ-filter/MM1156.bam, ../1_dosage/data/mapQ-filter/MM49.bam, ../1_dosage/data/mapQ-filter/MM43.bam, ../1_dosage/data/mapQ-filter/MM1152.bam, ../1_dosage/data/mapQ-filter/MM947.bam, ../1_dosage/data/mapQ-filter/MM1160.bam, ../1_dosage/data/mapQ-filter/MM1165.bam, ../1_dosage/data/mapQ-filter/MM625.bam, ../1_dosage/data/mapQ-filter/MM1133.bam, ../1_dosage/data/mapQ-filter/MM1157.bam, ../1_dosage/data/mapQ-filter/MM1147.bam, ../1_dosage/data/mapQ-filter/MM949.bam, ../1_dosage/data/mapQ-filter/MM1141.bam
+    output: mpup/LR00_014-IVP35-mpup.txt
+    jobid: 138
+    reason: Missing output files: mpup/LR00_014-IVP35-mpup.txt
+    wildcards: mother=LR00_014, inducer=IVP35
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/LR00_014-IVP35-mpup.txt ../1_dosage/data/mapQ-filter/MM1155.bam ../1_dosage/data/mapQ-filter/MM1150.bam ../1_dosage/data/mapQ-filter/MM952.bam ../1_dosage/data/mapQ-filter/MM955.bam ../1_dosage/data/mapQ-filter/MM628.bam ../1_dosage/data/mapQ-filter/MM51.bam ../1_dosage/data/mapQ-filter/MM1145.bam ../1_dosage/data/mapQ-filter/MM943.bam ../1_dosage/data/mapQ-filter/MM950.bam ../1_dosage/data/mapQ-filter/MM1163.bam ../1_dosage/data/mapQ-filter/MM55.bam ../1_dosage/data/mapQ-filter/MM1135.bam ../1_dosage/data/mapQ-filter/MM946.bam ../1_dosage/data/mapQ-filter/MM46.bam ../1_dosage/data/mapQ-filter/MM954.bam ../1_dosage/data/mapQ-filter/MM42.bam ../1_dosage/data/mapQ-filter/MM1140.bam ../1_dosage/data/mapQ-filter/MM1162.bam ../1_dosage/data/mapQ-filter/MM630.bam ../1_dosage/data/mapQ-filter/MM1143.bam ../1_dosage/data/mapQ-filter/MM1149.bam ../1_dosage/data/mapQ-filter/MM54.bam ../1_dosage/data/mapQ-filter/MM44.bam ../1_dosage/data/mapQ-filter/MM953.bam ../1_dosage/data/mapQ-filter/MM45.bam ../1_dosage/data/mapQ-filter/MM626.bam ../1_dosage/data/mapQ-filter/MM1139.bam ../1_dosage/data/mapQ-filter/MM1146.bam ../1_dosage/data/mapQ-filter/MM41.bam ../1_dosage/data/mapQ-filter/MM948.bam ../1_dosage/data/mapQ-filter/MM956.bam ../1_dosage/data/mapQ-filter/MM1148.bam ../1_dosage/data/mapQ-filter/MM624.bam ../1_dosage/data/mapQ-filter/MM53.bam ../1_dosage/data/mapQ-filter/MM627.bam ../1_dosage/data/mapQ-filter/MM1134.bam ../1_dosage/data/mapQ-filter/MM944.bam ../1_dosage/data/mapQ-filter/MM52.bam ../1_dosage/data/mapQ-filter/MM50.bam ../1_dosage/data/mapQ-filter/MM623.bam ../1_dosage/data/mapQ-filter/MM945.bam ../1_dosage/data/mapQ-filter/MM38.bam ../1_dosage/data/mapQ-filter/MM1153.bam ../1_dosage/data/mapQ-filter/MM1159.bam ../1_dosage/data/mapQ-filter/MM1130.bam ../1_dosage/data/mapQ-filter/MM1158.bam ../1_dosage/data/mapQ-filter/MM951.bam ../1_dosage/data/mapQ-filter/MM39.bam ../1_dosage/data/mapQ-filter/MM40.bam ../1_dosage/data/mapQ-filter/MM48.bam ../1_dosage/data/mapQ-filter/MM1138.bam ../1_dosage/data/mapQ-filter/MM1144.bam ../1_dosage/data/mapQ-filter/MM1164.bam ../1_dosage/data/mapQ-filter/MM1132.bam ../1_dosage/data/mapQ-filter/MM1154.bam ../1_dosage/data/mapQ-filter/MM1137.bam ../1_dosage/data/mapQ-filter/MM1161.bam ../1_dosage/data/mapQ-filter/MM629.bam ../1_dosage/data/mapQ-filter/MM1142.bam ../1_dosage/data/mapQ-filter/MM1136.bam ../1_dosage/data/mapQ-filter/MM37.bam ../1_dosage/data/mapQ-filter/MM47.bam ../1_dosage/data/mapQ-filter/MM1131.bam ../1_dosage/data/mapQ-filter/MM1151.bam ../1_dosage/data/mapQ-filter/MM1156.bam ../1_dosage/data/mapQ-filter/MM49.bam ../1_dosage/data/mapQ-filter/MM43.bam ../1_dosage/data/mapQ-filter/MM1152.bam ../1_dosage/data/mapQ-filter/MM947.bam ../1_dosage/data/mapQ-filter/MM1160.bam ../1_dosage/data/mapQ-filter/MM1165.bam ../1_dosage/data/mapQ-filter/MM625.bam ../1_dosage/data/mapQ-filter/MM1133.bam ../1_dosage/data/mapQ-filter/MM1157.bam ../1_dosage/data/mapQ-filter/MM1147.bam ../1_dosage/data/mapQ-filter/MM949.bam ../1_dosage/data/mapQ-filter/MM1141.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM1167.bam, ../1_dosage/data/mapQ-filter/MM1166.bam
+    output: mpup/LR00_022-IVP35-mpup.txt
+    jobid: 166
+    reason: Missing output files: mpup/LR00_022-IVP35-mpup.txt
+    wildcards: mother=LR00_022, inducer=IVP35
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/LR00_022-IVP35-mpup.txt ../1_dosage/data/mapQ-filter/MM1167.bam ../1_dosage/data/mapQ-filter/MM1166.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM700.bam, ../1_dosage/data/mapQ-filter/MM691.bam, ../1_dosage/data/mapQ-filter/MM704.bam, ../1_dosage/data/mapQ-filter/MM692.bam, ../1_dosage/data/mapQ-filter/MM1192.bam, ../1_dosage/data/mapQ-filter/MM699.bam, ../1_dosage/data/mapQ-filter/MM128.bam, ../1_dosage/data/mapQ-filter/MM129.bam, ../1_dosage/data/mapQ-filter/MM695.bam, ../1_dosage/data/mapQ-filter/MM1195.bam, ../1_dosage/data/mapQ-filter/MM698.bam, ../1_dosage/data/mapQ-filter/MM131.bam, ../1_dosage/data/mapQ-filter/MM706.bam, ../1_dosage/data/mapQ-filter/MM709.bam, ../1_dosage/data/mapQ-filter/MM130.bam, ../1_dosage/data/mapQ-filter/MM1194.bam, ../1_dosage/data/mapQ-filter/MM703.bam, ../1_dosage/data/mapQ-filter/MM708.bam, ../1_dosage/data/mapQ-filter/MM694.bam, ../1_dosage/data/mapQ-filter/MM690.bam, ../1_dosage/data/mapQ-filter/MM689.bam, ../1_dosage/data/mapQ-filter/MM127.bam, ../1_dosage/data/mapQ-filter/MM697.bam, ../1_dosage/data/mapQ-filter/MM633.bam, ../1_dosage/data/mapQ-filter/MM707.bam, ../1_dosage/data/mapQ-filter/MM1193.bam, ../1_dosage/data/mapQ-filter/MM701.bam, ../1_dosage/data/mapQ-filter/MM705.bam, ../1_dosage/data/mapQ-filter/MM696.bam, ../1_dosage/data/mapQ-filter/MM693.bam, ../1_dosage/data/mapQ-filter/MM702.bam
+    output: mpup/93_003-IVP35-mpup.txt
+    jobid: 165
+    reason: Missing output files: mpup/93_003-IVP35-mpup.txt
+    wildcards: mother=93_003, inducer=IVP35
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/93_003-IVP35-mpup.txt ../1_dosage/data/mapQ-filter/MM700.bam ../1_dosage/data/mapQ-filter/MM691.bam ../1_dosage/data/mapQ-filter/MM704.bam ../1_dosage/data/mapQ-filter/MM692.bam ../1_dosage/data/mapQ-filter/MM1192.bam ../1_dosage/data/mapQ-filter/MM699.bam ../1_dosage/data/mapQ-filter/MM128.bam ../1_dosage/data/mapQ-filter/MM129.bam ../1_dosage/data/mapQ-filter/MM695.bam ../1_dosage/data/mapQ-filter/MM1195.bam ../1_dosage/data/mapQ-filter/MM698.bam ../1_dosage/data/mapQ-filter/MM131.bam ../1_dosage/data/mapQ-filter/MM706.bam ../1_dosage/data/mapQ-filter/MM709.bam ../1_dosage/data/mapQ-filter/MM130.bam ../1_dosage/data/mapQ-filter/MM1194.bam ../1_dosage/data/mapQ-filter/MM703.bam ../1_dosage/data/mapQ-filter/MM708.bam ../1_dosage/data/mapQ-filter/MM694.bam ../1_dosage/data/mapQ-filter/MM690.bam ../1_dosage/data/mapQ-filter/MM689.bam ../1_dosage/data/mapQ-filter/MM127.bam ../1_dosage/data/mapQ-filter/MM697.bam ../1_dosage/data/mapQ-filter/MM633.bam ../1_dosage/data/mapQ-filter/MM707.bam ../1_dosage/data/mapQ-filter/MM1193.bam ../1_dosage/data/mapQ-filter/MM701.bam ../1_dosage/data/mapQ-filter/MM705.bam ../1_dosage/data/mapQ-filter/MM696.bam ../1_dosage/data/mapQ-filter/MM693.bam ../1_dosage/data/mapQ-filter/MM702.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta
+    output: mpup/C90_170-PL4-mpup.txt
+    jobid: 130
+    reason: Missing output files: mpup/C90_170-PL4-mpup.txt
+    wildcards: mother=C90_170, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/C90_170-PL4-mpup.txt 
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta
+    output: mpup/Atlantic-IVP101-mpup.txt
+    jobid: 171
+    reason: Missing output files: mpup/Atlantic-IVP101-mpup.txt
+    wildcards: mother=Atlantic, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/Atlantic-IVP101-mpup.txt 
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM635.bam, ../1_dosage/data/mapQ-filter/MM711.bam, ../1_dosage/data/mapQ-filter/MM712.bam, ../1_dosage/data/mapQ-filter/MM710.bam, ../1_dosage/data/mapQ-filter/MM634.bam, ../1_dosage/data/mapQ-filter/MM713.bam
+    output: mpup/458-IVP35-mpup.txt
+    jobid: 143
+    reason: Missing output files: mpup/458-IVP35-mpup.txt
+    wildcards: mother=458, inducer=IVP35
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/458-IVP35-mpup.txt ../1_dosage/data/mapQ-filter/MM635.bam ../1_dosage/data/mapQ-filter/MM711.bam ../1_dosage/data/mapQ-filter/MM712.bam ../1_dosage/data/mapQ-filter/MM710.bam ../1_dosage/data/mapQ-filter/MM634.bam ../1_dosage/data/mapQ-filter/MM713.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM481.bam, ../1_dosage/data/mapQ-filter/MM483.bam, ../1_dosage/data/mapQ-filter/MM578.bam, ../1_dosage/data/mapQ-filter/MM493.bam, ../1_dosage/data/mapQ-filter/MM486.bam, ../1_dosage/data/mapQ-filter/MM487.bam, ../1_dosage/data/mapQ-filter/MM489.bam, ../1_dosage/data/mapQ-filter/MM492.bam, ../1_dosage/data/mapQ-filter/MM485.bam, ../1_dosage/data/mapQ-filter/MM484.bam, ../1_dosage/data/mapQ-filter/MM495.bam, ../1_dosage/data/mapQ-filter/MM491.bam, ../1_dosage/data/mapQ-filter/MM494.bam, ../1_dosage/data/mapQ-filter/MM488.bam, ../1_dosage/data/mapQ-filter/MM482.bam, ../1_dosage/data/mapQ-filter/MM490.bam
+    output: mpup/C01_020-PL4-mpup.txt
+    jobid: 169
+    reason: Missing output files: mpup/C01_020-PL4-mpup.txt
+    wildcards: mother=C01_020, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/C01_020-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM481.bam ../1_dosage/data/mapQ-filter/MM483.bam ../1_dosage/data/mapQ-filter/MM578.bam ../1_dosage/data/mapQ-filter/MM493.bam ../1_dosage/data/mapQ-filter/MM486.bam ../1_dosage/data/mapQ-filter/MM487.bam ../1_dosage/data/mapQ-filter/MM489.bam ../1_dosage/data/mapQ-filter/MM492.bam ../1_dosage/data/mapQ-filter/MM485.bam ../1_dosage/data/mapQ-filter/MM484.bam ../1_dosage/data/mapQ-filter/MM495.bam ../1_dosage/data/mapQ-filter/MM491.bam ../1_dosage/data/mapQ-filter/MM494.bam ../1_dosage/data/mapQ-filter/MM488.bam ../1_dosage/data/mapQ-filter/MM482.bam ../1_dosage/data/mapQ-filter/MM490.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM894.bam, ../1_dosage/data/mapQ-filter/MM382.bam, ../1_dosage/data/mapQ-filter/MM400.bam, ../1_dosage/data/mapQ-filter/MM338.bam, ../1_dosage/data/mapQ-filter/MM311.bam, ../1_dosage/data/mapQ-filter/MM418.bam, ../1_dosage/data/mapQ-filter/MM1021.bam, ../1_dosage/data/mapQ-filter/MM1017.bam, ../1_dosage/data/mapQ-filter/MM421.bam, ../1_dosage/data/mapQ-filter/MM902.bam, ../1_dosage/data/mapQ-filter/MM335.bam, ../1_dosage/data/mapQ-filter/MM334.bam, ../1_dosage/data/mapQ-filter/MM327.bam, ../1_dosage/data/mapQ-filter/MM906.bam, ../1_dosage/data/mapQ-filter/MM1018.bam, ../1_dosage/data/mapQ-filter/MM883.bam, ../1_dosage/data/mapQ-filter/MM1007.bam, ../1_dosage/data/mapQ-filter/MM1034.bam, ../1_dosage/data/mapQ-filter/MM399.bam, ../1_dosage/data/mapQ-filter/MM387.bam, ../1_dosage/data/mapQ-filter/MM379.bam, ../1_dosage/data/mapQ-filter/MM361.bam, ../1_dosage/data/mapQ-filter/MM1023.bam, ../1_dosage/data/mapQ-filter/MM424.bam, ../1_dosage/data/mapQ-filter/MM312.bam, ../1_dosage/data/mapQ-filter/MM397.bam, ../1_dosage/data/mapQ-filter/MM420.bam, ../1_dosage/data/mapQ-filter/MM888.bam, ../1_dosage/data/mapQ-filter/MM337.bam, ../1_dosage/data/mapQ-filter/MM415.bam, ../1_dosage/data/mapQ-filter/MM880.bam, ../1_dosage/data/mapQ-filter/MM1020.bam, ../1_dosage/data/mapQ-filter/MM901.bam, ../1_dosage/data/mapQ-filter/MM1005.bam, ../1_dosage/data/mapQ-filter/MM339.bam, ../1_dosage/data/mapQ-filter/MM383.bam, ../1_dosage/data/mapQ-filter/MM310.bam, ../1_dosage/data/mapQ-filter/MM896.bam, ../1_dosage/data/mapQ-filter/MM309.bam, ../1_dosage/data/mapQ-filter/MM889.bam, ../1_dosage/data/mapQ-filter/MM891.bam, ../1_dosage/data/mapQ-filter/MM892.bam, ../1_dosage/data/mapQ-filter/MM345.bam, ../1_dosage/data/mapQ-filter/MM898.bam, ../1_dosage/data/mapQ-filter/MM326.bam, ../1_dosage/data/mapQ-filter/MM329.bam, ../1_dosage/data/mapQ-filter/MM887.bam, ../1_dosage/data/mapQ-filter/MM393.bam, ../1_dosage/data/mapQ-filter/MM319.bam, ../1_dosage/data/mapQ-filter/MM367.bam, ../1_dosage/data/mapQ-filter/MM386.bam, ../1_dosage/data/mapQ-filter/MM332.bam, ../1_dosage/data/mapQ-filter/MM401.bam, ../1_dosage/data/mapQ-filter/MM1009.bam, ../1_dosage/data/mapQ-filter/MM331.bam, ../1_dosage/data/mapQ-filter/MM316.bam, ../1_dosage/data/mapQ-filter/MM359.bam, ../1_dosage/data/mapQ-filter/MM1010.bam, ../1_dosage/data/mapQ-filter/MM376.bam, ../1_dosage/data/mapQ-filter/MM364.bam, ../1_dosage/data/mapQ-filter/MM324.bam, ../1_dosage/data/mapQ-filter/MM355.bam, ../1_dosage/data/mapQ-filter/MM403.bam, ../1_dosage/data/mapQ-filter/MM410.bam, ../1_dosage/data/mapQ-filter/MM341.bam, ../1_dosage/data/mapQ-filter/MM340.bam, ../1_dosage/data/mapQ-filter/MM363.bam, ../1_dosage/data/mapQ-filter/MM1024.bam, ../1_dosage/data/mapQ-filter/MM1026.bam, ../1_dosage/data/mapQ-filter/MM1032.bam, ../1_dosage/data/mapQ-filter/MM394.bam, ../1_dosage/data/mapQ-filter/MM890.bam, ../1_dosage/data/mapQ-filter/MM362.bam, ../1_dosage/data/mapQ-filter/MM392.bam, ../1_dosage/data/mapQ-filter/MM350.bam, ../1_dosage/data/mapQ-filter/MM388.bam, ../1_dosage/data/mapQ-filter/MM314.bam, ../1_dosage/data/mapQ-filter/MM426.bam, ../1_dosage/data/mapQ-filter/MM317.bam, ../1_dosage/data/mapQ-filter/MM409.bam, ../1_dosage/data/mapQ-filter/MM881.bam, ../1_dosage/data/mapQ-filter/MM904.bam, ../1_dosage/data/mapQ-filter/MM1030.bam, ../1_dosage/data/mapQ-filter/MM396.bam, ../1_dosage/data/mapQ-filter/MM349.bam, ../1_dosage/data/mapQ-filter/MM315.bam, ../1_dosage/data/mapQ-filter/MM416.bam, ../1_dosage/data/mapQ-filter/MM357.bam, ../1_dosage/data/mapQ-filter/MM380.bam, ../1_dosage/data/mapQ-filter/MM422.bam, ../1_dosage/data/mapQ-filter/MM333.bam, ../1_dosage/data/mapQ-filter/MM372.bam, ../1_dosage/data/mapQ-filter/MM366.bam, ../1_dosage/data/mapQ-filter/MM1019.bam, ../1_dosage/data/mapQ-filter/MM358.bam, ../1_dosage/data/mapQ-filter/MM356.bam, ../1_dosage/data/mapQ-filter/MM879.bam, ../1_dosage/data/mapQ-filter/MM408.bam, ../1_dosage/data/mapQ-filter/MM371.bam, ../1_dosage/data/mapQ-filter/MM373.bam, ../1_dosage/data/mapQ-filter/MM877.bam, ../1_dosage/data/mapQ-filter/MM1028.bam, ../1_dosage/data/mapQ-filter/MM375.bam, ../1_dosage/data/mapQ-filter/MM893.bam, ../1_dosage/data/mapQ-filter/MM313.bam, ../1_dosage/data/mapQ-filter/MM398.bam, ../1_dosage/data/mapQ-filter/MM1025.bam, ../1_dosage/data/mapQ-filter/MM344.bam, ../1_dosage/data/mapQ-filter/MM413.bam, ../1_dosage/data/mapQ-filter/MM905.bam, ../1_dosage/data/mapQ-filter/MM908.bam, ../1_dosage/data/mapQ-filter/MM1027.bam, ../1_dosage/data/mapQ-filter/MM411.bam, ../1_dosage/data/mapQ-filter/MM370.bam, ../1_dosage/data/mapQ-filter/MM395.bam, ../1_dosage/data/mapQ-filter/MM402.bam, ../1_dosage/data/mapQ-filter/MM374.bam, ../1_dosage/data/mapQ-filter/MM903.bam, ../1_dosage/data/mapQ-filter/MM899.bam, ../1_dosage/data/mapQ-filter/MM1022.bam, ../1_dosage/data/mapQ-filter/MM365.bam, ../1_dosage/data/mapQ-filter/MM384.bam, ../1_dosage/data/mapQ-filter/MM405.bam, ../1_dosage/data/mapQ-filter/MM1031.bam, ../1_dosage/data/mapQ-filter/MM412.bam, ../1_dosage/data/mapQ-filter/MM876.bam, ../1_dosage/data/mapQ-filter/MM407.bam, ../1_dosage/data/mapQ-filter/MM1015.bam, ../1_dosage/data/mapQ-filter/MM406.bam, ../1_dosage/data/mapQ-filter/MM391.bam, ../1_dosage/data/mapQ-filter/MM351.bam, ../1_dosage/data/mapQ-filter/MM425.bam, ../1_dosage/data/mapQ-filter/MM318.bam, ../1_dosage/data/mapQ-filter/MM320.bam, ../1_dosage/data/mapQ-filter/MM897.bam, ../1_dosage/data/mapQ-filter/MM419.bam, ../1_dosage/data/mapQ-filter/MM325.bam, ../1_dosage/data/mapQ-filter/MM900.bam, ../1_dosage/data/mapQ-filter/MM360.bam, ../1_dosage/data/mapQ-filter/MM1014.bam, ../1_dosage/data/mapQ-filter/MM323.bam, ../1_dosage/data/mapQ-filter/MM404.bam, ../1_dosage/data/mapQ-filter/MM354.bam, ../1_dosage/data/mapQ-filter/MM389.bam, ../1_dosage/data/mapQ-filter/MM882.bam, ../1_dosage/data/mapQ-filter/MM381.bam, ../1_dosage/data/mapQ-filter/MM321.bam, ../1_dosage/data/mapQ-filter/MM378.bam, ../1_dosage/data/mapQ-filter/MM1008.bam, ../1_dosage/data/mapQ-filter/MM348.bam, ../1_dosage/data/mapQ-filter/MM385.bam, ../1_dosage/data/mapQ-filter/MM377.bam, ../1_dosage/data/mapQ-filter/MM885.bam, ../1_dosage/data/mapQ-filter/MM1029.bam, ../1_dosage/data/mapQ-filter/MM414.bam, ../1_dosage/data/mapQ-filter/MM907.bam, ../1_dosage/data/mapQ-filter/MM895.bam, ../1_dosage/data/mapQ-filter/MM369.bam, ../1_dosage/data/mapQ-filter/MM353.bam, ../1_dosage/data/mapQ-filter/MM423.bam, ../1_dosage/data/mapQ-filter/MM347.bam, ../1_dosage/data/mapQ-filter/MM1035.bam, ../1_dosage/data/mapQ-filter/MM343.bam, ../1_dosage/data/mapQ-filter/MM1011.bam, ../1_dosage/data/mapQ-filter/MM878.bam, ../1_dosage/data/mapQ-filter/MM336.bam, ../1_dosage/data/mapQ-filter/MM1006.bam, ../1_dosage/data/mapQ-filter/MM330.bam, ../1_dosage/data/mapQ-filter/MM328.bam, ../1_dosage/data/mapQ-filter/MM886.bam, ../1_dosage/data/mapQ-filter/MM352.bam, ../1_dosage/data/mapQ-filter/MM342.bam, ../1_dosage/data/mapQ-filter/MM368.bam, ../1_dosage/data/mapQ-filter/MM390.bam, ../1_dosage/data/mapQ-filter/MM417.bam, ../1_dosage/data/mapQ-filter/MM346.bam, ../1_dosage/data/mapQ-filter/MM884.bam, ../1_dosage/data/mapQ-filter/MM577.bam, ../1_dosage/data/mapQ-filter/MM1016.bam, ../1_dosage/data/mapQ-filter/MM322.bam, ../1_dosage/data/mapQ-filter/MM1033.bam
+    output: mpup/C93_154-PL4-mpup.txt
+    jobid: 147
+    reason: Missing output files: mpup/C93_154-PL4-mpup.txt
+    wildcards: mother=C93_154, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/C93_154-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM894.bam ../1_dosage/data/mapQ-filter/MM382.bam ../1_dosage/data/mapQ-filter/MM400.bam ../1_dosage/data/mapQ-filter/MM338.bam ../1_dosage/data/mapQ-filter/MM311.bam ../1_dosage/data/mapQ-filter/MM418.bam ../1_dosage/data/mapQ-filter/MM1021.bam ../1_dosage/data/mapQ-filter/MM1017.bam ../1_dosage/data/mapQ-filter/MM421.bam ../1_dosage/data/mapQ-filter/MM902.bam ../1_dosage/data/mapQ-filter/MM335.bam ../1_dosage/data/mapQ-filter/MM334.bam ../1_dosage/data/mapQ-filter/MM327.bam ../1_dosage/data/mapQ-filter/MM906.bam ../1_dosage/data/mapQ-filter/MM1018.bam ../1_dosage/data/mapQ-filter/MM883.bam ../1_dosage/data/mapQ-filter/MM1007.bam ../1_dosage/data/mapQ-filter/MM1034.bam ../1_dosage/data/mapQ-filter/MM399.bam ../1_dosage/data/mapQ-filter/MM387.bam ../1_dosage/data/mapQ-filter/MM379.bam ../1_dosage/data/mapQ-filter/MM361.bam ../1_dosage/data/mapQ-filter/MM1023.bam ../1_dosage/data/mapQ-filter/MM424.bam ../1_dosage/data/mapQ-filter/MM312.bam ../1_dosage/data/mapQ-filter/MM397.bam ../1_dosage/data/mapQ-filter/MM420.bam ../1_dosage/data/mapQ-filter/MM888.bam ../1_dosage/data/mapQ-filter/MM337.bam ../1_dosage/data/mapQ-filter/MM415.bam ../1_dosage/data/mapQ-filter/MM880.bam ../1_dosage/data/mapQ-filter/MM1020.bam ../1_dosage/data/mapQ-filter/MM901.bam ../1_dosage/data/mapQ-filter/MM1005.bam ../1_dosage/data/mapQ-filter/MM339.bam ../1_dosage/data/mapQ-filter/MM383.bam ../1_dosage/data/mapQ-filter/MM310.bam ../1_dosage/data/mapQ-filter/MM896.bam ../1_dosage/data/mapQ-filter/MM309.bam ../1_dosage/data/mapQ-filter/MM889.bam ../1_dosage/data/mapQ-filter/MM891.bam ../1_dosage/data/mapQ-filter/MM892.bam ../1_dosage/data/mapQ-filter/MM345.bam ../1_dosage/data/mapQ-filter/MM898.bam ../1_dosage/data/mapQ-filter/MM326.bam ../1_dosage/data/mapQ-filter/MM329.bam ../1_dosage/data/mapQ-filter/MM887.bam ../1_dosage/data/mapQ-filter/MM393.bam ../1_dosage/data/mapQ-filter/MM319.bam ../1_dosage/data/mapQ-filter/MM367.bam ../1_dosage/data/mapQ-filter/MM386.bam ../1_dosage/data/mapQ-filter/MM332.bam ../1_dosage/data/mapQ-filter/MM401.bam ../1_dosage/data/mapQ-filter/MM1009.bam ../1_dosage/data/mapQ-filter/MM331.bam ../1_dosage/data/mapQ-filter/MM316.bam ../1_dosage/data/mapQ-filter/MM359.bam ../1_dosage/data/mapQ-filter/MM1010.bam ../1_dosage/data/mapQ-filter/MM376.bam ../1_dosage/data/mapQ-filter/MM364.bam ../1_dosage/data/mapQ-filter/MM324.bam ../1_dosage/data/mapQ-filter/MM355.bam ../1_dosage/data/mapQ-filter/MM403.bam ../1_dosage/data/mapQ-filter/MM410.bam ../1_dosage/data/mapQ-filter/MM341.bam ../1_dosage/data/mapQ-filter/MM340.bam ../1_dosage/data/mapQ-filter/MM363.bam ../1_dosage/data/mapQ-filter/MM1024.bam ../1_dosage/data/mapQ-filter/MM1026.bam ../1_dosage/data/mapQ-filter/MM1032.bam ../1_dosage/data/mapQ-filter/MM394.bam ../1_dosage/data/mapQ-filter/MM890.bam ../1_dosage/data/mapQ-filter/MM362.bam ../1_dosage/data/mapQ-filter/MM392.bam ../1_dosage/data/mapQ-filter/MM350.bam ../1_dosage/data/mapQ-filter/MM388.bam ../1_dosage/data/mapQ-filter/MM314.bam ../1_dosage/data/mapQ-filter/MM426.bam ../1_dosage/data/mapQ-filter/MM317.bam ../1_dosage/data/mapQ-filter/MM409.bam ../1_dosage/data/mapQ-filter/MM881.bam ../1_dosage/data/mapQ-filter/MM904.bam ../1_dosage/data/mapQ-filter/MM1030.bam ../1_dosage/data/mapQ-filter/MM396.bam ../1_dosage/data/mapQ-filter/MM349.bam ../1_dosage/data/mapQ-filter/MM315.bam ../1_dosage/data/mapQ-filter/MM416.bam ../1_dosage/data/mapQ-filter/MM357.bam ../1_dosage/data/mapQ-filter/MM380.bam ../1_dosage/data/mapQ-filter/MM422.bam ../1_dosage/data/mapQ-filter/MM333.bam ../1_dosage/data/mapQ-filter/MM372.bam ../1_dosage/data/mapQ-filter/MM366.bam ../1_dosage/data/mapQ-filter/MM1019.bam ../1_dosage/data/mapQ-filter/MM358.bam ../1_dosage/data/mapQ-filter/MM356.bam ../1_dosage/data/mapQ-filter/MM879.bam ../1_dosage/data/mapQ-filter/MM408.bam ../1_dosage/data/mapQ-filter/MM371.bam ../1_dosage/data/mapQ-filter/MM373.bam ../1_dosage/data/mapQ-filter/MM877.bam ../1_dosage/data/mapQ-filter/MM1028.bam ../1_dosage/data/mapQ-filter/MM375.bam ../1_dosage/data/mapQ-filter/MM893.bam ../1_dosage/data/mapQ-filter/MM313.bam ../1_dosage/data/mapQ-filter/MM398.bam ../1_dosage/data/mapQ-filter/MM1025.bam ../1_dosage/data/mapQ-filter/MM344.bam ../1_dosage/data/mapQ-filter/MM413.bam ../1_dosage/data/mapQ-filter/MM905.bam ../1_dosage/data/mapQ-filter/MM908.bam ../1_dosage/data/mapQ-filter/MM1027.bam ../1_dosage/data/mapQ-filter/MM411.bam ../1_dosage/data/mapQ-filter/MM370.bam ../1_dosage/data/mapQ-filter/MM395.bam ../1_dosage/data/mapQ-filter/MM402.bam ../1_dosage/data/mapQ-filter/MM374.bam ../1_dosage/data/mapQ-filter/MM903.bam ../1_dosage/data/mapQ-filter/MM899.bam ../1_dosage/data/mapQ-filter/MM1022.bam ../1_dosage/data/mapQ-filter/MM365.bam ../1_dosage/data/mapQ-filter/MM384.bam ../1_dosage/data/mapQ-filter/MM405.bam ../1_dosage/data/mapQ-filter/MM1031.bam ../1_dosage/data/mapQ-filter/MM412.bam ../1_dosage/data/mapQ-filter/MM876.bam ../1_dosage/data/mapQ-filter/MM407.bam ../1_dosage/data/mapQ-filter/MM1015.bam ../1_dosage/data/mapQ-filter/MM406.bam ../1_dosage/data/mapQ-filter/MM391.bam ../1_dosage/data/mapQ-filter/MM351.bam ../1_dosage/data/mapQ-filter/MM425.bam ../1_dosage/data/mapQ-filter/MM318.bam ../1_dosage/data/mapQ-filter/MM320.bam ../1_dosage/data/mapQ-filter/MM897.bam ../1_dosage/data/mapQ-filter/MM419.bam ../1_dosage/data/mapQ-filter/MM325.bam ../1_dosage/data/mapQ-filter/MM900.bam ../1_dosage/data/mapQ-filter/MM360.bam ../1_dosage/data/mapQ-filter/MM1014.bam ../1_dosage/data/mapQ-filter/MM323.bam ../1_dosage/data/mapQ-filter/MM404.bam ../1_dosage/data/mapQ-filter/MM354.bam ../1_dosage/data/mapQ-filter/MM389.bam ../1_dosage/data/mapQ-filter/MM882.bam ../1_dosage/data/mapQ-filter/MM381.bam ../1_dosage/data/mapQ-filter/MM321.bam ../1_dosage/data/mapQ-filter/MM378.bam ../1_dosage/data/mapQ-filter/MM1008.bam ../1_dosage/data/mapQ-filter/MM348.bam ../1_dosage/data/mapQ-filter/MM385.bam ../1_dosage/data/mapQ-filter/MM377.bam ../1_dosage/data/mapQ-filter/MM885.bam ../1_dosage/data/mapQ-filter/MM1029.bam ../1_dosage/data/mapQ-filter/MM414.bam ../1_dosage/data/mapQ-filter/MM907.bam ../1_dosage/data/mapQ-filter/MM895.bam ../1_dosage/data/mapQ-filter/MM369.bam ../1_dosage/data/mapQ-filter/MM353.bam ../1_dosage/data/mapQ-filter/MM423.bam ../1_dosage/data/mapQ-filter/MM347.bam ../1_dosage/data/mapQ-filter/MM1035.bam ../1_dosage/data/mapQ-filter/MM343.bam ../1_dosage/data/mapQ-filter/MM1011.bam ../1_dosage/data/mapQ-filter/MM878.bam ../1_dosage/data/mapQ-filter/MM336.bam ../1_dosage/data/mapQ-filter/MM1006.bam ../1_dosage/data/mapQ-filter/MM330.bam ../1_dosage/data/mapQ-filter/MM328.bam ../1_dosage/data/mapQ-filter/MM886.bam ../1_dosage/data/mapQ-filter/MM352.bam ../1_dosage/data/mapQ-filter/MM342.bam ../1_dosage/data/mapQ-filter/MM368.bam ../1_dosage/data/mapQ-filter/MM390.bam ../1_dosage/data/mapQ-filter/MM417.bam ../1_dosage/data/mapQ-filter/MM346.bam ../1_dosage/data/mapQ-filter/MM884.bam ../1_dosage/data/mapQ-filter/MM577.bam ../1_dosage/data/mapQ-filter/MM1016.bam ../1_dosage/data/mapQ-filter/MM322.bam ../1_dosage/data/mapQ-filter/MM1033.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta
+    output: mpup/WA_073-PL4-mpup.txt
+    jobid: 132
+    reason: Missing output files: mpup/WA_073-PL4-mpup.txt
+    wildcards: mother=WA_073, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/WA_073-PL4-mpup.txt 
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM153.bam, ../1_dosage/data/mapQ-filter/MM658.bam, ../1_dosage/data/mapQ-filter/MM154.bam, ../1_dosage/data/mapQ-filter/MM150.bam, ../1_dosage/data/mapQ-filter/MM780.bam, ../1_dosage/data/mapQ-filter/MM152.bam, ../1_dosage/data/mapQ-filter/MM151.bam
+    output: mpup/WA_104-IVP35-mpup.txt
+    jobid: 159
+    reason: Missing output files: mpup/WA_104-IVP35-mpup.txt
+    wildcards: mother=WA_104, inducer=IVP35
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/WA_104-IVP35-mpup.txt ../1_dosage/data/mapQ-filter/MM153.bam ../1_dosage/data/mapQ-filter/MM658.bam ../1_dosage/data/mapQ-filter/MM154.bam ../1_dosage/data/mapQ-filter/MM150.bam ../1_dosage/data/mapQ-filter/MM780.bam ../1_dosage/data/mapQ-filter/MM152.bam ../1_dosage/data/mapQ-filter/MM151.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM932.bam, ../1_dosage/data/mapQ-filter/MM942.bam, ../1_dosage/data/mapQ-filter/MM941.bam, ../1_dosage/data/mapQ-filter/MM1056.bam, ../1_dosage/data/mapQ-filter/MM1061.bam, ../1_dosage/data/mapQ-filter/MM1059.bam, ../1_dosage/data/mapQ-filter/MM1053.bam, ../1_dosage/data/mapQ-filter/MM1062.bam, ../1_dosage/data/mapQ-filter/MM1046.bam, ../1_dosage/data/mapQ-filter/MM1044.bam, ../1_dosage/data/mapQ-filter/MM937.bam, ../1_dosage/data/mapQ-filter/MM1049.bam, ../1_dosage/data/mapQ-filter/MM940.bam, ../1_dosage/data/mapQ-filter/MM935.bam, ../1_dosage/data/mapQ-filter/MM1047.bam, ../1_dosage/data/mapQ-filter/MM1060.bam, ../1_dosage/data/mapQ-filter/MM933.bam, ../1_dosage/data/mapQ-filter/MM1057.bam, ../1_dosage/data/mapQ-filter/MM936.bam, ../1_dosage/data/mapQ-filter/MM1054.bam, ../1_dosage/data/mapQ-filter/MM1051.bam, ../1_dosage/data/mapQ-filter/MM934.bam, ../1_dosage/data/mapQ-filter/MM1050.bam, ../1_dosage/data/mapQ-filter/MM939.bam, ../1_dosage/data/mapQ-filter/MM1045.bam, ../1_dosage/data/mapQ-filter/MM1048.bam, ../1_dosage/data/mapQ-filter/MM1055.bam, ../1_dosage/data/mapQ-filter/MM1058.bam, ../1_dosage/data/mapQ-filter/MM1052.bam, ../1_dosage/data/mapQ-filter/MM938.bam
+    output: mpup/LR00_014-IVP101-mpup.txt
+    jobid: 131
+    reason: Missing output files: mpup/LR00_014-IVP101-mpup.txt
+    wildcards: mother=LR00_014, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/LR00_014-IVP101-mpup.txt ../1_dosage/data/mapQ-filter/MM932.bam ../1_dosage/data/mapQ-filter/MM942.bam ../1_dosage/data/mapQ-filter/MM941.bam ../1_dosage/data/mapQ-filter/MM1056.bam ../1_dosage/data/mapQ-filter/MM1061.bam ../1_dosage/data/mapQ-filter/MM1059.bam ../1_dosage/data/mapQ-filter/MM1053.bam ../1_dosage/data/mapQ-filter/MM1062.bam ../1_dosage/data/mapQ-filter/MM1046.bam ../1_dosage/data/mapQ-filter/MM1044.bam ../1_dosage/data/mapQ-filter/MM937.bam ../1_dosage/data/mapQ-filter/MM1049.bam ../1_dosage/data/mapQ-filter/MM940.bam ../1_dosage/data/mapQ-filter/MM935.bam ../1_dosage/data/mapQ-filter/MM1047.bam ../1_dosage/data/mapQ-filter/MM1060.bam ../1_dosage/data/mapQ-filter/MM933.bam ../1_dosage/data/mapQ-filter/MM1057.bam ../1_dosage/data/mapQ-filter/MM936.bam ../1_dosage/data/mapQ-filter/MM1054.bam ../1_dosage/data/mapQ-filter/MM1051.bam ../1_dosage/data/mapQ-filter/MM934.bam ../1_dosage/data/mapQ-filter/MM1050.bam ../1_dosage/data/mapQ-filter/MM939.bam ../1_dosage/data/mapQ-filter/MM1045.bam ../1_dosage/data/mapQ-filter/MM1048.bam ../1_dosage/data/mapQ-filter/MM1055.bam ../1_dosage/data/mapQ-filter/MM1058.bam ../1_dosage/data/mapQ-filter/MM1052.bam ../1_dosage/data/mapQ-filter/MM938.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM1063.bam, ../1_dosage/data/mapQ-filter/MM1064.bam
+    output: mpup/LR00_022-IVP101-mpup.txt
+    jobid: 135
+    reason: Missing output files: mpup/LR00_022-IVP101-mpup.txt
+    wildcards: mother=LR00_022, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/LR00_022-IVP101-mpup.txt ../1_dosage/data/mapQ-filter/MM1063.bam ../1_dosage/data/mapQ-filter/MM1064.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM92.bam, ../1_dosage/data/mapQ-filter/MM851.bam, ../1_dosage/data/mapQ-filter/MM852.bam, ../1_dosage/data/mapQ-filter/MM95.bam, ../1_dosage/data/mapQ-filter/MM94.bam, ../1_dosage/data/mapQ-filter/MM93.bam, ../1_dosage/data/mapQ-filter/MM90.bam, ../1_dosage/data/mapQ-filter/MM91.bam, ../1_dosage/data/mapQ-filter/MM853.bam
+    output: mpup/Y84_027-PL4-mpup.txt
+    jobid: 141
+    reason: Missing output files: mpup/Y84_027-PL4-mpup.txt
+    wildcards: mother=Y84_027, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/Y84_027-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM92.bam ../1_dosage/data/mapQ-filter/MM851.bam ../1_dosage/data/mapQ-filter/MM852.bam ../1_dosage/data/mapQ-filter/MM95.bam ../1_dosage/data/mapQ-filter/MM94.bam ../1_dosage/data/mapQ-filter/MM93.bam ../1_dosage/data/mapQ-filter/MM90.bam ../1_dosage/data/mapQ-filter/MM91.bam ../1_dosage/data/mapQ-filter/MM853.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM507.bam, ../1_dosage/data/mapQ-filter/MM555.bam, ../1_dosage/data/mapQ-filter/MM558.bam, ../1_dosage/data/mapQ-filter/MM498.bam, ../1_dosage/data/mapQ-filter/MM525.bam, ../1_dosage/data/mapQ-filter/MM562.bam, ../1_dosage/data/mapQ-filter/MM552.bam, ../1_dosage/data/mapQ-filter/MM503.bam, ../1_dosage/data/mapQ-filter/MM512.bam, ../1_dosage/data/mapQ-filter/MM517.bam, ../1_dosage/data/mapQ-filter/MM547.bam, ../1_dosage/data/mapQ-filter/MM500.bam, ../1_dosage/data/mapQ-filter/MM514.bam, ../1_dosage/data/mapQ-filter/MM531.bam, ../1_dosage/data/mapQ-filter/MM505.bam, ../1_dosage/data/mapQ-filter/MM571.bam, ../1_dosage/data/mapQ-filter/MM532.bam, ../1_dosage/data/mapQ-filter/MM550.bam, ../1_dosage/data/mapQ-filter/MM574.bam, ../1_dosage/data/mapQ-filter/MM496.bam, ../1_dosage/data/mapQ-filter/MM545.bam, ../1_dosage/data/mapQ-filter/MM576.bam, ../1_dosage/data/mapQ-filter/MM534.bam, ../1_dosage/data/mapQ-filter/MM557.bam, ../1_dosage/data/mapQ-filter/MM504.bam, ../1_dosage/data/mapQ-filter/MM513.bam, ../1_dosage/data/mapQ-filter/MM542.bam, ../1_dosage/data/mapQ-filter/MM533.bam, ../1_dosage/data/mapQ-filter/MM510.bam, ../1_dosage/data/mapQ-filter/MM560.bam, ../1_dosage/data/mapQ-filter/MM847.bam, ../1_dosage/data/mapQ-filter/MM536.bam, ../1_dosage/data/mapQ-filter/MM501.bam, ../1_dosage/data/mapQ-filter/MM564.bam, ../1_dosage/data/mapQ-filter/MM497.bam, ../1_dosage/data/mapQ-filter/MM570.bam, ../1_dosage/data/mapQ-filter/MM573.bam, ../1_dosage/data/mapQ-filter/MM528.bam, ../1_dosage/data/mapQ-filter/MM541.bam, ../1_dosage/data/mapQ-filter/MM516.bam, ../1_dosage/data/mapQ-filter/MM548.bam, ../1_dosage/data/mapQ-filter/MM553.bam, ../1_dosage/data/mapQ-filter/MM526.bam, ../1_dosage/data/mapQ-filter/MM846.bam, ../1_dosage/data/mapQ-filter/MM568.bam, ../1_dosage/data/mapQ-filter/MM529.bam, ../1_dosage/data/mapQ-filter/MM559.bam, ../1_dosage/data/mapQ-filter/MM549.bam, ../1_dosage/data/mapQ-filter/MM521.bam, ../1_dosage/data/mapQ-filter/MM520.bam, ../1_dosage/data/mapQ-filter/MM539.bam, ../1_dosage/data/mapQ-filter/MM544.bam, ../1_dosage/data/mapQ-filter/MM538.bam, ../1_dosage/data/mapQ-filter/MM523.bam, ../1_dosage/data/mapQ-filter/MM511.bam, ../1_dosage/data/mapQ-filter/MM554.bam, ../1_dosage/data/mapQ-filter/MM565.bam, ../1_dosage/data/mapQ-filter/MM527.bam, ../1_dosage/data/mapQ-filter/MM563.bam, ../1_dosage/data/mapQ-filter/MM502.bam, ../1_dosage/data/mapQ-filter/MM556.bam, ../1_dosage/data/mapQ-filter/MM508.bam, ../1_dosage/data/mapQ-filter/MM518.bam, ../1_dosage/data/mapQ-filter/MM506.bam, ../1_dosage/data/mapQ-filter/MM519.bam, ../1_dosage/data/mapQ-filter/MM530.bam, ../1_dosage/data/mapQ-filter/MM537.bam, ../1_dosage/data/mapQ-filter/MM535.bam, ../1_dosage/data/mapQ-filter/MM566.bam, ../1_dosage/data/mapQ-filter/MM849.bam, ../1_dosage/data/mapQ-filter/MM509.bam, ../1_dosage/data/mapQ-filter/MM540.bam, ../1_dosage/data/mapQ-filter/MM515.bam, ../1_dosage/data/mapQ-filter/MM524.bam, ../1_dosage/data/mapQ-filter/MM499.bam, ../1_dosage/data/mapQ-filter/MM850.bam, ../1_dosage/data/mapQ-filter/MM543.bam, ../1_dosage/data/mapQ-filter/MM567.bam, ../1_dosage/data/mapQ-filter/MM561.bam, ../1_dosage/data/mapQ-filter/MM569.bam, ../1_dosage/data/mapQ-filter/MM546.bam, ../1_dosage/data/mapQ-filter/MM575.bam, ../1_dosage/data/mapQ-filter/MM848.bam, ../1_dosage/data/mapQ-filter/MM522.bam, ../1_dosage/data/mapQ-filter/MM572.bam, ../1_dosage/data/mapQ-filter/MM551.bam
+    output: mpup/C91_640-PL4-mpup.txt
+    jobid: 139
+    reason: Missing output files: mpup/C91_640-PL4-mpup.txt
+    wildcards: mother=C91_640, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/C91_640-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM507.bam ../1_dosage/data/mapQ-filter/MM555.bam ../1_dosage/data/mapQ-filter/MM558.bam ../1_dosage/data/mapQ-filter/MM498.bam ../1_dosage/data/mapQ-filter/MM525.bam ../1_dosage/data/mapQ-filter/MM562.bam ../1_dosage/data/mapQ-filter/MM552.bam ../1_dosage/data/mapQ-filter/MM503.bam ../1_dosage/data/mapQ-filter/MM512.bam ../1_dosage/data/mapQ-filter/MM517.bam ../1_dosage/data/mapQ-filter/MM547.bam ../1_dosage/data/mapQ-filter/MM500.bam ../1_dosage/data/mapQ-filter/MM514.bam ../1_dosage/data/mapQ-filter/MM531.bam ../1_dosage/data/mapQ-filter/MM505.bam ../1_dosage/data/mapQ-filter/MM571.bam ../1_dosage/data/mapQ-filter/MM532.bam ../1_dosage/data/mapQ-filter/MM550.bam ../1_dosage/data/mapQ-filter/MM574.bam ../1_dosage/data/mapQ-filter/MM496.bam ../1_dosage/data/mapQ-filter/MM545.bam ../1_dosage/data/mapQ-filter/MM576.bam ../1_dosage/data/mapQ-filter/MM534.bam ../1_dosage/data/mapQ-filter/MM557.bam ../1_dosage/data/mapQ-filter/MM504.bam ../1_dosage/data/mapQ-filter/MM513.bam ../1_dosage/data/mapQ-filter/MM542.bam ../1_dosage/data/mapQ-filter/MM533.bam ../1_dosage/data/mapQ-filter/MM510.bam ../1_dosage/data/mapQ-filter/MM560.bam ../1_dosage/data/mapQ-filter/MM847.bam ../1_dosage/data/mapQ-filter/MM536.bam ../1_dosage/data/mapQ-filter/MM501.bam ../1_dosage/data/mapQ-filter/MM564.bam ../1_dosage/data/mapQ-filter/MM497.bam ../1_dosage/data/mapQ-filter/MM570.bam ../1_dosage/data/mapQ-filter/MM573.bam ../1_dosage/data/mapQ-filter/MM528.bam ../1_dosage/data/mapQ-filter/MM541.bam ../1_dosage/data/mapQ-filter/MM516.bam ../1_dosage/data/mapQ-filter/MM548.bam ../1_dosage/data/mapQ-filter/MM553.bam ../1_dosage/data/mapQ-filter/MM526.bam ../1_dosage/data/mapQ-filter/MM846.bam ../1_dosage/data/mapQ-filter/MM568.bam ../1_dosage/data/mapQ-filter/MM529.bam ../1_dosage/data/mapQ-filter/MM559.bam ../1_dosage/data/mapQ-filter/MM549.bam ../1_dosage/data/mapQ-filter/MM521.bam ../1_dosage/data/mapQ-filter/MM520.bam ../1_dosage/data/mapQ-filter/MM539.bam ../1_dosage/data/mapQ-filter/MM544.bam ../1_dosage/data/mapQ-filter/MM538.bam ../1_dosage/data/mapQ-filter/MM523.bam ../1_dosage/data/mapQ-filter/MM511.bam ../1_dosage/data/mapQ-filter/MM554.bam ../1_dosage/data/mapQ-filter/MM565.bam ../1_dosage/data/mapQ-filter/MM527.bam ../1_dosage/data/mapQ-filter/MM563.bam ../1_dosage/data/mapQ-filter/MM502.bam ../1_dosage/data/mapQ-filter/MM556.bam ../1_dosage/data/mapQ-filter/MM508.bam ../1_dosage/data/mapQ-filter/MM518.bam ../1_dosage/data/mapQ-filter/MM506.bam ../1_dosage/data/mapQ-filter/MM519.bam ../1_dosage/data/mapQ-filter/MM530.bam ../1_dosage/data/mapQ-filter/MM537.bam ../1_dosage/data/mapQ-filter/MM535.bam ../1_dosage/data/mapQ-filter/MM566.bam ../1_dosage/data/mapQ-filter/MM849.bam ../1_dosage/data/mapQ-filter/MM509.bam ../1_dosage/data/mapQ-filter/MM540.bam ../1_dosage/data/mapQ-filter/MM515.bam ../1_dosage/data/mapQ-filter/MM524.bam ../1_dosage/data/mapQ-filter/MM499.bam ../1_dosage/data/mapQ-filter/MM850.bam ../1_dosage/data/mapQ-filter/MM543.bam ../1_dosage/data/mapQ-filter/MM567.bam ../1_dosage/data/mapQ-filter/MM561.bam ../1_dosage/data/mapQ-filter/MM569.bam ../1_dosage/data/mapQ-filter/MM546.bam ../1_dosage/data/mapQ-filter/MM575.bam ../1_dosage/data/mapQ-filter/MM848.bam ../1_dosage/data/mapQ-filter/MM522.bam ../1_dosage/data/mapQ-filter/MM572.bam ../1_dosage/data/mapQ-filter/MM551.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM1079.bam, ../1_dosage/data/mapQ-filter/MM1080.bam, ../1_dosage/data/mapQ-filter/MM1076.bam, ../1_dosage/data/mapQ-filter/MM1081.bam, ../1_dosage/data/mapQ-filter/MM1085.bam, ../1_dosage/data/mapQ-filter/MM1084.bam, ../1_dosage/data/mapQ-filter/MM1078.bam, ../1_dosage/data/mapQ-filter/MM1082.bam, ../1_dosage/data/mapQ-filter/MM1083.bam, ../1_dosage/data/mapQ-filter/MM1086.bam, ../1_dosage/data/mapQ-filter/MM1077.bam, ../1_dosage/data/mapQ-filter/MM1087.bam
+    output: mpup/93_003-IVP101-mpup.txt
+    jobid: 168
+    reason: Missing output files: mpup/93_003-IVP101-mpup.txt
+    wildcards: mother=93_003, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/93_003-IVP101-mpup.txt ../1_dosage/data/mapQ-filter/MM1079.bam ../1_dosage/data/mapQ-filter/MM1080.bam ../1_dosage/data/mapQ-filter/MM1076.bam ../1_dosage/data/mapQ-filter/MM1081.bam ../1_dosage/data/mapQ-filter/MM1085.bam ../1_dosage/data/mapQ-filter/MM1084.bam ../1_dosage/data/mapQ-filter/MM1078.bam ../1_dosage/data/mapQ-filter/MM1082.bam ../1_dosage/data/mapQ-filter/MM1083.bam ../1_dosage/data/mapQ-filter/MM1086.bam ../1_dosage/data/mapQ-filter/MM1077.bam ../1_dosage/data/mapQ-filter/MM1087.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM267.bam, ../1_dosage/data/mapQ-filter/MM269.bam, ../1_dosage/data/mapQ-filter/MM266.bam, ../1_dosage/data/mapQ-filter/MM271.bam, ../1_dosage/data/mapQ-filter/MM268.bam, ../1_dosage/data/mapQ-filter/MM270.bam
+    output: mpup/Desiree-PL4-mpup.txt
+    jobid: 170
+    reason: Missing output files: mpup/Desiree-PL4-mpup.txt
+    wildcards: mother=Desiree, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/Desiree-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM267.bam ../1_dosage/data/mapQ-filter/MM269.bam ../1_dosage/data/mapQ-filter/MM266.bam ../1_dosage/data/mapQ-filter/MM271.bam ../1_dosage/data/mapQ-filter/MM268.bam ../1_dosage/data/mapQ-filter/MM270.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM929.bam, ../1_dosage/data/mapQ-filter/MM213.bam, ../1_dosage/data/mapQ-filter/MM980.bam, ../1_dosage/data/mapQ-filter/MM200.bam, ../1_dosage/data/mapQ-filter/MM925.bam, ../1_dosage/data/mapQ-filter/MM193.bam, ../1_dosage/data/mapQ-filter/MM189.bam, ../1_dosage/data/mapQ-filter/MM161.bam, ../1_dosage/data/mapQ-filter/MM170.bam, ../1_dosage/data/mapQ-filter/MM186.bam, ../1_dosage/data/mapQ-filter/MM206.bam, ../1_dosage/data/mapQ-filter/MM197.bam, ../1_dosage/data/mapQ-filter/MM174.bam, ../1_dosage/data/mapQ-filter/MM972.bam, ../1_dosage/data/mapQ-filter/MM218.bam, ../1_dosage/data/mapQ-filter/MM305.bam, ../1_dosage/data/mapQ-filter/MM930.bam, ../1_dosage/data/mapQ-filter/MM918.bam, ../1_dosage/data/mapQ-filter/MM924.bam, ../1_dosage/data/mapQ-filter/MM182.bam, ../1_dosage/data/mapQ-filter/MM158.bam, ../1_dosage/data/mapQ-filter/MM166.bam, ../1_dosage/data/mapQ-filter/MM971.bam, ../1_dosage/data/mapQ-filter/MM176.bam, ../1_dosage/data/mapQ-filter/MM970.bam, ../1_dosage/data/mapQ-filter/MM211.bam, ../1_dosage/data/mapQ-filter/MM183.bam, ../1_dosage/data/mapQ-filter/MM976.bam, ../1_dosage/data/mapQ-filter/MM922.bam, ../1_dosage/data/mapQ-filter/MM202.bam, ../1_dosage/data/mapQ-filter/MM979.bam, ../1_dosage/data/mapQ-filter/MM165.bam, ../1_dosage/data/mapQ-filter/MM171.bam, ../1_dosage/data/mapQ-filter/MM163.bam, ../1_dosage/data/mapQ-filter/MM167.bam, ../1_dosage/data/mapQ-filter/MM217.bam, ../1_dosage/data/mapQ-filter/MM178.bam, ../1_dosage/data/mapQ-filter/MM208.bam, ../1_dosage/data/mapQ-filter/MM192.bam, ../1_dosage/data/mapQ-filter/MM191.bam, ../1_dosage/data/mapQ-filter/MM973.bam, ../1_dosage/data/mapQ-filter/MM207.bam, ../1_dosage/data/mapQ-filter/MM196.bam, ../1_dosage/data/mapQ-filter/MM180.bam, ../1_dosage/data/mapQ-filter/MM209.bam, ../1_dosage/data/mapQ-filter/MM969.bam, ../1_dosage/data/mapQ-filter/MM185.bam, ../1_dosage/data/mapQ-filter/MM914.bam, ../1_dosage/data/mapQ-filter/MM1036.bam, ../1_dosage/data/mapQ-filter/MM911.bam, ../1_dosage/data/mapQ-filter/MM173.bam, ../1_dosage/data/mapQ-filter/MM967.bam, ../1_dosage/data/mapQ-filter/MM917.bam, ../1_dosage/data/mapQ-filter/MM913.bam, ../1_dosage/data/mapQ-filter/MM190.bam, ../1_dosage/data/mapQ-filter/MM307.bam, ../1_dosage/data/mapQ-filter/MM188.bam, ../1_dosage/data/mapQ-filter/MM978.bam, ../1_dosage/data/mapQ-filter/MM975.bam, ../1_dosage/data/mapQ-filter/MM927.bam, ../1_dosage/data/mapQ-filter/MM216.bam, ../1_dosage/data/mapQ-filter/MM177.bam, ../1_dosage/data/mapQ-filter/MM162.bam, ../1_dosage/data/mapQ-filter/MM974.bam, ../1_dosage/data/mapQ-filter/MM214.bam, ../1_dosage/data/mapQ-filter/MM923.bam, ../1_dosage/data/mapQ-filter/MM159.bam, ../1_dosage/data/mapQ-filter/MM169.bam, ../1_dosage/data/mapQ-filter/MM926.bam, ../1_dosage/data/mapQ-filter/MM308.bam, ../1_dosage/data/mapQ-filter/MM203.bam, ../1_dosage/data/mapQ-filter/MM920.bam, ../1_dosage/data/mapQ-filter/MM157.bam, ../1_dosage/data/mapQ-filter/MM175.bam, ../1_dosage/data/mapQ-filter/MM181.bam, ../1_dosage/data/mapQ-filter/MM919.bam, ../1_dosage/data/mapQ-filter/MM201.bam, ../1_dosage/data/mapQ-filter/MM921.bam, ../1_dosage/data/mapQ-filter/MM916.bam, ../1_dosage/data/mapQ-filter/MM306.bam, ../1_dosage/data/mapQ-filter/MM184.bam, ../1_dosage/data/mapQ-filter/MM981.bam, ../1_dosage/data/mapQ-filter/MM164.bam, ../1_dosage/data/mapQ-filter/MM204.bam, ../1_dosage/data/mapQ-filter/MM205.bam, ../1_dosage/data/mapQ-filter/MM199.bam, ../1_dosage/data/mapQ-filter/MM210.bam, ../1_dosage/data/mapQ-filter/MM1037.bam, ../1_dosage/data/mapQ-filter/MM156.bam, ../1_dosage/data/mapQ-filter/MM198.bam, ../1_dosage/data/mapQ-filter/MM931.bam, ../1_dosage/data/mapQ-filter/MM195.bam, ../1_dosage/data/mapQ-filter/MM215.bam, ../1_dosage/data/mapQ-filter/MM212.bam, ../1_dosage/data/mapQ-filter/MM179.bam, ../1_dosage/data/mapQ-filter/MM155.bam, ../1_dosage/data/mapQ-filter/MM187.bam, ../1_dosage/data/mapQ-filter/MM915.bam, ../1_dosage/data/mapQ-filter/MM160.bam, ../1_dosage/data/mapQ-filter/MM194.bam, ../1_dosage/data/mapQ-filter/MM912.bam, ../1_dosage/data/mapQ-filter/MM977.bam, ../1_dosage/data/mapQ-filter/MM1038.bam, ../1_dosage/data/mapQ-filter/MM172.bam, ../1_dosage/data/mapQ-filter/MM928.bam, ../1_dosage/data/mapQ-filter/MM968.bam, ../1_dosage/data/mapQ-filter/MM168.bam
+    output: mpup/WA_077-PL4-mpup.txt
+    jobid: 150
+    reason: Missing output files: mpup/WA_077-PL4-mpup.txt
+    wildcards: mother=WA_077, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/WA_077-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM929.bam ../1_dosage/data/mapQ-filter/MM213.bam ../1_dosage/data/mapQ-filter/MM980.bam ../1_dosage/data/mapQ-filter/MM200.bam ../1_dosage/data/mapQ-filter/MM925.bam ../1_dosage/data/mapQ-filter/MM193.bam ../1_dosage/data/mapQ-filter/MM189.bam ../1_dosage/data/mapQ-filter/MM161.bam ../1_dosage/data/mapQ-filter/MM170.bam ../1_dosage/data/mapQ-filter/MM186.bam ../1_dosage/data/mapQ-filter/MM206.bam ../1_dosage/data/mapQ-filter/MM197.bam ../1_dosage/data/mapQ-filter/MM174.bam ../1_dosage/data/mapQ-filter/MM972.bam ../1_dosage/data/mapQ-filter/MM218.bam ../1_dosage/data/mapQ-filter/MM305.bam ../1_dosage/data/mapQ-filter/MM930.bam ../1_dosage/data/mapQ-filter/MM918.bam ../1_dosage/data/mapQ-filter/MM924.bam ../1_dosage/data/mapQ-filter/MM182.bam ../1_dosage/data/mapQ-filter/MM158.bam ../1_dosage/data/mapQ-filter/MM166.bam ../1_dosage/data/mapQ-filter/MM971.bam ../1_dosage/data/mapQ-filter/MM176.bam ../1_dosage/data/mapQ-filter/MM970.bam ../1_dosage/data/mapQ-filter/MM211.bam ../1_dosage/data/mapQ-filter/MM183.bam ../1_dosage/data/mapQ-filter/MM976.bam ../1_dosage/data/mapQ-filter/MM922.bam ../1_dosage/data/mapQ-filter/MM202.bam ../1_dosage/data/mapQ-filter/MM979.bam ../1_dosage/data/mapQ-filter/MM165.bam ../1_dosage/data/mapQ-filter/MM171.bam ../1_dosage/data/mapQ-filter/MM163.bam ../1_dosage/data/mapQ-filter/MM167.bam ../1_dosage/data/mapQ-filter/MM217.bam ../1_dosage/data/mapQ-filter/MM178.bam ../1_dosage/data/mapQ-filter/MM208.bam ../1_dosage/data/mapQ-filter/MM192.bam ../1_dosage/data/mapQ-filter/MM191.bam ../1_dosage/data/mapQ-filter/MM973.bam ../1_dosage/data/mapQ-filter/MM207.bam ../1_dosage/data/mapQ-filter/MM196.bam ../1_dosage/data/mapQ-filter/MM180.bam ../1_dosage/data/mapQ-filter/MM209.bam ../1_dosage/data/mapQ-filter/MM969.bam ../1_dosage/data/mapQ-filter/MM185.bam ../1_dosage/data/mapQ-filter/MM914.bam ../1_dosage/data/mapQ-filter/MM1036.bam ../1_dosage/data/mapQ-filter/MM911.bam ../1_dosage/data/mapQ-filter/MM173.bam ../1_dosage/data/mapQ-filter/MM967.bam ../1_dosage/data/mapQ-filter/MM917.bam ../1_dosage/data/mapQ-filter/MM913.bam ../1_dosage/data/mapQ-filter/MM190.bam ../1_dosage/data/mapQ-filter/MM307.bam ../1_dosage/data/mapQ-filter/MM188.bam ../1_dosage/data/mapQ-filter/MM978.bam ../1_dosage/data/mapQ-filter/MM975.bam ../1_dosage/data/mapQ-filter/MM927.bam ../1_dosage/data/mapQ-filter/MM216.bam ../1_dosage/data/mapQ-filter/MM177.bam ../1_dosage/data/mapQ-filter/MM162.bam ../1_dosage/data/mapQ-filter/MM974.bam ../1_dosage/data/mapQ-filter/MM214.bam ../1_dosage/data/mapQ-filter/MM923.bam ../1_dosage/data/mapQ-filter/MM159.bam ../1_dosage/data/mapQ-filter/MM169.bam ../1_dosage/data/mapQ-filter/MM926.bam ../1_dosage/data/mapQ-filter/MM308.bam ../1_dosage/data/mapQ-filter/MM203.bam ../1_dosage/data/mapQ-filter/MM920.bam ../1_dosage/data/mapQ-filter/MM157.bam ../1_dosage/data/mapQ-filter/MM175.bam ../1_dosage/data/mapQ-filter/MM181.bam ../1_dosage/data/mapQ-filter/MM919.bam ../1_dosage/data/mapQ-filter/MM201.bam ../1_dosage/data/mapQ-filter/MM921.bam ../1_dosage/data/mapQ-filter/MM916.bam ../1_dosage/data/mapQ-filter/MM306.bam ../1_dosage/data/mapQ-filter/MM184.bam ../1_dosage/data/mapQ-filter/MM981.bam ../1_dosage/data/mapQ-filter/MM164.bam ../1_dosage/data/mapQ-filter/MM204.bam ../1_dosage/data/mapQ-filter/MM205.bam ../1_dosage/data/mapQ-filter/MM199.bam ../1_dosage/data/mapQ-filter/MM210.bam ../1_dosage/data/mapQ-filter/MM1037.bam ../1_dosage/data/mapQ-filter/MM156.bam ../1_dosage/data/mapQ-filter/MM198.bam ../1_dosage/data/mapQ-filter/MM931.bam ../1_dosage/data/mapQ-filter/MM195.bam ../1_dosage/data/mapQ-filter/MM215.bam ../1_dosage/data/mapQ-filter/MM212.bam ../1_dosage/data/mapQ-filter/MM179.bam ../1_dosage/data/mapQ-filter/MM155.bam ../1_dosage/data/mapQ-filter/MM187.bam ../1_dosage/data/mapQ-filter/MM915.bam ../1_dosage/data/mapQ-filter/MM160.bam ../1_dosage/data/mapQ-filter/MM194.bam ../1_dosage/data/mapQ-filter/MM912.bam ../1_dosage/data/mapQ-filter/MM977.bam ../1_dosage/data/mapQ-filter/MM1038.bam ../1_dosage/data/mapQ-filter/MM172.bam ../1_dosage/data/mapQ-filter/MM928.bam ../1_dosage/data/mapQ-filter/MM968.bam ../1_dosage/data/mapQ-filter/MM168.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM611.bam, ../1_dosage/data/mapQ-filter/MM616.bam, ../1_dosage/data/mapQ-filter/MM612.bam, ../1_dosage/data/mapQ-filter/MM613.bam, ../1_dosage/data/mapQ-filter/MM617.bam, ../1_dosage/data/mapQ-filter/MM615.bam, ../1_dosage/data/mapQ-filter/MM614.bam
+    output: mpup/LR93_073-IVP101-mpup.txt
+    jobid: 158
+    reason: Missing output files: mpup/LR93_073-IVP101-mpup.txt
+    wildcards: mother=LR93_073, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/LR93_073-IVP101-mpup.txt ../1_dosage/data/mapQ-filter/MM611.bam ../1_dosage/data/mapQ-filter/MM616.bam ../1_dosage/data/mapQ-filter/MM612.bam ../1_dosage/data/mapQ-filter/MM613.bam ../1_dosage/data/mapQ-filter/MM617.bam ../1_dosage/data/mapQ-filter/MM615.bam ../1_dosage/data/mapQ-filter/MM614.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM1091.bam, ../1_dosage/data/mapQ-filter/MM1092.bam, ../1_dosage/data/mapQ-filter/MM1088.bam, ../1_dosage/data/mapQ-filter/MM1090.bam, ../1_dosage/data/mapQ-filter/MM1089.bam, ../1_dosage/data/mapQ-filter/MM1093.bam
+    output: mpup/458-IVP101-mpup.txt
+    jobid: 148
+    reason: Missing output files: mpup/458-IVP101-mpup.txt
+    wildcards: mother=458, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/458-IVP101-mpup.txt ../1_dosage/data/mapQ-filter/MM1091.bam ../1_dosage/data/mapQ-filter/MM1092.bam ../1_dosage/data/mapQ-filter/MM1088.bam ../1_dosage/data/mapQ-filter/MM1090.bam ../1_dosage/data/mapQ-filter/MM1089.bam ../1_dosage/data/mapQ-filter/MM1093.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM278.bam, ../1_dosage/data/mapQ-filter/MM1040.bam, ../1_dosage/data/mapQ-filter/MM276.bam, ../1_dosage/data/mapQ-filter/MM274.bam, ../1_dosage/data/mapQ-filter/MM1039.bam, ../1_dosage/data/mapQ-filter/MM1043.bam, ../1_dosage/data/mapQ-filter/MM1041.bam, ../1_dosage/data/mapQ-filter/MM277.bam, ../1_dosage/data/mapQ-filter/MM275.bam, ../1_dosage/data/mapQ-filter/MM1042.bam
+    output: mpup/Atlantic-PL4-mpup.txt
+    jobid: 146
+    reason: Missing output files: mpup/Atlantic-PL4-mpup.txt
+    wildcards: mother=Atlantic, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/Atlantic-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM278.bam ../1_dosage/data/mapQ-filter/MM1040.bam ../1_dosage/data/mapQ-filter/MM276.bam ../1_dosage/data/mapQ-filter/MM274.bam ../1_dosage/data/mapQ-filter/MM1039.bam ../1_dosage/data/mapQ-filter/MM1043.bam ../1_dosage/data/mapQ-filter/MM1041.bam ../1_dosage/data/mapQ-filter/MM277.bam ../1_dosage/data/mapQ-filter/MM275.bam ../1_dosage/data/mapQ-filter/MM1042.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM1075.bam
+    output: mpup/C90_170-IVP101-mpup.txt
+    jobid: 145
+    reason: Missing output files: mpup/C90_170-IVP101-mpup.txt
+    wildcards: mother=C90_170, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/C90_170-IVP101-mpup.txt ../1_dosage/data/mapQ-filter/MM1075.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM1066.bam, ../1_dosage/data/mapQ-filter/MM1067.bam, ../1_dosage/data/mapQ-filter/MM1068.bam, ../1_dosage/data/mapQ-filter/MM1065.bam
+    output: mpup/C01_020-IVP101-mpup.txt
+    jobid: 151
+    reason: Missing output files: mpup/C01_020-IVP101-mpup.txt
+    wildcards: mother=C01_020, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/C01_020-IVP101-mpup.txt ../1_dosage/data/mapQ-filter/MM1066.bam ../1_dosage/data/mapQ-filter/MM1067.bam ../1_dosage/data/mapQ-filter/MM1068.bam ../1_dosage/data/mapQ-filter/MM1065.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM582.bam, ../1_dosage/data/mapQ-filter/MM580.bam, ../1_dosage/data/mapQ-filter/MM581.bam, ../1_dosage/data/mapQ-filter/MM583.bam, ../1_dosage/data/mapQ-filter/MM586.bam, ../1_dosage/data/mapQ-filter/MM584.bam, ../1_dosage/data/mapQ-filter/MM585.bam, ../1_dosage/data/mapQ-filter/MM579.bam
+    output: mpup/LRY_21_25-IVP101-mpup.txt
+    jobid: 136
+    reason: Missing output files: mpup/LRY_21_25-IVP101-mpup.txt
+    wildcards: mother=LRY_21_25, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/LRY_21_25-IVP101-mpup.txt ../1_dosage/data/mapQ-filter/MM582.bam ../1_dosage/data/mapQ-filter/MM580.bam ../1_dosage/data/mapQ-filter/MM581.bam ../1_dosage/data/mapQ-filter/MM583.bam ../1_dosage/data/mapQ-filter/MM586.bam ../1_dosage/data/mapQ-filter/MM584.bam ../1_dosage/data/mapQ-filter/MM585.bam ../1_dosage/data/mapQ-filter/MM579.bam
+    
+
+[Mon Oct  5 22:53:18 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM138.bam, ../1_dosage/data/mapQ-filter/MM139.bam
+    output: mpup/C92_172-PL4-mpup.txt
+    jobid: 142
+    reason: Missing output files: mpup/C92_172-PL4-mpup.txt
+    wildcards: mother=C92_172, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/C92_172-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM138.bam ../1_dosage/data/mapQ-filter/MM139.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM1224.bam, ../1_dosage/data/mapQ-filter/MM1222.bam, ../1_dosage/data/mapQ-filter/MM1223.bam, ../1_dosage/data/mapQ-filter/MM89.bam
+    output: mpup/LR00_026-IVP101-mpup.txt
+    jobid: 137
+    reason: Missing output files: mpup/LR00_026-IVP101-mpup.txt
+    wildcards: mother=LR00_026, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/LR00_026-IVP101-mpup.txt ../1_dosage/data/mapQ-filter/MM1224.bam ../1_dosage/data/mapQ-filter/MM1222.bam ../1_dosage/data/mapQ-filter/MM1223.bam ../1_dosage/data/mapQ-filter/MM89.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM1181.bam, ../1_dosage/data/mapQ-filter/MM97.bam, ../1_dosage/data/mapQ-filter/MM1189.bam, ../1_dosage/data/mapQ-filter/MM1190.bam, ../1_dosage/data/mapQ-filter/MM1180.bam, ../1_dosage/data/mapQ-filter/MM1183.bam, ../1_dosage/data/mapQ-filter/MM632.bam, ../1_dosage/data/mapQ-filter/MM1187.bam, ../1_dosage/data/mapQ-filter/MM1191.bam, ../1_dosage/data/mapQ-filter/MM1178.bam, ../1_dosage/data/mapQ-filter/MM1182.bam, ../1_dosage/data/mapQ-filter/MM1186.bam, ../1_dosage/data/mapQ-filter/MM100.bam, ../1_dosage/data/mapQ-filter/MM98.bam, ../1_dosage/data/mapQ-filter/MM1185.bam, ../1_dosage/data/mapQ-filter/MM99.bam, ../1_dosage/data/mapQ-filter/MM96.bam, ../1_dosage/data/mapQ-filter/MM1179.bam, ../1_dosage/data/mapQ-filter/MM1188.bam, ../1_dosage/data/mapQ-filter/MM1184.bam
+    output: mpup/Y84_027-IVP35-mpup.txt
+    jobid: 140
+    reason: Missing output files: mpup/Y84_027-IVP35-mpup.txt
+    wildcards: mother=Y84_027, inducer=IVP35
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/Y84_027-IVP35-mpup.txt ../1_dosage/data/mapQ-filter/MM1181.bam ../1_dosage/data/mapQ-filter/MM97.bam ../1_dosage/data/mapQ-filter/MM1189.bam ../1_dosage/data/mapQ-filter/MM1190.bam ../1_dosage/data/mapQ-filter/MM1180.bam ../1_dosage/data/mapQ-filter/MM1183.bam ../1_dosage/data/mapQ-filter/MM632.bam ../1_dosage/data/mapQ-filter/MM1187.bam ../1_dosage/data/mapQ-filter/MM1191.bam ../1_dosage/data/mapQ-filter/MM1178.bam ../1_dosage/data/mapQ-filter/MM1182.bam ../1_dosage/data/mapQ-filter/MM1186.bam ../1_dosage/data/mapQ-filter/MM100.bam ../1_dosage/data/mapQ-filter/MM98.bam ../1_dosage/data/mapQ-filter/MM1185.bam ../1_dosage/data/mapQ-filter/MM99.bam ../1_dosage/data/mapQ-filter/MM96.bam ../1_dosage/data/mapQ-filter/MM1179.bam ../1_dosage/data/mapQ-filter/MM1188.bam ../1_dosage/data/mapQ-filter/MM1184.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM645.bam, ../1_dosage/data/mapQ-filter/MM648.bam, ../1_dosage/data/mapQ-filter/MM739.bam, ../1_dosage/data/mapQ-filter/MM720.bam, ../1_dosage/data/mapQ-filter/MM636.bam, ../1_dosage/data/mapQ-filter/MM724.bam, ../1_dosage/data/mapQ-filter/MM656.bam, ../1_dosage/data/mapQ-filter/MM749.bam, ../1_dosage/data/mapQ-filter/MM769.bam, ../1_dosage/data/mapQ-filter/MM745.bam, ../1_dosage/data/mapQ-filter/MM747.bam, ../1_dosage/data/mapQ-filter/MM733.bam, ../1_dosage/data/mapQ-filter/MM773.bam, ../1_dosage/data/mapQ-filter/MM714.bam, ../1_dosage/data/mapQ-filter/MM757.bam, ../1_dosage/data/mapQ-filter/MM742.bam, ../1_dosage/data/mapQ-filter/MM779.bam, ../1_dosage/data/mapQ-filter/MM735.bam, ../1_dosage/data/mapQ-filter/MM778.bam, ../1_dosage/data/mapQ-filter/MM754.bam, ../1_dosage/data/mapQ-filter/MM741.bam, ../1_dosage/data/mapQ-filter/MM746.bam, ../1_dosage/data/mapQ-filter/MM761.bam, ../1_dosage/data/mapQ-filter/MM762.bam, ../1_dosage/data/mapQ-filter/MM755.bam, ../1_dosage/data/mapQ-filter/MM637.bam, ../1_dosage/data/mapQ-filter/MM725.bam, ../1_dosage/data/mapQ-filter/MM738.bam, ../1_dosage/data/mapQ-filter/MM649.bam, ../1_dosage/data/mapQ-filter/MM654.bam, ../1_dosage/data/mapQ-filter/MM652.bam, ../1_dosage/data/mapQ-filter/MM727.bam, ../1_dosage/data/mapQ-filter/MM764.bam, ../1_dosage/data/mapQ-filter/MM767.bam, ../1_dosage/data/mapQ-filter/MM640.bam, ../1_dosage/data/mapQ-filter/MM723.bam, ../1_dosage/data/mapQ-filter/MM722.bam, ../1_dosage/data/mapQ-filter/MM646.bam, ../1_dosage/data/mapQ-filter/MM759.bam, ../1_dosage/data/mapQ-filter/MM744.bam, ../1_dosage/data/mapQ-filter/MM638.bam, ../1_dosage/data/mapQ-filter/MM651.bam, ../1_dosage/data/mapQ-filter/MM641.bam, ../1_dosage/data/mapQ-filter/MM766.bam, ../1_dosage/data/mapQ-filter/MM643.bam, ../1_dosage/data/mapQ-filter/MM740.bam, ../1_dosage/data/mapQ-filter/MM655.bam, ../1_dosage/data/mapQ-filter/MM775.bam, ../1_dosage/data/mapQ-filter/MM717.bam, ../1_dosage/data/mapQ-filter/MM770.bam, ../1_dosage/data/mapQ-filter/MM653.bam, ../1_dosage/data/mapQ-filter/MM776.bam, ../1_dosage/data/mapQ-filter/MM729.bam, ../1_dosage/data/mapQ-filter/MM644.bam, ../1_dosage/data/mapQ-filter/MM736.bam, ../1_dosage/data/mapQ-filter/MM774.bam, ../1_dosage/data/mapQ-filter/MM756.bam, ../1_dosage/data/mapQ-filter/MM719.bam, ../1_dosage/data/mapQ-filter/MM728.bam, ../1_dosage/data/mapQ-filter/MM772.bam, ../1_dosage/data/mapQ-filter/MM765.bam, ../1_dosage/data/mapQ-filter/MM777.bam, ../1_dosage/data/mapQ-filter/MM752.bam, ../1_dosage/data/mapQ-filter/MM657.bam, ../1_dosage/data/mapQ-filter/MM763.bam, ../1_dosage/data/mapQ-filter/MM734.bam, ../1_dosage/data/mapQ-filter/MM718.bam, ../1_dosage/data/mapQ-filter/MM732.bam, ../1_dosage/data/mapQ-filter/MM751.bam, ../1_dosage/data/mapQ-filter/MM731.bam, ../1_dosage/data/mapQ-filter/MM721.bam, ../1_dosage/data/mapQ-filter/MM650.bam, ../1_dosage/data/mapQ-filter/MM639.bam, ../1_dosage/data/mapQ-filter/MM748.bam, ../1_dosage/data/mapQ-filter/MM758.bam, ../1_dosage/data/mapQ-filter/MM743.bam, ../1_dosage/data/mapQ-filter/MM716.bam, ../1_dosage/data/mapQ-filter/MM771.bam, ../1_dosage/data/mapQ-filter/MM715.bam, ../1_dosage/data/mapQ-filter/MM768.bam, ../1_dosage/data/mapQ-filter/MM737.bam, ../1_dosage/data/mapQ-filter/MM730.bam, ../1_dosage/data/mapQ-filter/MM647.bam, ../1_dosage/data/mapQ-filter/MM726.bam, ../1_dosage/data/mapQ-filter/MM750.bam, ../1_dosage/data/mapQ-filter/MM642.bam, ../1_dosage/data/mapQ-filter/MM753.bam, ../1_dosage/data/mapQ-filter/MM760.bam
+    output: mpup/C93_154-IVP35-mpup.txt
+    jobid: 167
+    reason: Missing output files: mpup/C93_154-IVP35-mpup.txt
+    wildcards: mother=C93_154, inducer=IVP35
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/C93_154-IVP35-mpup.txt ../1_dosage/data/mapQ-filter/MM645.bam ../1_dosage/data/mapQ-filter/MM648.bam ../1_dosage/data/mapQ-filter/MM739.bam ../1_dosage/data/mapQ-filter/MM720.bam ../1_dosage/data/mapQ-filter/MM636.bam ../1_dosage/data/mapQ-filter/MM724.bam ../1_dosage/data/mapQ-filter/MM656.bam ../1_dosage/data/mapQ-filter/MM749.bam ../1_dosage/data/mapQ-filter/MM769.bam ../1_dosage/data/mapQ-filter/MM745.bam ../1_dosage/data/mapQ-filter/MM747.bam ../1_dosage/data/mapQ-filter/MM733.bam ../1_dosage/data/mapQ-filter/MM773.bam ../1_dosage/data/mapQ-filter/MM714.bam ../1_dosage/data/mapQ-filter/MM757.bam ../1_dosage/data/mapQ-filter/MM742.bam ../1_dosage/data/mapQ-filter/MM779.bam ../1_dosage/data/mapQ-filter/MM735.bam ../1_dosage/data/mapQ-filter/MM778.bam ../1_dosage/data/mapQ-filter/MM754.bam ../1_dosage/data/mapQ-filter/MM741.bam ../1_dosage/data/mapQ-filter/MM746.bam ../1_dosage/data/mapQ-filter/MM761.bam ../1_dosage/data/mapQ-filter/MM762.bam ../1_dosage/data/mapQ-filter/MM755.bam ../1_dosage/data/mapQ-filter/MM637.bam ../1_dosage/data/mapQ-filter/MM725.bam ../1_dosage/data/mapQ-filter/MM738.bam ../1_dosage/data/mapQ-filter/MM649.bam ../1_dosage/data/mapQ-filter/MM654.bam ../1_dosage/data/mapQ-filter/MM652.bam ../1_dosage/data/mapQ-filter/MM727.bam ../1_dosage/data/mapQ-filter/MM764.bam ../1_dosage/data/mapQ-filter/MM767.bam ../1_dosage/data/mapQ-filter/MM640.bam ../1_dosage/data/mapQ-filter/MM723.bam ../1_dosage/data/mapQ-filter/MM722.bam ../1_dosage/data/mapQ-filter/MM646.bam ../1_dosage/data/mapQ-filter/MM759.bam ../1_dosage/data/mapQ-filter/MM744.bam ../1_dosage/data/mapQ-filter/MM638.bam ../1_dosage/data/mapQ-filter/MM651.bam ../1_dosage/data/mapQ-filter/MM641.bam ../1_dosage/data/mapQ-filter/MM766.bam ../1_dosage/data/mapQ-filter/MM643.bam ../1_dosage/data/mapQ-filter/MM740.bam ../1_dosage/data/mapQ-filter/MM655.bam ../1_dosage/data/mapQ-filter/MM775.bam ../1_dosage/data/mapQ-filter/MM717.bam ../1_dosage/data/mapQ-filter/MM770.bam ../1_dosage/data/mapQ-filter/MM653.bam ../1_dosage/data/mapQ-filter/MM776.bam ../1_dosage/data/mapQ-filter/MM729.bam ../1_dosage/data/mapQ-filter/MM644.bam ../1_dosage/data/mapQ-filter/MM736.bam ../1_dosage/data/mapQ-filter/MM774.bam ../1_dosage/data/mapQ-filter/MM756.bam ../1_dosage/data/mapQ-filter/MM719.bam ../1_dosage/data/mapQ-filter/MM728.bam ../1_dosage/data/mapQ-filter/MM772.bam ../1_dosage/data/mapQ-filter/MM765.bam ../1_dosage/data/mapQ-filter/MM777.bam ../1_dosage/data/mapQ-filter/MM752.bam ../1_dosage/data/mapQ-filter/MM657.bam ../1_dosage/data/mapQ-filter/MM763.bam ../1_dosage/data/mapQ-filter/MM734.bam ../1_dosage/data/mapQ-filter/MM718.bam ../1_dosage/data/mapQ-filter/MM732.bam ../1_dosage/data/mapQ-filter/MM751.bam ../1_dosage/data/mapQ-filter/MM731.bam ../1_dosage/data/mapQ-filter/MM721.bam ../1_dosage/data/mapQ-filter/MM650.bam ../1_dosage/data/mapQ-filter/MM639.bam ../1_dosage/data/mapQ-filter/MM748.bam ../1_dosage/data/mapQ-filter/MM758.bam ../1_dosage/data/mapQ-filter/MM743.bam ../1_dosage/data/mapQ-filter/MM716.bam ../1_dosage/data/mapQ-filter/MM771.bam ../1_dosage/data/mapQ-filter/MM715.bam ../1_dosage/data/mapQ-filter/MM768.bam ../1_dosage/data/mapQ-filter/MM737.bam ../1_dosage/data/mapQ-filter/MM730.bam ../1_dosage/data/mapQ-filter/MM647.bam ../1_dosage/data/mapQ-filter/MM726.bam ../1_dosage/data/mapQ-filter/MM750.bam ../1_dosage/data/mapQ-filter/MM642.bam ../1_dosage/data/mapQ-filter/MM753.bam ../1_dosage/data/mapQ-filter/MM760.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM144.bam, ../1_dosage/data/mapQ-filter/MM141.bam, ../1_dosage/data/mapQ-filter/MM146.bam, ../1_dosage/data/mapQ-filter/MM143.bam, ../1_dosage/data/mapQ-filter/MM147.bam, ../1_dosage/data/mapQ-filter/MM148.bam, ../1_dosage/data/mapQ-filter/MM149.bam, ../1_dosage/data/mapQ-filter/MM909.bam, ../1_dosage/data/mapQ-filter/MM142.bam, ../1_dosage/data/mapQ-filter/MM910.bam, ../1_dosage/data/mapQ-filter/MM145.bam
+    output: mpup/WA_104-PL4-mpup.txt
+    jobid: 172
+    reason: Missing output files: mpup/WA_104-PL4-mpup.txt
+    wildcards: mother=WA_104, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/WA_104-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM144.bam ../1_dosage/data/mapQ-filter/MM141.bam ../1_dosage/data/mapQ-filter/MM146.bam ../1_dosage/data/mapQ-filter/MM143.bam ../1_dosage/data/mapQ-filter/MM147.bam ../1_dosage/data/mapQ-filter/MM148.bam ../1_dosage/data/mapQ-filter/MM149.bam ../1_dosage/data/mapQ-filter/MM909.bam ../1_dosage/data/mapQ-filter/MM142.bam ../1_dosage/data/mapQ-filter/MM910.bam ../1_dosage/data/mapQ-filter/MM145.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM273.bam, ../1_dosage/data/mapQ-filter/MM272.bam
+    output: mpup/Desiree-IVP35-mpup.txt
+    jobid: 152
+    reason: Missing output files: mpup/Desiree-IVP35-mpup.txt
+    wildcards: mother=Desiree, inducer=IVP35
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/Desiree-IVP35-mpup.txt ../1_dosage/data/mapQ-filter/MM273.bam ../1_dosage/data/mapQ-filter/MM272.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM1177.bam
+    output: mpup/C91_640-IVP35-mpup.txt
+    jobid: 156
+    reason: Missing output files: mpup/C91_640-IVP35-mpup.txt
+    wildcards: mother=C91_640, inducer=IVP35
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/C91_640-IVP35-mpup.txt ../1_dosage/data/mapQ-filter/MM1177.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM631.bam
+    output: mpup/LRY_3_57-IVP35-mpup.txt
+    jobid: 161
+    reason: Missing output files: mpup/LRY_3_57-IVP35-mpup.txt
+    wildcards: mother=LRY_3_57, inducer=IVP35
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/LRY_3_57-IVP35-mpup.txt ../1_dosage/data/mapQ-filter/MM631.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM837.bam, ../1_dosage/data/mapQ-filter/MM833.bam, ../1_dosage/data/mapQ-filter/MM781.bam, ../1_dosage/data/mapQ-filter/MM989.bam, ../1_dosage/data/mapQ-filter/MM237.bam, ../1_dosage/data/mapQ-filter/MM228.bam, ../1_dosage/data/mapQ-filter/MM783.bam, ../1_dosage/data/mapQ-filter/MM808.bam, ../1_dosage/data/mapQ-filter/MM229.bam, ../1_dosage/data/mapQ-filter/MM822.bam, ../1_dosage/data/mapQ-filter/MM263.bam, ../1_dosage/data/mapQ-filter/MM832.bam, ../1_dosage/data/mapQ-filter/MM248.bam, ../1_dosage/data/mapQ-filter/MM793.bam, ../1_dosage/data/mapQ-filter/MM219.bam, ../1_dosage/data/mapQ-filter/MM258.bam, ../1_dosage/data/mapQ-filter/MM796.bam, ../1_dosage/data/mapQ-filter/MM802.bam, ../1_dosage/data/mapQ-filter/MM241.bam, ../1_dosage/data/mapQ-filter/MM224.bam, ../1_dosage/data/mapQ-filter/MM813.bam, ../1_dosage/data/mapQ-filter/MM830.bam, ../1_dosage/data/mapQ-filter/MM991.bam, ../1_dosage/data/mapQ-filter/MM220.bam, ../1_dosage/data/mapQ-filter/MM821.bam, ../1_dosage/data/mapQ-filter/MM1012.bam, ../1_dosage/data/mapQ-filter/MM670.bam, ../1_dosage/data/mapQ-filter/MM834.bam, ../1_dosage/data/mapQ-filter/MM803.bam, ../1_dosage/data/mapQ-filter/MM669.bam, ../1_dosage/data/mapQ-filter/MM246.bam, ../1_dosage/data/mapQ-filter/MM230.bam, ../1_dosage/data/mapQ-filter/MM251.bam, ../1_dosage/data/mapQ-filter/MM242.bam, ../1_dosage/data/mapQ-filter/MM259.bam, ../1_dosage/data/mapQ-filter/MM663.bam, ../1_dosage/data/mapQ-filter/MM660.bam, ../1_dosage/data/mapQ-filter/MM659.bam, ../1_dosage/data/mapQ-filter/MM829.bam, ../1_dosage/data/mapQ-filter/MM672.bam, ../1_dosage/data/mapQ-filter/MM831.bam, ../1_dosage/data/mapQ-filter/MM787.bam, ../1_dosage/data/mapQ-filter/MM233.bam, ../1_dosage/data/mapQ-filter/MM673.bam, ../1_dosage/data/mapQ-filter/MM1198.bam, ../1_dosage/data/mapQ-filter/MM990.bam, ../1_dosage/data/mapQ-filter/MM255.bam, ../1_dosage/data/mapQ-filter/MM671.bam, ../1_dosage/data/mapQ-filter/MM254.bam, ../1_dosage/data/mapQ-filter/MM785.bam, ../1_dosage/data/mapQ-filter/MM249.bam, ../1_dosage/data/mapQ-filter/MM810.bam, ../1_dosage/data/mapQ-filter/MM782.bam, ../1_dosage/data/mapQ-filter/MM225.bam, ../1_dosage/data/mapQ-filter/MM664.bam, ../1_dosage/data/mapQ-filter/MM986.bam, ../1_dosage/data/mapQ-filter/MM235.bam, ../1_dosage/data/mapQ-filter/MM240.bam, ../1_dosage/data/mapQ-filter/MM253.bam, ../1_dosage/data/mapQ-filter/MM825.bam, ../1_dosage/data/mapQ-filter/MM666.bam, ../1_dosage/data/mapQ-filter/MM983.bam, ../1_dosage/data/mapQ-filter/MM256.bam, ../1_dosage/data/mapQ-filter/MM812.bam, ../1_dosage/data/mapQ-filter/MM827.bam, ../1_dosage/data/mapQ-filter/MM239.bam, ../1_dosage/data/mapQ-filter/MM221.bam, ../1_dosage/data/mapQ-filter/MM790.bam, ../1_dosage/data/mapQ-filter/MM795.bam, ../1_dosage/data/mapQ-filter/MM797.bam, ../1_dosage/data/mapQ-filter/MM824.bam, ../1_dosage/data/mapQ-filter/MM236.bam, ../1_dosage/data/mapQ-filter/MM826.bam, ../1_dosage/data/mapQ-filter/MM807.bam, ../1_dosage/data/mapQ-filter/MM252.bam, ../1_dosage/data/mapQ-filter/MM1196.bam, ../1_dosage/data/mapQ-filter/MM801.bam, ../1_dosage/data/mapQ-filter/MM261.bam, ../1_dosage/data/mapQ-filter/MM804.bam, ../1_dosage/data/mapQ-filter/MM982.bam, ../1_dosage/data/mapQ-filter/MM784.bam, ../1_dosage/data/mapQ-filter/MM662.bam, ../1_dosage/data/mapQ-filter/MM814.bam, ../1_dosage/data/mapQ-filter/MM798.bam, ../1_dosage/data/mapQ-filter/MM231.bam, ../1_dosage/data/mapQ-filter/MM786.bam, ../1_dosage/data/mapQ-filter/MM245.bam, ../1_dosage/data/mapQ-filter/MM1013.bam, ../1_dosage/data/mapQ-filter/MM806.bam, ../1_dosage/data/mapQ-filter/MM232.bam, ../1_dosage/data/mapQ-filter/MM988.bam, ../1_dosage/data/mapQ-filter/MM247.bam, ../1_dosage/data/mapQ-filter/MM828.bam, ../1_dosage/data/mapQ-filter/MM836.bam, ../1_dosage/data/mapQ-filter/MM1199.bam, ../1_dosage/data/mapQ-filter/MM815.bam, ../1_dosage/data/mapQ-filter/MM661.bam, ../1_dosage/data/mapQ-filter/MM1197.bam, ../1_dosage/data/mapQ-filter/MM788.bam, ../1_dosage/data/mapQ-filter/MM819.bam, ../1_dosage/data/mapQ-filter/MM823.bam, ../1_dosage/data/mapQ-filter/MM791.bam, ../1_dosage/data/mapQ-filter/MM985.bam, ../1_dosage/data/mapQ-filter/MM260.bam, ../1_dosage/data/mapQ-filter/MM665.bam, ../1_dosage/data/mapQ-filter/MM838.bam, ../1_dosage/data/mapQ-filter/MM250.bam, ../1_dosage/data/mapQ-filter/MM987.bam, ../1_dosage/data/mapQ-filter/MM257.bam, ../1_dosage/data/mapQ-filter/MM234.bam, ../1_dosage/data/mapQ-filter/MM809.bam, ../1_dosage/data/mapQ-filter/MM238.bam, ../1_dosage/data/mapQ-filter/MM668.bam, ../1_dosage/data/mapQ-filter/MM244.bam, ../1_dosage/data/mapQ-filter/MM800.bam, ../1_dosage/data/mapQ-filter/MM789.bam, ../1_dosage/data/mapQ-filter/MM794.bam, ../1_dosage/data/mapQ-filter/MM667.bam, ../1_dosage/data/mapQ-filter/MM226.bam, ../1_dosage/data/mapQ-filter/MM984.bam, ../1_dosage/data/mapQ-filter/MM792.bam, ../1_dosage/data/mapQ-filter/MM816.bam, ../1_dosage/data/mapQ-filter/MM799.bam, ../1_dosage/data/mapQ-filter/MM817.bam, ../1_dosage/data/mapQ-filter/MM811.bam, ../1_dosage/data/mapQ-filter/MM805.bam, ../1_dosage/data/mapQ-filter/MM818.bam, ../1_dosage/data/mapQ-filter/MM227.bam, ../1_dosage/data/mapQ-filter/MM262.bam, ../1_dosage/data/mapQ-filter/MM223.bam, ../1_dosage/data/mapQ-filter/MM243.bam, ../1_dosage/data/mapQ-filter/MM835.bam, ../1_dosage/data/mapQ-filter/MM820.bam, ../1_dosage/data/mapQ-filter/MM222.bam
+    output: mpup/WA_077-IVP35-mpup.txt
+    jobid: 144
+    reason: Missing output files: mpup/WA_077-IVP35-mpup.txt
+    wildcards: mother=WA_077, inducer=IVP35
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/WA_077-IVP35-mpup.txt ../1_dosage/data/mapQ-filter/MM837.bam ../1_dosage/data/mapQ-filter/MM833.bam ../1_dosage/data/mapQ-filter/MM781.bam ../1_dosage/data/mapQ-filter/MM989.bam ../1_dosage/data/mapQ-filter/MM237.bam ../1_dosage/data/mapQ-filter/MM228.bam ../1_dosage/data/mapQ-filter/MM783.bam ../1_dosage/data/mapQ-filter/MM808.bam ../1_dosage/data/mapQ-filter/MM229.bam ../1_dosage/data/mapQ-filter/MM822.bam ../1_dosage/data/mapQ-filter/MM263.bam ../1_dosage/data/mapQ-filter/MM832.bam ../1_dosage/data/mapQ-filter/MM248.bam ../1_dosage/data/mapQ-filter/MM793.bam ../1_dosage/data/mapQ-filter/MM219.bam ../1_dosage/data/mapQ-filter/MM258.bam ../1_dosage/data/mapQ-filter/MM796.bam ../1_dosage/data/mapQ-filter/MM802.bam ../1_dosage/data/mapQ-filter/MM241.bam ../1_dosage/data/mapQ-filter/MM224.bam ../1_dosage/data/mapQ-filter/MM813.bam ../1_dosage/data/mapQ-filter/MM830.bam ../1_dosage/data/mapQ-filter/MM991.bam ../1_dosage/data/mapQ-filter/MM220.bam ../1_dosage/data/mapQ-filter/MM821.bam ../1_dosage/data/mapQ-filter/MM1012.bam ../1_dosage/data/mapQ-filter/MM670.bam ../1_dosage/data/mapQ-filter/MM834.bam ../1_dosage/data/mapQ-filter/MM803.bam ../1_dosage/data/mapQ-filter/MM669.bam ../1_dosage/data/mapQ-filter/MM246.bam ../1_dosage/data/mapQ-filter/MM230.bam ../1_dosage/data/mapQ-filter/MM251.bam ../1_dosage/data/mapQ-filter/MM242.bam ../1_dosage/data/mapQ-filter/MM259.bam ../1_dosage/data/mapQ-filter/MM663.bam ../1_dosage/data/mapQ-filter/MM660.bam ../1_dosage/data/mapQ-filter/MM659.bam ../1_dosage/data/mapQ-filter/MM829.bam ../1_dosage/data/mapQ-filter/MM672.bam ../1_dosage/data/mapQ-filter/MM831.bam ../1_dosage/data/mapQ-filter/MM787.bam ../1_dosage/data/mapQ-filter/MM233.bam ../1_dosage/data/mapQ-filter/MM673.bam ../1_dosage/data/mapQ-filter/MM1198.bam ../1_dosage/data/mapQ-filter/MM990.bam ../1_dosage/data/mapQ-filter/MM255.bam ../1_dosage/data/mapQ-filter/MM671.bam ../1_dosage/data/mapQ-filter/MM254.bam ../1_dosage/data/mapQ-filter/MM785.bam ../1_dosage/data/mapQ-filter/MM249.bam ../1_dosage/data/mapQ-filter/MM810.bam ../1_dosage/data/mapQ-filter/MM782.bam ../1_dosage/data/mapQ-filter/MM225.bam ../1_dosage/data/mapQ-filter/MM664.bam ../1_dosage/data/mapQ-filter/MM986.bam ../1_dosage/data/mapQ-filter/MM235.bam ../1_dosage/data/mapQ-filter/MM240.bam ../1_dosage/data/mapQ-filter/MM253.bam ../1_dosage/data/mapQ-filter/MM825.bam ../1_dosage/data/mapQ-filter/MM666.bam ../1_dosage/data/mapQ-filter/MM983.bam ../1_dosage/data/mapQ-filter/MM256.bam ../1_dosage/data/mapQ-filter/MM812.bam ../1_dosage/data/mapQ-filter/MM827.bam ../1_dosage/data/mapQ-filter/MM239.bam ../1_dosage/data/mapQ-filter/MM221.bam ../1_dosage/data/mapQ-filter/MM790.bam ../1_dosage/data/mapQ-filter/MM795.bam ../1_dosage/data/mapQ-filter/MM797.bam ../1_dosage/data/mapQ-filter/MM824.bam ../1_dosage/data/mapQ-filter/MM236.bam ../1_dosage/data/mapQ-filter/MM826.bam ../1_dosage/data/mapQ-filter/MM807.bam ../1_dosage/data/mapQ-filter/MM252.bam ../1_dosage/data/mapQ-filter/MM1196.bam ../1_dosage/data/mapQ-filter/MM801.bam ../1_dosage/data/mapQ-filter/MM261.bam ../1_dosage/data/mapQ-filter/MM804.bam ../1_dosage/data/mapQ-filter/MM982.bam ../1_dosage/data/mapQ-filter/MM784.bam ../1_dosage/data/mapQ-filter/MM662.bam ../1_dosage/data/mapQ-filter/MM814.bam ../1_dosage/data/mapQ-filter/MM798.bam ../1_dosage/data/mapQ-filter/MM231.bam ../1_dosage/data/mapQ-filter/MM786.bam ../1_dosage/data/mapQ-filter/MM245.bam ../1_dosage/data/mapQ-filter/MM1013.bam ../1_dosage/data/mapQ-filter/MM806.bam ../1_dosage/data/mapQ-filter/MM232.bam ../1_dosage/data/mapQ-filter/MM988.bam ../1_dosage/data/mapQ-filter/MM247.bam ../1_dosage/data/mapQ-filter/MM828.bam ../1_dosage/data/mapQ-filter/MM836.bam ../1_dosage/data/mapQ-filter/MM1199.bam ../1_dosage/data/mapQ-filter/MM815.bam ../1_dosage/data/mapQ-filter/MM661.bam ../1_dosage/data/mapQ-filter/MM1197.bam ../1_dosage/data/mapQ-filter/MM788.bam ../1_dosage/data/mapQ-filter/MM819.bam ../1_dosage/data/mapQ-filter/MM823.bam ../1_dosage/data/mapQ-filter/MM791.bam ../1_dosage/data/mapQ-filter/MM985.bam ../1_dosage/data/mapQ-filter/MM260.bam ../1_dosage/data/mapQ-filter/MM665.bam ../1_dosage/data/mapQ-filter/MM838.bam ../1_dosage/data/mapQ-filter/MM250.bam ../1_dosage/data/mapQ-filter/MM987.bam ../1_dosage/data/mapQ-filter/MM257.bam ../1_dosage/data/mapQ-filter/MM234.bam ../1_dosage/data/mapQ-filter/MM809.bam ../1_dosage/data/mapQ-filter/MM238.bam ../1_dosage/data/mapQ-filter/MM668.bam ../1_dosage/data/mapQ-filter/MM244.bam ../1_dosage/data/mapQ-filter/MM800.bam ../1_dosage/data/mapQ-filter/MM789.bam ../1_dosage/data/mapQ-filter/MM794.bam ../1_dosage/data/mapQ-filter/MM667.bam ../1_dosage/data/mapQ-filter/MM226.bam ../1_dosage/data/mapQ-filter/MM984.bam ../1_dosage/data/mapQ-filter/MM792.bam ../1_dosage/data/mapQ-filter/MM816.bam ../1_dosage/data/mapQ-filter/MM799.bam ../1_dosage/data/mapQ-filter/MM817.bam ../1_dosage/data/mapQ-filter/MM811.bam ../1_dosage/data/mapQ-filter/MM805.bam ../1_dosage/data/mapQ-filter/MM818.bam ../1_dosage/data/mapQ-filter/MM227.bam ../1_dosage/data/mapQ-filter/MM262.bam ../1_dosage/data/mapQ-filter/MM223.bam ../1_dosage/data/mapQ-filter/MM243.bam ../1_dosage/data/mapQ-filter/MM835.bam ../1_dosage/data/mapQ-filter/MM820.bam ../1_dosage/data/mapQ-filter/MM222.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM136.bam, ../1_dosage/data/mapQ-filter/MM133.bam, ../1_dosage/data/mapQ-filter/MM134.bam, ../1_dosage/data/mapQ-filter/MM135.bam, ../1_dosage/data/mapQ-filter/MM1004.bam
+    output: mpup/458-PL4-mpup.txt
+    jobid: 160
+    reason: Missing output files: mpup/458-PL4-mpup.txt
+    wildcards: mother=458, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/458-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM136.bam ../1_dosage/data/mapQ-filter/MM133.bam ../1_dosage/data/mapQ-filter/MM134.bam ../1_dosage/data/mapQ-filter/MM135.bam ../1_dosage/data/mapQ-filter/MM1004.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM84.bam, ../1_dosage/data/mapQ-filter/MM1172.bam, ../1_dosage/data/mapQ-filter/MM1212.bam, ../1_dosage/data/mapQ-filter/MM1213.bam, ../1_dosage/data/mapQ-filter/MM77.bam, ../1_dosage/data/mapQ-filter/MM76.bam, ../1_dosage/data/mapQ-filter/MM78.bam, ../1_dosage/data/mapQ-filter/MM87.bam, ../1_dosage/data/mapQ-filter/MM1169.bam, ../1_dosage/data/mapQ-filter/MM1175.bam, ../1_dosage/data/mapQ-filter/MM1211.bam, ../1_dosage/data/mapQ-filter/MM1176.bam, ../1_dosage/data/mapQ-filter/MM1219.bam, ../1_dosage/data/mapQ-filter/MM1173.bam, ../1_dosage/data/mapQ-filter/MM85.bam, ../1_dosage/data/mapQ-filter/MM86.bam, ../1_dosage/data/mapQ-filter/MM80.bam, ../1_dosage/data/mapQ-filter/MM1215.bam, ../1_dosage/data/mapQ-filter/MM82.bam, ../1_dosage/data/mapQ-filter/MM1218.bam, ../1_dosage/data/mapQ-filter/MM1216.bam, ../1_dosage/data/mapQ-filter/MM1170.bam, ../1_dosage/data/mapQ-filter/MM1174.bam, ../1_dosage/data/mapQ-filter/MM79.bam, ../1_dosage/data/mapQ-filter/MM1220.bam, ../1_dosage/data/mapQ-filter/MM1168.bam, ../1_dosage/data/mapQ-filter/MM1210.bam, ../1_dosage/data/mapQ-filter/MM81.bam, ../1_dosage/data/mapQ-filter/MM1217.bam, ../1_dosage/data/mapQ-filter/MM1221.bam, ../1_dosage/data/mapQ-filter/MM74.bam, ../1_dosage/data/mapQ-filter/MM1171.bam, ../1_dosage/data/mapQ-filter/MM83.bam, ../1_dosage/data/mapQ-filter/MM88.bam, ../1_dosage/data/mapQ-filter/MM1214.bam, ../1_dosage/data/mapQ-filter/MM75.bam
+    output: mpup/LR00_026-IVP35-mpup.txt
+    jobid: 155
+    reason: Missing output files: mpup/LR00_026-IVP35-mpup.txt
+    wildcards: mother=LR00_026, inducer=IVP35
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/LR00_026-IVP35-mpup.txt ../1_dosage/data/mapQ-filter/MM84.bam ../1_dosage/data/mapQ-filter/MM1172.bam ../1_dosage/data/mapQ-filter/MM1212.bam ../1_dosage/data/mapQ-filter/MM1213.bam ../1_dosage/data/mapQ-filter/MM77.bam ../1_dosage/data/mapQ-filter/MM76.bam ../1_dosage/data/mapQ-filter/MM78.bam ../1_dosage/data/mapQ-filter/MM87.bam ../1_dosage/data/mapQ-filter/MM1169.bam ../1_dosage/data/mapQ-filter/MM1175.bam ../1_dosage/data/mapQ-filter/MM1211.bam ../1_dosage/data/mapQ-filter/MM1176.bam ../1_dosage/data/mapQ-filter/MM1219.bam ../1_dosage/data/mapQ-filter/MM1173.bam ../1_dosage/data/mapQ-filter/MM85.bam ../1_dosage/data/mapQ-filter/MM86.bam ../1_dosage/data/mapQ-filter/MM80.bam ../1_dosage/data/mapQ-filter/MM1215.bam ../1_dosage/data/mapQ-filter/MM82.bam ../1_dosage/data/mapQ-filter/MM1218.bam ../1_dosage/data/mapQ-filter/MM1216.bam ../1_dosage/data/mapQ-filter/MM1170.bam ../1_dosage/data/mapQ-filter/MM1174.bam ../1_dosage/data/mapQ-filter/MM79.bam ../1_dosage/data/mapQ-filter/MM1220.bam ../1_dosage/data/mapQ-filter/MM1168.bam ../1_dosage/data/mapQ-filter/MM1210.bam ../1_dosage/data/mapQ-filter/MM81.bam ../1_dosage/data/mapQ-filter/MM1217.bam ../1_dosage/data/mapQ-filter/MM1221.bam ../1_dosage/data/mapQ-filter/MM74.bam ../1_dosage/data/mapQ-filter/MM1171.bam ../1_dosage/data/mapQ-filter/MM83.bam ../1_dosage/data/mapQ-filter/MM88.bam ../1_dosage/data/mapQ-filter/MM1214.bam ../1_dosage/data/mapQ-filter/MM75.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM427.bam, ../1_dosage/data/mapQ-filter/MM445.bam, ../1_dosage/data/mapQ-filter/MM447.bam, ../1_dosage/data/mapQ-filter/MM432.bam, ../1_dosage/data/mapQ-filter/MM448.bam, ../1_dosage/data/mapQ-filter/MM478.bam, ../1_dosage/data/mapQ-filter/MM469.bam, ../1_dosage/data/mapQ-filter/MM436.bam, ../1_dosage/data/mapQ-filter/MM443.bam, ../1_dosage/data/mapQ-filter/MM480.bam, ../1_dosage/data/mapQ-filter/MM470.bam, ../1_dosage/data/mapQ-filter/MM474.bam, ../1_dosage/data/mapQ-filter/MM844.bam, ../1_dosage/data/mapQ-filter/MM999.bam, ../1_dosage/data/mapQ-filter/MM456.bam, ../1_dosage/data/mapQ-filter/MM442.bam, ../1_dosage/data/mapQ-filter/MM472.bam, ../1_dosage/data/mapQ-filter/MM454.bam, ../1_dosage/data/mapQ-filter/MM462.bam, ../1_dosage/data/mapQ-filter/MM440.bam, ../1_dosage/data/mapQ-filter/MM466.bam, ../1_dosage/data/mapQ-filter/MM477.bam, ../1_dosage/data/mapQ-filter/MM438.bam, ../1_dosage/data/mapQ-filter/MM431.bam, ../1_dosage/data/mapQ-filter/MM435.bam, ../1_dosage/data/mapQ-filter/MM446.bam, ../1_dosage/data/mapQ-filter/MM455.bam, ../1_dosage/data/mapQ-filter/MM464.bam, ../1_dosage/data/mapQ-filter/MM428.bam, ../1_dosage/data/mapQ-filter/MM452.bam, ../1_dosage/data/mapQ-filter/MM476.bam, ../1_dosage/data/mapQ-filter/MM451.bam, ../1_dosage/data/mapQ-filter/MM461.bam, ../1_dosage/data/mapQ-filter/MM471.bam, ../1_dosage/data/mapQ-filter/MM843.bam, ../1_dosage/data/mapQ-filter/MM434.bam, ../1_dosage/data/mapQ-filter/MM467.bam, ../1_dosage/data/mapQ-filter/MM468.bam, ../1_dosage/data/mapQ-filter/MM465.bam, ../1_dosage/data/mapQ-filter/MM459.bam, ../1_dosage/data/mapQ-filter/MM441.bam, ../1_dosage/data/mapQ-filter/MM437.bam, ../1_dosage/data/mapQ-filter/MM439.bam, ../1_dosage/data/mapQ-filter/MM1000.bam, ../1_dosage/data/mapQ-filter/MM457.bam, ../1_dosage/data/mapQ-filter/MM458.bam, ../1_dosage/data/mapQ-filter/MM463.bam, ../1_dosage/data/mapQ-filter/MM473.bam, ../1_dosage/data/mapQ-filter/MM475.bam, ../1_dosage/data/mapQ-filter/MM430.bam, ../1_dosage/data/mapQ-filter/MM479.bam, ../1_dosage/data/mapQ-filter/MM429.bam, ../1_dosage/data/mapQ-filter/MM845.bam, ../1_dosage/data/mapQ-filter/MM433.bam, ../1_dosage/data/mapQ-filter/MM450.bam, ../1_dosage/data/mapQ-filter/MM460.bam, ../1_dosage/data/mapQ-filter/MM453.bam, ../1_dosage/data/mapQ-filter/MM449.bam, ../1_dosage/data/mapQ-filter/MM444.bam
+    output: mpup/LR00_022-PL4-mpup.txt
+    jobid: 153
+    reason: Missing output files: mpup/LR00_022-PL4-mpup.txt
+    wildcards: mother=LR00_022, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/LR00_022-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM427.bam ../1_dosage/data/mapQ-filter/MM445.bam ../1_dosage/data/mapQ-filter/MM447.bam ../1_dosage/data/mapQ-filter/MM432.bam ../1_dosage/data/mapQ-filter/MM448.bam ../1_dosage/data/mapQ-filter/MM478.bam ../1_dosage/data/mapQ-filter/MM469.bam ../1_dosage/data/mapQ-filter/MM436.bam ../1_dosage/data/mapQ-filter/MM443.bam ../1_dosage/data/mapQ-filter/MM480.bam ../1_dosage/data/mapQ-filter/MM470.bam ../1_dosage/data/mapQ-filter/MM474.bam ../1_dosage/data/mapQ-filter/MM844.bam ../1_dosage/data/mapQ-filter/MM999.bam ../1_dosage/data/mapQ-filter/MM456.bam ../1_dosage/data/mapQ-filter/MM442.bam ../1_dosage/data/mapQ-filter/MM472.bam ../1_dosage/data/mapQ-filter/MM454.bam ../1_dosage/data/mapQ-filter/MM462.bam ../1_dosage/data/mapQ-filter/MM440.bam ../1_dosage/data/mapQ-filter/MM466.bam ../1_dosage/data/mapQ-filter/MM477.bam ../1_dosage/data/mapQ-filter/MM438.bam ../1_dosage/data/mapQ-filter/MM431.bam ../1_dosage/data/mapQ-filter/MM435.bam ../1_dosage/data/mapQ-filter/MM446.bam ../1_dosage/data/mapQ-filter/MM455.bam ../1_dosage/data/mapQ-filter/MM464.bam ../1_dosage/data/mapQ-filter/MM428.bam ../1_dosage/data/mapQ-filter/MM452.bam ../1_dosage/data/mapQ-filter/MM476.bam ../1_dosage/data/mapQ-filter/MM451.bam ../1_dosage/data/mapQ-filter/MM461.bam ../1_dosage/data/mapQ-filter/MM471.bam ../1_dosage/data/mapQ-filter/MM843.bam ../1_dosage/data/mapQ-filter/MM434.bam ../1_dosage/data/mapQ-filter/MM467.bam ../1_dosage/data/mapQ-filter/MM468.bam ../1_dosage/data/mapQ-filter/MM465.bam ../1_dosage/data/mapQ-filter/MM459.bam ../1_dosage/data/mapQ-filter/MM441.bam ../1_dosage/data/mapQ-filter/MM437.bam ../1_dosage/data/mapQ-filter/MM439.bam ../1_dosage/data/mapQ-filter/MM1000.bam ../1_dosage/data/mapQ-filter/MM457.bam ../1_dosage/data/mapQ-filter/MM458.bam ../1_dosage/data/mapQ-filter/MM463.bam ../1_dosage/data/mapQ-filter/MM473.bam ../1_dosage/data/mapQ-filter/MM475.bam ../1_dosage/data/mapQ-filter/MM430.bam ../1_dosage/data/mapQ-filter/MM479.bam ../1_dosage/data/mapQ-filter/MM429.bam ../1_dosage/data/mapQ-filter/MM845.bam ../1_dosage/data/mapQ-filter/MM433.bam ../1_dosage/data/mapQ-filter/MM450.bam ../1_dosage/data/mapQ-filter/MM460.bam ../1_dosage/data/mapQ-filter/MM453.bam ../1_dosage/data/mapQ-filter/MM449.bam ../1_dosage/data/mapQ-filter/MM444.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM1072.bam, ../1_dosage/data/mapQ-filter/MM1074.bam, ../1_dosage/data/mapQ-filter/MM1070.bam, ../1_dosage/data/mapQ-filter/MM1069.bam, ../1_dosage/data/mapQ-filter/MM1071.bam, ../1_dosage/data/mapQ-filter/MM1073.bam
+    output: mpup/Y84_027-IVP101-mpup.txt
+    jobid: 163
+    reason: Missing output files: mpup/Y84_027-IVP101-mpup.txt
+    wildcards: mother=Y84_027, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/Y84_027-IVP101-mpup.txt ../1_dosage/data/mapQ-filter/MM1072.bam ../1_dosage/data/mapQ-filter/MM1074.bam ../1_dosage/data/mapQ-filter/MM1070.bam ../1_dosage/data/mapQ-filter/MM1069.bam ../1_dosage/data/mapQ-filter/MM1071.bam ../1_dosage/data/mapQ-filter/MM1073.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM4.bam, ../1_dosage/data/mapQ-filter/MM8.bam, ../1_dosage/data/mapQ-filter/MM280.bam, ../1_dosage/data/mapQ-filter/MM27.bam, ../1_dosage/data/mapQ-filter/MM12.bam, ../1_dosage/data/mapQ-filter/MM686.bam, ../1_dosage/data/mapQ-filter/MM961.bam, ../1_dosage/data/mapQ-filter/MM32.bam, ../1_dosage/data/mapQ-filter/MM965.bam, ../1_dosage/data/mapQ-filter/MM31.bam, ../1_dosage/data/mapQ-filter/MM960.bam, ../1_dosage/data/mapQ-filter/MM2.bam, ../1_dosage/data/mapQ-filter/MM994.bam, ../1_dosage/data/mapQ-filter/MM15.bam, ../1_dosage/data/mapQ-filter/MM22.bam, ../1_dosage/data/mapQ-filter/MM995.bam, ../1_dosage/data/mapQ-filter/MM25.bam, ../1_dosage/data/mapQ-filter/MM26.bam, ../1_dosage/data/mapQ-filter/MM996.bam, ../1_dosage/data/mapQ-filter/MM35.bam, ../1_dosage/data/mapQ-filter/MM23.bam, ../1_dosage/data/mapQ-filter/MM681.bam, ../1_dosage/data/mapQ-filter/MM678.bam, ../1_dosage/data/mapQ-filter/MM688.bam, ../1_dosage/data/mapQ-filter/MM957.bam, ../1_dosage/data/mapQ-filter/MM679.bam, ../1_dosage/data/mapQ-filter/MM685.bam, ../1_dosage/data/mapQ-filter/MM963.bam, ../1_dosage/data/mapQ-filter/MM997.bam, ../1_dosage/data/mapQ-filter/MM966.bam, ../1_dosage/data/mapQ-filter/MM33.bam, ../1_dosage/data/mapQ-filter/MM18.bam, ../1_dosage/data/mapQ-filter/MM13.bam, ../1_dosage/data/mapQ-filter/MM962.bam, ../1_dosage/data/mapQ-filter/MM992.bam, ../1_dosage/data/mapQ-filter/MM14.bam, ../1_dosage/data/mapQ-filter/MM36.bam, ../1_dosage/data/mapQ-filter/MM687.bam, ../1_dosage/data/mapQ-filter/MM16.bam, ../1_dosage/data/mapQ-filter/MM677.bam, ../1_dosage/data/mapQ-filter/MM958.bam, ../1_dosage/data/mapQ-filter/MM684.bam, ../1_dosage/data/mapQ-filter/MM1.bam, ../1_dosage/data/mapQ-filter/MM3.bam, ../1_dosage/data/mapQ-filter/MM21.bam, ../1_dosage/data/mapQ-filter/MM683.bam, ../1_dosage/data/mapQ-filter/MM28.bam, ../1_dosage/data/mapQ-filter/MM998.bam, ../1_dosage/data/mapQ-filter/MM11.bam, ../1_dosage/data/mapQ-filter/MM842.bam, ../1_dosage/data/mapQ-filter/MM6.bam, ../1_dosage/data/mapQ-filter/MM24.bam, ../1_dosage/data/mapQ-filter/MM19.bam, ../1_dosage/data/mapQ-filter/MM20.bam, ../1_dosage/data/mapQ-filter/MM9.bam, ../1_dosage/data/mapQ-filter/MM680.bam, ../1_dosage/data/mapQ-filter/MM7.bam, ../1_dosage/data/mapQ-filter/MM682.bam, ../1_dosage/data/mapQ-filter/MM17.bam, ../1_dosage/data/mapQ-filter/MM30.bam, ../1_dosage/data/mapQ-filter/MM10.bam, ../1_dosage/data/mapQ-filter/MM964.bam, ../1_dosage/data/mapQ-filter/MM993.bam, ../1_dosage/data/mapQ-filter/MM29.bam, ../1_dosage/data/mapQ-filter/MM5.bam, ../1_dosage/data/mapQ-filter/MM959.bam, ../1_dosage/data/mapQ-filter/MM34.bam
+    output: mpup/LR00_014-PL4-mpup.txt
+    jobid: 164
+    reason: Missing output files: mpup/LR00_014-PL4-mpup.txt
+    wildcards: mother=LR00_014, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/LR00_014-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM4.bam ../1_dosage/data/mapQ-filter/MM8.bam ../1_dosage/data/mapQ-filter/MM280.bam ../1_dosage/data/mapQ-filter/MM27.bam ../1_dosage/data/mapQ-filter/MM12.bam ../1_dosage/data/mapQ-filter/MM686.bam ../1_dosage/data/mapQ-filter/MM961.bam ../1_dosage/data/mapQ-filter/MM32.bam ../1_dosage/data/mapQ-filter/MM965.bam ../1_dosage/data/mapQ-filter/MM31.bam ../1_dosage/data/mapQ-filter/MM960.bam ../1_dosage/data/mapQ-filter/MM2.bam ../1_dosage/data/mapQ-filter/MM994.bam ../1_dosage/data/mapQ-filter/MM15.bam ../1_dosage/data/mapQ-filter/MM22.bam ../1_dosage/data/mapQ-filter/MM995.bam ../1_dosage/data/mapQ-filter/MM25.bam ../1_dosage/data/mapQ-filter/MM26.bam ../1_dosage/data/mapQ-filter/MM996.bam ../1_dosage/data/mapQ-filter/MM35.bam ../1_dosage/data/mapQ-filter/MM23.bam ../1_dosage/data/mapQ-filter/MM681.bam ../1_dosage/data/mapQ-filter/MM678.bam ../1_dosage/data/mapQ-filter/MM688.bam ../1_dosage/data/mapQ-filter/MM957.bam ../1_dosage/data/mapQ-filter/MM679.bam ../1_dosage/data/mapQ-filter/MM685.bam ../1_dosage/data/mapQ-filter/MM963.bam ../1_dosage/data/mapQ-filter/MM997.bam ../1_dosage/data/mapQ-filter/MM966.bam ../1_dosage/data/mapQ-filter/MM33.bam ../1_dosage/data/mapQ-filter/MM18.bam ../1_dosage/data/mapQ-filter/MM13.bam ../1_dosage/data/mapQ-filter/MM962.bam ../1_dosage/data/mapQ-filter/MM992.bam ../1_dosage/data/mapQ-filter/MM14.bam ../1_dosage/data/mapQ-filter/MM36.bam ../1_dosage/data/mapQ-filter/MM687.bam ../1_dosage/data/mapQ-filter/MM16.bam ../1_dosage/data/mapQ-filter/MM677.bam ../1_dosage/data/mapQ-filter/MM958.bam ../1_dosage/data/mapQ-filter/MM684.bam ../1_dosage/data/mapQ-filter/MM1.bam ../1_dosage/data/mapQ-filter/MM3.bam ../1_dosage/data/mapQ-filter/MM21.bam ../1_dosage/data/mapQ-filter/MM683.bam ../1_dosage/data/mapQ-filter/MM28.bam ../1_dosage/data/mapQ-filter/MM998.bam ../1_dosage/data/mapQ-filter/MM11.bam ../1_dosage/data/mapQ-filter/MM842.bam ../1_dosage/data/mapQ-filter/MM6.bam ../1_dosage/data/mapQ-filter/MM24.bam ../1_dosage/data/mapQ-filter/MM19.bam ../1_dosage/data/mapQ-filter/MM20.bam ../1_dosage/data/mapQ-filter/MM9.bam ../1_dosage/data/mapQ-filter/MM680.bam ../1_dosage/data/mapQ-filter/MM7.bam ../1_dosage/data/mapQ-filter/MM682.bam ../1_dosage/data/mapQ-filter/MM17.bam ../1_dosage/data/mapQ-filter/MM30.bam ../1_dosage/data/mapQ-filter/MM10.bam ../1_dosage/data/mapQ-filter/MM964.bam ../1_dosage/data/mapQ-filter/MM993.bam ../1_dosage/data/mapQ-filter/MM29.bam ../1_dosage/data/mapQ-filter/MM5.bam ../1_dosage/data/mapQ-filter/MM959.bam ../1_dosage/data/mapQ-filter/MM34.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM593.bam, ../1_dosage/data/mapQ-filter/MM589.bam, ../1_dosage/data/mapQ-filter/MM601.bam, ../1_dosage/data/mapQ-filter/MM609.bam, ../1_dosage/data/mapQ-filter/MM608.bam, ../1_dosage/data/mapQ-filter/MM603.bam, ../1_dosage/data/mapQ-filter/MM590.bam, ../1_dosage/data/mapQ-filter/MM606.bam, ../1_dosage/data/mapQ-filter/MM595.bam, ../1_dosage/data/mapQ-filter/MM587.bam, ../1_dosage/data/mapQ-filter/MM602.bam, ../1_dosage/data/mapQ-filter/MM607.bam, ../1_dosage/data/mapQ-filter/MM600.bam, ../1_dosage/data/mapQ-filter/MM604.bam, ../1_dosage/data/mapQ-filter/MM591.bam, ../1_dosage/data/mapQ-filter/MM592.bam, ../1_dosage/data/mapQ-filter/MM599.bam, ../1_dosage/data/mapQ-filter/MM594.bam, ../1_dosage/data/mapQ-filter/MM610.bam, ../1_dosage/data/mapQ-filter/MM598.bam, ../1_dosage/data/mapQ-filter/MM596.bam, ../1_dosage/data/mapQ-filter/MM588.bam, ../1_dosage/data/mapQ-filter/MM597.bam, ../1_dosage/data/mapQ-filter/MM605.bam
+    output: mpup/C93_154-IVP101-mpup.txt
+    jobid: 149
+    reason: Missing output files: mpup/C93_154-IVP101-mpup.txt
+    wildcards: mother=C93_154, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/C93_154-IVP101-mpup.txt ../1_dosage/data/mapQ-filter/MM593.bam ../1_dosage/data/mapQ-filter/MM589.bam ../1_dosage/data/mapQ-filter/MM601.bam ../1_dosage/data/mapQ-filter/MM609.bam ../1_dosage/data/mapQ-filter/MM608.bam ../1_dosage/data/mapQ-filter/MM603.bam ../1_dosage/data/mapQ-filter/MM590.bam ../1_dosage/data/mapQ-filter/MM606.bam ../1_dosage/data/mapQ-filter/MM595.bam ../1_dosage/data/mapQ-filter/MM587.bam ../1_dosage/data/mapQ-filter/MM602.bam ../1_dosage/data/mapQ-filter/MM607.bam ../1_dosage/data/mapQ-filter/MM600.bam ../1_dosage/data/mapQ-filter/MM604.bam ../1_dosage/data/mapQ-filter/MM591.bam ../1_dosage/data/mapQ-filter/MM592.bam ../1_dosage/data/mapQ-filter/MM599.bam ../1_dosage/data/mapQ-filter/MM594.bam ../1_dosage/data/mapQ-filter/MM610.bam ../1_dosage/data/mapQ-filter/MM598.bam ../1_dosage/data/mapQ-filter/MM596.bam ../1_dosage/data/mapQ-filter/MM588.bam ../1_dosage/data/mapQ-filter/MM597.bam ../1_dosage/data/mapQ-filter/MM605.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM1111.bam, ../1_dosage/data/mapQ-filter/MM1116.bam, ../1_dosage/data/mapQ-filter/MM1115.bam, ../1_dosage/data/mapQ-filter/MM1110.bam, ../1_dosage/data/mapQ-filter/MM1097.bam, ../1_dosage/data/mapQ-filter/MM1119.bam, ../1_dosage/data/mapQ-filter/MM1104.bam, ../1_dosage/data/mapQ-filter/MM1094.bam, ../1_dosage/data/mapQ-filter/MM1108.bam, ../1_dosage/data/mapQ-filter/MM1102.bam, ../1_dosage/data/mapQ-filter/MM1208.bam, ../1_dosage/data/mapQ-filter/MM1201.bam, ../1_dosage/data/mapQ-filter/MM1205.bam, ../1_dosage/data/mapQ-filter/MM1200.bam, ../1_dosage/data/mapQ-filter/MM1206.bam, ../1_dosage/data/mapQ-filter/MM1105.bam, ../1_dosage/data/mapQ-filter/MM1098.bam, ../1_dosage/data/mapQ-filter/MM1120.bam, ../1_dosage/data/mapQ-filter/MM620.bam, ../1_dosage/data/mapQ-filter/MM1127.bam, ../1_dosage/data/mapQ-filter/MM1122.bam, ../1_dosage/data/mapQ-filter/MM1123.bam, ../1_dosage/data/mapQ-filter/MM1126.bam, ../1_dosage/data/mapQ-filter/MM1117.bam, ../1_dosage/data/mapQ-filter/MM1125.bam, ../1_dosage/data/mapQ-filter/MM1203.bam, ../1_dosage/data/mapQ-filter/MM619.bam, ../1_dosage/data/mapQ-filter/MM1207.bam, ../1_dosage/data/mapQ-filter/MM1101.bam, ../1_dosage/data/mapQ-filter/MM1118.bam, ../1_dosage/data/mapQ-filter/MM265.bam, ../1_dosage/data/mapQ-filter/MM621.bam, ../1_dosage/data/mapQ-filter/MM1121.bam, ../1_dosage/data/mapQ-filter/MM1209.bam, ../1_dosage/data/mapQ-filter/MM1113.bam, ../1_dosage/data/mapQ-filter/MM1095.bam, ../1_dosage/data/mapQ-filter/MM622.bam, ../1_dosage/data/mapQ-filter/MM1096.bam, ../1_dosage/data/mapQ-filter/MM1114.bam, ../1_dosage/data/mapQ-filter/MM1100.bam, ../1_dosage/data/mapQ-filter/MM1109.bam, ../1_dosage/data/mapQ-filter/MM1103.bam, ../1_dosage/data/mapQ-filter/MM264.bam, ../1_dosage/data/mapQ-filter/MM1204.bam, ../1_dosage/data/mapQ-filter/MM1107.bam, ../1_dosage/data/mapQ-filter/MM1124.bam, ../1_dosage/data/mapQ-filter/MM1112.bam, ../1_dosage/data/mapQ-filter/MM1106.bam, ../1_dosage/data/mapQ-filter/MM1099.bam, ../1_dosage/data/mapQ-filter/MM1202.bam
+    output: mpup/WA_077-IVP101-mpup.txt
+    jobid: 162
+    reason: Missing output files: mpup/WA_077-IVP101-mpup.txt
+    wildcards: mother=WA_077, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/WA_077-IVP101-mpup.txt ../1_dosage/data/mapQ-filter/MM1111.bam ../1_dosage/data/mapQ-filter/MM1116.bam ../1_dosage/data/mapQ-filter/MM1115.bam ../1_dosage/data/mapQ-filter/MM1110.bam ../1_dosage/data/mapQ-filter/MM1097.bam ../1_dosage/data/mapQ-filter/MM1119.bam ../1_dosage/data/mapQ-filter/MM1104.bam ../1_dosage/data/mapQ-filter/MM1094.bam ../1_dosage/data/mapQ-filter/MM1108.bam ../1_dosage/data/mapQ-filter/MM1102.bam ../1_dosage/data/mapQ-filter/MM1208.bam ../1_dosage/data/mapQ-filter/MM1201.bam ../1_dosage/data/mapQ-filter/MM1205.bam ../1_dosage/data/mapQ-filter/MM1200.bam ../1_dosage/data/mapQ-filter/MM1206.bam ../1_dosage/data/mapQ-filter/MM1105.bam ../1_dosage/data/mapQ-filter/MM1098.bam ../1_dosage/data/mapQ-filter/MM1120.bam ../1_dosage/data/mapQ-filter/MM620.bam ../1_dosage/data/mapQ-filter/MM1127.bam ../1_dosage/data/mapQ-filter/MM1122.bam ../1_dosage/data/mapQ-filter/MM1123.bam ../1_dosage/data/mapQ-filter/MM1126.bam ../1_dosage/data/mapQ-filter/MM1117.bam ../1_dosage/data/mapQ-filter/MM1125.bam ../1_dosage/data/mapQ-filter/MM1203.bam ../1_dosage/data/mapQ-filter/MM619.bam ../1_dosage/data/mapQ-filter/MM1207.bam ../1_dosage/data/mapQ-filter/MM1101.bam ../1_dosage/data/mapQ-filter/MM1118.bam ../1_dosage/data/mapQ-filter/MM265.bam ../1_dosage/data/mapQ-filter/MM621.bam ../1_dosage/data/mapQ-filter/MM1121.bam ../1_dosage/data/mapQ-filter/MM1209.bam ../1_dosage/data/mapQ-filter/MM1113.bam ../1_dosage/data/mapQ-filter/MM1095.bam ../1_dosage/data/mapQ-filter/MM622.bam ../1_dosage/data/mapQ-filter/MM1096.bam ../1_dosage/data/mapQ-filter/MM1114.bam ../1_dosage/data/mapQ-filter/MM1100.bam ../1_dosage/data/mapQ-filter/MM1109.bam ../1_dosage/data/mapQ-filter/MM1103.bam ../1_dosage/data/mapQ-filter/MM264.bam ../1_dosage/data/mapQ-filter/MM1204.bam ../1_dosage/data/mapQ-filter/MM1107.bam ../1_dosage/data/mapQ-filter/MM1124.bam ../1_dosage/data/mapQ-filter/MM1112.bam ../1_dosage/data/mapQ-filter/MM1106.bam ../1_dosage/data/mapQ-filter/MM1099.bam ../1_dosage/data/mapQ-filter/MM1202.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta
+    output: mpup/C91_640-IVP101-mpup.txt
+    jobid: 134
+    reason: Missing output files: mpup/C91_640-IVP101-mpup.txt
+    wildcards: mother=C91_640, inducer=IVP101
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/C91_640-IVP101-mpup.txt 
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule run_mpup:
+    input: ../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta, ../1_dosage/data/mapQ-filter/MM112.bam, ../1_dosage/data/mapQ-filter/MM125.bam, ../1_dosage/data/mapQ-filter/MM862.bam, ../1_dosage/data/mapQ-filter/MM111.bam, ../1_dosage/data/mapQ-filter/MM872.bam, ../1_dosage/data/mapQ-filter/MM117.bam, ../1_dosage/data/mapQ-filter/MM854.bam, ../1_dosage/data/mapQ-filter/MM875.bam, ../1_dosage/data/mapQ-filter/MM859.bam, ../1_dosage/data/mapQ-filter/MM123.bam, ../1_dosage/data/mapQ-filter/MM867.bam, ../1_dosage/data/mapQ-filter/MM109.bam, ../1_dosage/data/mapQ-filter/MM868.bam, ../1_dosage/data/mapQ-filter/MM119.bam, ../1_dosage/data/mapQ-filter/MM866.bam, ../1_dosage/data/mapQ-filter/MM861.bam, ../1_dosage/data/mapQ-filter/MM1002.bam, ../1_dosage/data/mapQ-filter/MM855.bam, ../1_dosage/data/mapQ-filter/MM107.bam, ../1_dosage/data/mapQ-filter/MM105.bam, ../1_dosage/data/mapQ-filter/MM102.bam, ../1_dosage/data/mapQ-filter/MM122.bam, ../1_dosage/data/mapQ-filter/MM860.bam, ../1_dosage/data/mapQ-filter/MM874.bam, ../1_dosage/data/mapQ-filter/MM864.bam, ../1_dosage/data/mapQ-filter/MM124.bam, ../1_dosage/data/mapQ-filter/MM115.bam, ../1_dosage/data/mapQ-filter/MM856.bam, ../1_dosage/data/mapQ-filter/MM108.bam, ../1_dosage/data/mapQ-filter/MM869.bam, ../1_dosage/data/mapQ-filter/MM870.bam, ../1_dosage/data/mapQ-filter/MM865.bam, ../1_dosage/data/mapQ-filter/MM104.bam, ../1_dosage/data/mapQ-filter/MM857.bam, ../1_dosage/data/mapQ-filter/MM863.bam, ../1_dosage/data/mapQ-filter/MM126.bam, ../1_dosage/data/mapQ-filter/MM118.bam, ../1_dosage/data/mapQ-filter/MM113.bam, ../1_dosage/data/mapQ-filter/MM121.bam, ../1_dosage/data/mapQ-filter/MM1003.bam, ../1_dosage/data/mapQ-filter/MM1001.bam, ../1_dosage/data/mapQ-filter/MM120.bam, ../1_dosage/data/mapQ-filter/MM873.bam, ../1_dosage/data/mapQ-filter/MM110.bam, ../1_dosage/data/mapQ-filter/MM116.bam, ../1_dosage/data/mapQ-filter/MM114.bam, ../1_dosage/data/mapQ-filter/MM871.bam, ../1_dosage/data/mapQ-filter/MM858.bam, ../1_dosage/data/mapQ-filter/MM103.bam
+    output: mpup/93_003-PL4-mpup.txt
+    jobid: 154
+    reason: Missing output files: mpup/93_003-PL4-mpup.txt
+    wildcards: mother=93_003, inducer=PL4
+
+
+        samtools mpileup -l -d 8000 -q 20 -Q 20 -f mpup/93_003-PL4-mpup.txt ../1_dosage/data/mapQ-filter/MM112.bam ../1_dosage/data/mapQ-filter/MM125.bam ../1_dosage/data/mapQ-filter/MM862.bam ../1_dosage/data/mapQ-filter/MM111.bam ../1_dosage/data/mapQ-filter/MM872.bam ../1_dosage/data/mapQ-filter/MM117.bam ../1_dosage/data/mapQ-filter/MM854.bam ../1_dosage/data/mapQ-filter/MM875.bam ../1_dosage/data/mapQ-filter/MM859.bam ../1_dosage/data/mapQ-filter/MM123.bam ../1_dosage/data/mapQ-filter/MM867.bam ../1_dosage/data/mapQ-filter/MM109.bam ../1_dosage/data/mapQ-filter/MM868.bam ../1_dosage/data/mapQ-filter/MM119.bam ../1_dosage/data/mapQ-filter/MM866.bam ../1_dosage/data/mapQ-filter/MM861.bam ../1_dosage/data/mapQ-filter/MM1002.bam ../1_dosage/data/mapQ-filter/MM855.bam ../1_dosage/data/mapQ-filter/MM107.bam ../1_dosage/data/mapQ-filter/MM105.bam ../1_dosage/data/mapQ-filter/MM102.bam ../1_dosage/data/mapQ-filter/MM122.bam ../1_dosage/data/mapQ-filter/MM860.bam ../1_dosage/data/mapQ-filter/MM874.bam ../1_dosage/data/mapQ-filter/MM864.bam ../1_dosage/data/mapQ-filter/MM124.bam ../1_dosage/data/mapQ-filter/MM115.bam ../1_dosage/data/mapQ-filter/MM856.bam ../1_dosage/data/mapQ-filter/MM108.bam ../1_dosage/data/mapQ-filter/MM869.bam ../1_dosage/data/mapQ-filter/MM870.bam ../1_dosage/data/mapQ-filter/MM865.bam ../1_dosage/data/mapQ-filter/MM104.bam ../1_dosage/data/mapQ-filter/MM857.bam ../1_dosage/data/mapQ-filter/MM863.bam ../1_dosage/data/mapQ-filter/MM126.bam ../1_dosage/data/mapQ-filter/MM118.bam ../1_dosage/data/mapQ-filter/MM113.bam ../1_dosage/data/mapQ-filter/MM121.bam ../1_dosage/data/mapQ-filter/MM1003.bam ../1_dosage/data/mapQ-filter/MM1001.bam ../1_dosage/data/mapQ-filter/MM120.bam ../1_dosage/data/mapQ-filter/MM873.bam ../1_dosage/data/mapQ-filter/MM110.bam ../1_dosage/data/mapQ-filter/MM116.bam ../1_dosage/data/mapQ-filter/MM114.bam ../1_dosage/data/mapQ-filter/MM871.bam ../1_dosage/data/mapQ-filter/MM858.bam ../1_dosage/data/mapQ-filter/MM103.bam
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/C91_640-PL4-mpup.txt
+    output: parsed_mpup/parsed-C91_640-PL4-mpup.txt
+    jobid: 96
+    reason: Missing output files: parsed_mpup/parsed-C91_640-PL4-mpup.txt; Input files updated by another job: mpup/C91_640-PL4-mpup.txt
+    wildcards: mother=C91_640, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/C91_640-PL4-mpup.txt -o parsed_mpup/parsed-C91_640-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/93_003-IVP101-mpup.txt
+    output: parsed_mpup/parsed-93_003-IVP101-mpup.txt
+    jobid: 125
+    reason: Missing output files: parsed_mpup/parsed-93_003-IVP101-mpup.txt; Input files updated by another job: mpup/93_003-IVP101-mpup.txt
+    wildcards: mother=93_003, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/93_003-IVP101-mpup.txt -o parsed_mpup/parsed-93_003-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/Desiree-PL4-mpup.txt
+    output: parsed_mpup/parsed-Desiree-PL4-mpup.txt
+    jobid: 127
+    reason: Missing output files: parsed_mpup/parsed-Desiree-PL4-mpup.txt; Input files updated by another job: mpup/Desiree-PL4-mpup.txt
+    wildcards: mother=Desiree, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/Desiree-PL4-mpup.txt -o parsed_mpup/parsed-Desiree-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/WA_077-PL4-mpup.txt
+    output: parsed_mpup/parsed-WA_077-PL4-mpup.txt
+    jobid: 107
+    reason: Missing output files: parsed_mpup/parsed-WA_077-PL4-mpup.txt; Input files updated by another job: mpup/WA_077-PL4-mpup.txt
+    wildcards: mother=WA_077, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/WA_077-PL4-mpup.txt -o parsed_mpup/parsed-WA_077-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/C93_154-PL4-mpup.txt
+    output: parsed_mpup/parsed-C93_154-PL4-mpup.txt
+    jobid: 104
+    reason: Missing output files: parsed_mpup/parsed-C93_154-PL4-mpup.txt; Input files updated by another job: mpup/C93_154-PL4-mpup.txt
+    wildcards: mother=C93_154, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/C93_154-PL4-mpup.txt -o parsed_mpup/parsed-C93_154-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/WA_073-PL4-mpup.txt
+    output: parsed_mpup/parsed-WA_073-PL4-mpup.txt
+    jobid: 89
+    reason: Missing output files: parsed_mpup/parsed-WA_073-PL4-mpup.txt; Input files updated by another job: mpup/WA_073-PL4-mpup.txt
+    wildcards: mother=WA_073, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/WA_073-PL4-mpup.txt -o parsed_mpup/parsed-WA_073-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/WA_104-IVP35-mpup.txt
+    output: parsed_mpup/parsed-WA_104-IVP35-mpup.txt
+    jobid: 116
+    reason: Missing output files: parsed_mpup/parsed-WA_104-IVP35-mpup.txt; Input files updated by another job: mpup/WA_104-IVP35-mpup.txt
+    wildcards: mother=WA_104, inducer=IVP35
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/WA_104-IVP35-mpup.txt -o parsed_mpup/parsed-WA_104-IVP35-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/LR00_014-IVP101-mpup.txt
+    output: parsed_mpup/parsed-LR00_014-IVP101-mpup.txt
+    jobid: 88
+    reason: Missing output files: parsed_mpup/parsed-LR00_014-IVP101-mpup.txt; Input files updated by another job: mpup/LR00_014-IVP101-mpup.txt
+    wildcards: mother=LR00_014, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/LR00_014-IVP101-mpup.txt -o parsed_mpup/parsed-LR00_014-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/LR00_022-IVP101-mpup.txt
+    output: parsed_mpup/parsed-LR00_022-IVP101-mpup.txt
+    jobid: 92
+    reason: Missing output files: parsed_mpup/parsed-LR00_022-IVP101-mpup.txt; Input files updated by another job: mpup/LR00_022-IVP101-mpup.txt
+    wildcards: mother=LR00_022, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/LR00_022-IVP101-mpup.txt -o parsed_mpup/parsed-LR00_022-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/Y84_027-PL4-mpup.txt
+    output: parsed_mpup/parsed-Y84_027-PL4-mpup.txt
+    jobid: 98
+    reason: Missing output files: parsed_mpup/parsed-Y84_027-PL4-mpup.txt; Input files updated by another job: mpup/Y84_027-PL4-mpup.txt
+    wildcards: mother=Y84_027, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/Y84_027-PL4-mpup.txt -o parsed_mpup/parsed-Y84_027-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/Y84_027-IVP35-mpup.txt
+    output: parsed_mpup/parsed-Y84_027-IVP35-mpup.txt
+    jobid: 97
+    reason: Missing output files: parsed_mpup/parsed-Y84_027-IVP35-mpup.txt; Input files updated by another job: mpup/Y84_027-IVP35-mpup.txt
+    wildcards: mother=Y84_027, inducer=IVP35
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/Y84_027-IVP35-mpup.txt -o parsed_mpup/parsed-Y84_027-IVP35-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/458-IVP101-mpup.txt
+    output: parsed_mpup/parsed-458-IVP101-mpup.txt
+    jobid: 105
+    reason: Missing output files: parsed_mpup/parsed-458-IVP101-mpup.txt; Input files updated by another job: mpup/458-IVP101-mpup.txt
+    wildcards: mother=458, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/458-IVP101-mpup.txt -o parsed_mpup/parsed-458-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/LR93_073-IVP101-mpup.txt
+    output: parsed_mpup/parsed-LR93_073-IVP101-mpup.txt
+    jobid: 115
+    reason: Missing output files: parsed_mpup/parsed-LR93_073-IVP101-mpup.txt; Input files updated by another job: mpup/LR93_073-IVP101-mpup.txt
+    wildcards: mother=LR93_073, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/LR93_073-IVP101-mpup.txt -o parsed_mpup/parsed-LR93_073-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/WA_104-IVP101-mpup.txt
+    output: parsed_mpup/parsed-WA_104-IVP101-mpup.txt
+    jobid: 90
+    reason: Missing output files: parsed_mpup/parsed-WA_104-IVP101-mpup.txt; Input files updated by another job: mpup/WA_104-IVP101-mpup.txt
+    wildcards: mother=WA_104, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/WA_104-IVP101-mpup.txt -o parsed_mpup/parsed-WA_104-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/LR00_026-PL4-mpup.txt
+    output: parsed_mpup/parsed-LR00_026-PL4-mpup.txt
+    jobid: 114
+    reason: Missing output files: parsed_mpup/parsed-LR00_026-PL4-mpup.txt; Input files updated by another job: mpup/LR00_026-PL4-mpup.txt
+    wildcards: mother=LR00_026, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/LR00_026-PL4-mpup.txt -o parsed_mpup/parsed-LR00_026-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/LR00_014-IVP35-mpup.txt
+    output: parsed_mpup/parsed-LR00_014-IVP35-mpup.txt
+    jobid: 95
+    reason: Missing output files: parsed_mpup/parsed-LR00_014-IVP35-mpup.txt; Input files updated by another job: mpup/LR00_014-IVP35-mpup.txt
+    wildcards: mother=LR00_014, inducer=IVP35
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/LR00_014-IVP35-mpup.txt -o parsed_mpup/parsed-LR00_014-IVP35-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/LR00_022-IVP35-mpup.txt
+    output: parsed_mpup/parsed-LR00_022-IVP35-mpup.txt
+    jobid: 123
+    reason: Missing output files: parsed_mpup/parsed-LR00_022-IVP35-mpup.txt; Input files updated by another job: mpup/LR00_022-IVP35-mpup.txt
+    wildcards: mother=LR00_022, inducer=IVP35
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/LR00_022-IVP35-mpup.txt -o parsed_mpup/parsed-LR00_022-IVP35-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/458-IVP35-mpup.txt
+    output: parsed_mpup/parsed-458-IVP35-mpup.txt
+    jobid: 100
+    reason: Missing output files: parsed_mpup/parsed-458-IVP35-mpup.txt; Input files updated by another job: mpup/458-IVP35-mpup.txt
+    wildcards: mother=458, inducer=IVP35
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/458-IVP35-mpup.txt -o parsed_mpup/parsed-458-IVP35-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/C01_020-PL4-mpup.txt
+    output: parsed_mpup/parsed-C01_020-PL4-mpup.txt
+    jobid: 126
+    reason: Missing output files: parsed_mpup/parsed-C01_020-PL4-mpup.txt; Input files updated by another job: mpup/C01_020-PL4-mpup.txt
+    wildcards: mother=C01_020, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/C01_020-PL4-mpup.txt -o parsed_mpup/parsed-C01_020-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/C93_154-IVP35-mpup.txt
+    output: parsed_mpup/parsed-C93_154-IVP35-mpup.txt
+    jobid: 124
+    reason: Missing output files: parsed_mpup/parsed-C93_154-IVP35-mpup.txt; Input files updated by another job: mpup/C93_154-IVP35-mpup.txt
+    wildcards: mother=C93_154, inducer=IVP35
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/C93_154-IVP35-mpup.txt -o parsed_mpup/parsed-C93_154-IVP35-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/C90_170-PL4-mpup.txt
+    output: parsed_mpup/parsed-C90_170-PL4-mpup.txt
+    jobid: 87
+    reason: Missing output files: parsed_mpup/parsed-C90_170-PL4-mpup.txt; Input files updated by another job: mpup/C90_170-PL4-mpup.txt
+    wildcards: mother=C90_170, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/C90_170-PL4-mpup.txt -o parsed_mpup/parsed-C90_170-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/Atlantic-IVP101-mpup.txt
+    output: parsed_mpup/parsed-Atlantic-IVP101-mpup.txt
+    jobid: 128
+    reason: Missing output files: parsed_mpup/parsed-Atlantic-IVP101-mpup.txt; Input files updated by another job: mpup/Atlantic-IVP101-mpup.txt
+    wildcards: mother=Atlantic, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/Atlantic-IVP101-mpup.txt -o parsed_mpup/parsed-Atlantic-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/93_003-IVP35-mpup.txt
+    output: parsed_mpup/parsed-93_003-IVP35-mpup.txt
+    jobid: 122
+    reason: Missing output files: parsed_mpup/parsed-93_003-IVP35-mpup.txt; Input files updated by another job: mpup/93_003-IVP35-mpup.txt
+    wildcards: mother=93_003, inducer=IVP35
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/93_003-IVP35-mpup.txt -o parsed_mpup/parsed-93_003-IVP35-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/458-PL4-mpup.txt
+    output: parsed_mpup/parsed-458-PL4-mpup.txt
+    jobid: 117
+    reason: Missing output files: parsed_mpup/parsed-458-PL4-mpup.txt; Input files updated by another job: mpup/458-PL4-mpup.txt
+    wildcards: mother=458, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/458-PL4-mpup.txt -o parsed_mpup/parsed-458-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/LR00_026-IVP101-mpup.txt
+    output: parsed_mpup/parsed-LR00_026-IVP101-mpup.txt
+    jobid: 94
+    reason: Missing output files: parsed_mpup/parsed-LR00_026-IVP101-mpup.txt; Input files updated by another job: mpup/LR00_026-IVP101-mpup.txt
+    wildcards: mother=LR00_026, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/LR00_026-IVP101-mpup.txt -o parsed_mpup/parsed-LR00_026-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/WA_077-IVP101-mpup.txt
+    output: parsed_mpup/parsed-WA_077-IVP101-mpup.txt
+    jobid: 119
+    reason: Missing output files: parsed_mpup/parsed-WA_077-IVP101-mpup.txt; Input files updated by another job: mpup/WA_077-IVP101-mpup.txt
+    wildcards: mother=WA_077, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/WA_077-IVP101-mpup.txt -o parsed_mpup/parsed-WA_077-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/C91_640-IVP101-mpup.txt
+    output: parsed_mpup/parsed-C91_640-IVP101-mpup.txt
+    jobid: 91
+    reason: Missing output files: parsed_mpup/parsed-C91_640-IVP101-mpup.txt; Input files updated by another job: mpup/C91_640-IVP101-mpup.txt
+    wildcards: mother=C91_640, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/C91_640-IVP101-mpup.txt -o parsed_mpup/parsed-C91_640-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/93_003-PL4-mpup.txt
+    output: parsed_mpup/parsed-93_003-PL4-mpup.txt
+    jobid: 111
+    reason: Missing output files: parsed_mpup/parsed-93_003-PL4-mpup.txt; Input files updated by another job: mpup/93_003-PL4-mpup.txt
+    wildcards: mother=93_003, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/93_003-PL4-mpup.txt -o parsed_mpup/parsed-93_003-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/LR00_026-IVP35-mpup.txt
+    output: parsed_mpup/parsed-LR00_026-IVP35-mpup.txt
+    jobid: 112
+    reason: Missing output files: parsed_mpup/parsed-LR00_026-IVP35-mpup.txt; Input files updated by another job: mpup/LR00_026-IVP35-mpup.txt
+    wildcards: mother=LR00_026, inducer=IVP35
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/LR00_026-IVP35-mpup.txt -o parsed_mpup/parsed-LR00_026-IVP35-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/LR00_022-PL4-mpup.txt
+    output: parsed_mpup/parsed-LR00_022-PL4-mpup.txt
+    jobid: 110
+    reason: Missing output files: parsed_mpup/parsed-LR00_022-PL4-mpup.txt; Input files updated by another job: mpup/LR00_022-PL4-mpup.txt
+    wildcards: mother=LR00_022, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/LR00_022-PL4-mpup.txt -o parsed_mpup/parsed-LR00_022-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/Y84_027-IVP101-mpup.txt
+    output: parsed_mpup/parsed-Y84_027-IVP101-mpup.txt
+    jobid: 120
+    reason: Missing output files: parsed_mpup/parsed-Y84_027-IVP101-mpup.txt; Input files updated by another job: mpup/Y84_027-IVP101-mpup.txt
+    wildcards: mother=Y84_027, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/Y84_027-IVP101-mpup.txt -o parsed_mpup/parsed-Y84_027-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/LR00_014-PL4-mpup.txt
+    output: parsed_mpup/parsed-LR00_014-PL4-mpup.txt
+    jobid: 121
+    reason: Missing output files: parsed_mpup/parsed-LR00_014-PL4-mpup.txt; Input files updated by another job: mpup/LR00_014-PL4-mpup.txt
+    wildcards: mother=LR00_014, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/LR00_014-PL4-mpup.txt -o parsed_mpup/parsed-LR00_014-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/C93_154-IVP101-mpup.txt
+    output: parsed_mpup/parsed-C93_154-IVP101-mpup.txt
+    jobid: 106
+    reason: Missing output files: parsed_mpup/parsed-C93_154-IVP101-mpup.txt; Input files updated by another job: mpup/C93_154-IVP101-mpup.txt
+    wildcards: mother=C93_154, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/C93_154-IVP101-mpup.txt -o parsed_mpup/parsed-C93_154-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/C01_020-IVP101-mpup.txt
+    output: parsed_mpup/parsed-C01_020-IVP101-mpup.txt
+    jobid: 108
+    reason: Missing output files: parsed_mpup/parsed-C01_020-IVP101-mpup.txt; Input files updated by another job: mpup/C01_020-IVP101-mpup.txt
+    wildcards: mother=C01_020, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/C01_020-IVP101-mpup.txt -o parsed_mpup/parsed-C01_020-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/LRY_21_25-IVP101-mpup.txt
+    output: parsed_mpup/parsed-LRY_21_25-IVP101-mpup.txt
+    jobid: 93
+    reason: Missing output files: parsed_mpup/parsed-LRY_21_25-IVP101-mpup.txt; Input files updated by another job: mpup/LRY_21_25-IVP101-mpup.txt
+    wildcards: mother=LRY_21_25, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/LRY_21_25-IVP101-mpup.txt -o parsed_mpup/parsed-LRY_21_25-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/Atlantic-PL4-mpup.txt
+    output: parsed_mpup/parsed-Atlantic-PL4-mpup.txt
+    jobid: 103
+    reason: Missing output files: parsed_mpup/parsed-Atlantic-PL4-mpup.txt; Input files updated by another job: mpup/Atlantic-PL4-mpup.txt
+    wildcards: mother=Atlantic, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/Atlantic-PL4-mpup.txt -o parsed_mpup/parsed-Atlantic-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/C90_170-IVP101-mpup.txt
+    output: parsed_mpup/parsed-C90_170-IVP101-mpup.txt
+    jobid: 102
+    reason: Missing output files: parsed_mpup/parsed-C90_170-IVP101-mpup.txt; Input files updated by another job: mpup/C90_170-IVP101-mpup.txt
+    wildcards: mother=C90_170, inducer=IVP101
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/C90_170-IVP101-mpup.txt -o parsed_mpup/parsed-C90_170-IVP101-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/Desiree-IVP35-mpup.txt
+    output: parsed_mpup/parsed-Desiree-IVP35-mpup.txt
+    jobid: 109
+    reason: Missing output files: parsed_mpup/parsed-Desiree-IVP35-mpup.txt; Input files updated by another job: mpup/Desiree-IVP35-mpup.txt
+    wildcards: mother=Desiree, inducer=IVP35
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/Desiree-IVP35-mpup.txt -o parsed_mpup/parsed-Desiree-IVP35-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/C91_640-IVP35-mpup.txt
+    output: parsed_mpup/parsed-C91_640-IVP35-mpup.txt
+    jobid: 113
+    reason: Missing output files: parsed_mpup/parsed-C91_640-IVP35-mpup.txt; Input files updated by another job: mpup/C91_640-IVP35-mpup.txt
+    wildcards: mother=C91_640, inducer=IVP35
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/C91_640-IVP35-mpup.txt -o parsed_mpup/parsed-C91_640-IVP35-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/LRY_3_57-IVP35-mpup.txt
+    output: parsed_mpup/parsed-LRY_3_57-IVP35-mpup.txt
+    jobid: 118
+    reason: Missing output files: parsed_mpup/parsed-LRY_3_57-IVP35-mpup.txt; Input files updated by another job: mpup/LRY_3_57-IVP35-mpup.txt
+    wildcards: mother=LRY_3_57, inducer=IVP35
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/LRY_3_57-IVP35-mpup.txt -o parsed_mpup/parsed-LRY_3_57-IVP35-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/WA_077-IVP35-mpup.txt
+    output: parsed_mpup/parsed-WA_077-IVP35-mpup.txt
+    jobid: 101
+    reason: Missing output files: parsed_mpup/parsed-WA_077-IVP35-mpup.txt; Input files updated by another job: mpup/WA_077-IVP35-mpup.txt
+    wildcards: mother=WA_077, inducer=IVP35
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/WA_077-IVP35-mpup.txt -o parsed_mpup/parsed-WA_077-IVP35-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/C92_172-PL4-mpup.txt
+    output: parsed_mpup/parsed-C92_172-PL4-mpup.txt
+    jobid: 99
+    reason: Missing output files: parsed_mpup/parsed-C92_172-PL4-mpup.txt; Input files updated by another job: mpup/C92_172-PL4-mpup.txt
+    wildcards: mother=C92_172, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/C92_172-PL4-mpup.txt -o parsed_mpup/parsed-C92_172-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule parse_mpup:
+    input: mpup/WA_104-PL4-mpup.txt
+    output: parsed_mpup/parsed-WA_104-PL4-mpup.txt
+    jobid: 129
+    reason: Missing output files: parsed_mpup/parsed-WA_104-PL4-mpup.txt; Input files updated by another job: mpup/WA_104-PL4-mpup.txt
+    wildcards: mother=WA_104, inducer=PL4
+
+
+        python2 scripts/mpileup-parser-v2.py -f mpup/WA_104-PL4-mpup.txt -o parsed_mpup/parsed-WA_104-PL4-mpup.txt -t 1
+    
+
+[Mon Oct  5 22:53:19 2020]
+rule call_alleles:
+    input: parsed_mpup/parsed-Atlantic-PL4-mpup.txt
+    output: alleles/Atlantic-PL4-alleles.txt
+    jobid: 60
+    reason: Missing output files: alleles/Atlantic-PL4-alleles.txt; Input files updated by another job: parsed_mpup/parsed-Atlantic-PL4-mpup.txt
+    wildcards: mother=Atlantic, inducer=PL4
+
+RuleException in line 37 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/3_chromosome_ori/Snakefile:
+'InputFiles' object has no attribute 'snplist'

@@ -1,0 +1,5 @@
+Building DAG of jobs...
+MissingInputException in line 63 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/3_chromosome_ori/Snakefile:
+Missing input files for rule run_mpup:
+../1_dosage/data/mapQ-filter/MM1166.bam
+../1_dosage/data/mapQ-filter/MM1167.bam

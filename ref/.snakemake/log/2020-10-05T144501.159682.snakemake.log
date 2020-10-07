@@ -1,0 +1,41 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	bedtools_genome_windows
+	1	bwa_index
+	3	clean_genomes
+	1	combine_genomes
+	1	create_sequence_dictionary
+	1	get_genome
+	1	samtools_faidx
+	10
+
+[Mon Oct  5 14:45:01 2020]
+rule get_genome:
+    output: potato_dm_v404_all_pm_un.fasta, S_tuberosum_Group_Phureja_chloroplast_DM1-3-516-R44.fasta, S_tuberosum_Group_Phureja_mitochondrion_DM1-3-516-R44.fasta
+    jobid: 9
+
+Terminating processes on user request, this might take some time.
+[Mon Oct  5 14:45:08 2020]
+Error in rule get_genome:
+    jobid: 9
+    output: potato_dm_v404_all_pm_un.fasta, S_tuberosum_Group_Phureja_chloroplast_DM1-3-516-R44.fasta, S_tuberosum_Group_Phureja_mitochondrion_DM1-3-516-R44.fasta
+
+RuleException:
+CalledProcessError in line 8 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/ref/rules/get_genome.rules:
+Command ' set -euo pipefail;  
+        wget http://solanaceae.plantbiology.msu.edu/data/potato_dm_v404_all_pm_un.fasta.zip ;
+        unzip potato_dm_v404_all_pm_un.fasta.zip ;
+        
+        wget http://solanaceae.plantbiology.msu.edu/data/S_tuberosum_Group_Phureja_chloroplast_DM1-3-516-R44.fasta.zip ;
+        unzip S_tuberosum_Group_Phureja_chloroplast_DM1-3-516-R44.fasta.zip ;
+        
+        wget http://solanaceae.plantbiology.msu.edu/data/S_tuberosum_Group_Phureja_mitochondrion_DM1-3-516-R44.fasta.zip ;
+        unzip S_tuberosum_Group_Phureja_mitochondrion_DM1-3-516-R44.fasta.zip ' died with <Signals.SIGINT: 2>.
+  File "/Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/ref/rules/get_genome.rules", line 8, in __rule_get_genome
+  File "/Users/Kirk/miniconda3/envs/ximena/lib/python3.6/concurrent/futures/thread.py", line 56, in run
+Complete log: /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/ref/.snakemake/log/2020-10-05T144501.159682.snakemake.log

@@ -1,0 +1,2 @@
+SyntaxError in line 19 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/3_chromosome_ori/Snakefile:
+Expecting rule keyword, comment or docstrings inside a rule definition. (Snakefile, line 19)

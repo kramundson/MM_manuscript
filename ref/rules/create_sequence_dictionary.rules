@@ -1,0 +1,12 @@
+rule create_sequence_dictionary:
+    input:
+        config["genome"]
+    output:
+        re.sub("(\.fasta$|\.fa$)", ".dict", config["genome"]),
+    params: 
+        jar=config["params"]["mark_duplicates"]["jarpath"]
+    shell: """
+        picard CreateSequenceDictionary \
+            R={input} \
+            O={output}
+    """

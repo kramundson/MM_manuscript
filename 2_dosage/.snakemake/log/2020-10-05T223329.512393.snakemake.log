@@ -1,0 +1,6 @@
+Building DAG of jobs...
+InputFunctionException in line 59 of /Users/Kirk/Desktop/Comai_Lab/github-repositories/MM_manuscript/3_chromosome_ori/Snakefile:
+TypeError: get_bams() missing 1 required positional argument: 'hi_parent'
+Wildcards:
+mother=LR93_073
+inducer=IVP101
