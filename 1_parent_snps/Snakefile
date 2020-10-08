@@ -113,35 +113,12 @@ except FileNotFoundError:
 rule all:
     input:
         ["data/realigned/{}.bam".format(x) for x in units.index.levels[0]],
-        # ["data/summarized/summarized_{}_q0_depth.bed".format(x) for x in units.index.levels[0]],
         ["data/depths/{}_q20_depth.bed".format(x) for x in units.index.levels[0]],
-        # ["data/summarized/summarized_{}_q20_depth.bed".format(x) for x in units.index.levels[0]]
-        "data/calls/MM-calls.vcf"
-        # "data/calls/step1-calls.vcf",
-        # "data/calls/step2-calls.vcf",
-        # "data/calls/step3-calls.vcf",
-        # "data/calls/step4-calls.vcf"
-        # "data/merged/4x_MM302.bam"
-        # ["data/merged/{}.bam.bai".format(x) for x in units.index.levels[0]],
-        # ["data/calls/scaffold/{}-calls.vcf".format(scaffold) for scaffold in scaffolds], # scaffold calls now caught by merge_scaffold_vcfs.rules
-        # "data/calls/all-calls.vcf" # testing
-        # ["data/calls/{}-calls.vcf".format(chrom) for chrom in chroms] # currently in use, removed for testing
-    
-# think about this more: is this the correct order to apply these rules?
-# include: "rules/merge_scaffold_vcfs.rules" # rewritten rule for later indel realign
-# include: "rules/freebayes_scaffold.rules"
-# include: "rules/merge_step4_vcfs.rules"
-# include: "rules/freebayes_scaffold_step4.rules"
-# include: "rules/merge_step3_vcfs.rules"
-# include: "rules/freebayes_scaffold_step3.rules"
-# include: "rules/merge_step2_vcfs.rules"
-# include: "rules/freebayes_scaffold_step2.rules"
-# include: "rules/merge_step1_vcfs.rules"
-# include: "rules/freebayes_scaffold_step1.rules" # rewritten rule for later indel realign
+        ["data/calls/{}-filtered-MM-calls.vcf.gz".format(x) for x in config["good_chroms"]]
+
+include: "rules/vcf_site_filters.rules"
 include: "rules/merge_MM_vcfs.rules"
-# include: "rules/freebayes_scaffold_MM.rules"
 include: "rules/freebayes_interval_MM.rules"
-# include: "rules/merge_interval_MM.rules"
 # include: "rules/summarize_q20_depth.rules"
 # include: "rules/summarize_q0_depth.rules"
 include: "rules/samtools_q20_depth.rules"
@@ -151,11 +128,8 @@ include: "rules/realigner_target_creator.rules" # testing placement at this poin
 include: "rules/samtools_index_pe.rules" # change for later indel realign
 include: "rules/samtools_merge.rules" # change for later indel realign
 include: "rules/clip_overlap.rules" # changed for later indel realign
-# include: "rules/realign_indels.rules" # putting later in the workflow to accommodate pooled clean dihaploids
-# include: "rules/realigner_target_creator.rules" # putting later in the workflow to accommodate pooled clean dihaploids
 include: "rules/filter_good_pairs.rules"
 include: "rules/mark_duplicates.rules"
 include: "rules/align.rules"
 include: "rules/cutadapt_pe.rules"
 include: "rules/cutadapt.rules"
-# include: "rules/get_SRA_reads.rules" # broken right now
