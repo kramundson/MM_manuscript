@@ -7,7 +7,7 @@ configfile: "config.yaml"
 units = pd.read_csv(config["units"], index_col=["sample","unit"], dtype=str, sep="\t")
 units.index = units.index.set_levels([i.astype(str) for i in units.index.levels])
 
-OFFSPRING=units[units["parhap"]=="haploid"]
+OFFSPRING=units[(units["parhap"]=="haploid") & (units["mother"].isin(config["moms"]))]
 PARENTS=set(zip(OFFSPRING.mother, OFFSPRING.inducer))
 
 samples = {}
