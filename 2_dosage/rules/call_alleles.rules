@@ -1,9 +1,11 @@
 rule call_alleles:
     input:
-        pmpup="parsed_mpup/parsed-{mother}-{inducer}-mpup.txt"
-        # snplist="{mother}-{inducer}-snplist.txt"
+        pmpup="parsed_mpup/parsed-{mother}-{inducer}-mpup.txt",
+        snplist="../1_parent_snps/analysis/{mother}-{inducer}-hom-SNP.tsv"
     output:
         "alleles/{mother}-{inducer}-alleles.txt"
+    log:
+        "log/call_alleles/{mother}-{inducer}.log"
     shell: """
-        python2 scripts/CallAllelesAB.py {input.pmpup} {output}
+        python2 scripts/CallAllelesAB.py {input.pmpup} {output} {input.snplist} > {log} 2>&1
     """

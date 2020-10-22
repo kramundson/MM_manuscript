@@ -115,7 +115,7 @@ rule all:
         ["data/realigned/{}.bam".format(x) for x in units.index.levels[0]],
         ["data/depths/{}_q20_depth.bed".format(x) for x in units.index.levels[0]],
         ["data/calls/{}-filtered-MM-calls.vcf.gz".format(x) for x in config["good_chroms"]],
-        expand(["data/snplists/{pop}-{mom}-hom-SNP.tsv"], pop=config["pops"], mom=config["moms"])
+        expand(["data/snplists/{mom}-{pop}-hom-SNP.tsv"], mom=config["moms"], pop=config["pops"])
 
 include: "rules/make_snp_lists.rules"
 include: "rules/vcf_site_filters.rules"

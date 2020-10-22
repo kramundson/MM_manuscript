@@ -41,7 +41,7 @@ final_samples: ["4x_Atlantic", "4x_CIP_Desiree", "4x_MM293", "4x_MM294", "4x_MM3
                 "clean_458_dihaploids", "clean_C01020_dihaploids", "clean_WA104_dihaploids",
                 "clean_Y84027_dihaploids", "clean_Atlantic_dihaploids"]
 
-moms: ["MM293", "MM294", "MM302", "Atlantic", "Desiree"]
+moms: ["LR00014", "LR00026", "WA077", "Atlantic", "Desiree"]
 pops: ["IVP101", "IVP35", "PL4"]
 
 params:

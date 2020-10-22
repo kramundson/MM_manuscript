@@ -83,92 +83,92 @@ snps2 <- snps %>%
 
 WA.077 x IVP101 (n=50)
 ```{r}
-filter_homozygous_vars(MM302_GT, IVP101_GT, snps2, 10) %>% 
-  mutate(MM302 = ifelse(MM302_GT == "0/0/0/0", REF, ALT)) %>% 
+filter_homozygous_vars(WA077_GT, IVP101_GT, snps2, 10) %>% 
+  mutate(WA077 = ifelse(WA077_GT == "0/0/0/0", REF, ALT)) %>% 
   mutate(IVP101 = ifelse(IVP101_GT == "0/0", REF, ALT)) %>% 
-  select(CHROM, POS, REF, IVP101, MM302) %>% 
+  select(CHROM, POS, REF, IVP101, WA077) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>% 
-  write_tsv(., "IVP101-MM302-hom-SNP.tsv", col_names = T)
+  write_tsv(., "WA077-IVP101-hom-SNP.tsv", col_names = T)
 ```
 
 WA.077 x IVP35 (n=134)
 ```{r}
-filter_homozygous_vars(MM302_GT, IVP35_GT, snps2, 10) %>% 
-  mutate(MM302 = ifelse(MM302_GT == "0/0/0/0", REF, ALT)) %>% 
+filter_homozygous_vars(WA077_GT, IVP35_GT, snps2, 10) %>% 
+  mutate(WA077 = ifelse(WA077_GT == "0/0/0/0", REF, ALT)) %>% 
   mutate(IVP35 = ifelse(IVP35_GT == "0/0", REF, ALT)) %>% 
-  select(CHROM, POS, REF, IVP35, MM302) %>% 
+  select(CHROM, POS, REF, IVP35, WA077) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>% 
-  write_tsv(., "IVP35-MM302-hom-SNP.tsv", col_names = T)
+  write_tsv(., "WA077-IVP35-hom-SNP.tsv", col_names = T)
 ```
 
 WA.077 x PL4 (n=107)
 ```{r}
-filter_homozygous_vars(MM302_GT, PL4_GT, snps2, 10) %>% 
-  mutate(MM302 = ifelse(MM302_GT == "0/0/0/0", REF, ALT)) %>% 
+filter_homozygous_vars(WA077_GT, PL4_GT, snps2, 10) %>% 
+  mutate(WA077 = ifelse(WA077_GT == "0/0/0/0", REF, ALT)) %>% 
   mutate(PL4 = ifelse(PL4_GT == "0/0", REF, ALT)) %>% 
-  select(CHROM, POS, REF, PL4, MM302) %>% 
+  select(CHROM, POS, REF, PL4, WA077) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>% 
-  write_tsv(., "PL4-MM302-hom-SNP.tsv", col_names = T)
+  write_tsv(., "WA077-PL4-hom-SNP.tsv", col_names = T)
 ```
 
 LR00.014 x IVP101 (n=30)
 ```{r}
-filter_homozygous_vars(MM293_GT, IVP101_GT, snps2, 10) %>% 
-  mutate(MM293 = ifelse(MM293_GT == "0/0/0/0", REF, ALT)) %>% 
+filter_homozygous_vars(LR00014_GT, IVP101_GT, snps2, 10) %>% 
+  mutate(LR00014 = ifelse(LR00014_GT == "0/0/0/0", REF, ALT)) %>% 
   mutate(IVP101 = ifelse(IVP101_GT == "0/0", REF, ALT)) %>% 
-  dplyr::select(CHROM, POS, REF, IVP101, MM293) %>% 
+  dplyr::select(CHROM, POS, REF, IVP101, LR00014) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>% 
-  write_tsv(., "IVP101-MM293-hom-SNP.tsv", col_names = T)
+  write_tsv(., "LR00014-IVP101-hom-SNP.tsv", col_names = T)
 ```
 
 LR00.014 x IVP35 (n=77)
 ```{r}
-filter_homozygous_vars(MM293_GT, IVP35_GT, snps2, 10) %>% 
-  mutate(MM293 = ifelse(MM293_GT == "0/0/0/0", REF, ALT)) %>% 
+filter_homozygous_vars(LR00014_GT, IVP35_GT, snps2, 10) %>% 
+  mutate(LR00014 = ifelse(LR00014_GT == "0/0/0/0", REF, ALT)) %>% 
   mutate(IVP35 = ifelse(IVP35_GT == "0/0", REF, ALT)) %>% 
-  select(CHROM, POS, REF, IVP35, MM293) %>% 
+  select(CHROM, POS, REF, IVP35, LR00014) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>% 
-  write_tsv(., "IVP35-MM293-hom-SNP.tsv", col_names = T)
+  write_tsv(., "LR00014-IVP35-hom-SNP.tsv", col_names = T)
 ```
 
 LR00.014 x PL4 (n=67)
 ```{r}
-filter_homozygous_vars(MM293_GT, PL4_GT, snps2, 10) %>% 
-  mutate(MM293 = ifelse(MM293_GT == "0/0/0/0", REF, ALT)) %>% 
+filter_homozygous_vars(LR00014_GT, PL4_GT, snps2, 10) %>% 
+  mutate(LR00014 = ifelse(LR00014_GT == "0/0/0/0", REF, ALT)) %>% 
   mutate(PL4 = ifelse(IVP35_GT == "0/0", REF, ALT)) %>% 
-  select(CHROM, POS, REF, IVP35, MM293) %>% 
+  select(CHROM, POS, REF, IVP35, LR00014) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>% 
-  write_tsv(., "PL4-MM293-hom-SNP.tsv", col_names = T)
+  write_tsv(., "LR00014-PL4-hom-SNP.tsv", col_names = T)
 ```
 
 LR00.026 x IVP101 (n=4)
 ```{r}
-filter_homozygous_vars(MM294_GT, IVP101_GT, snps2, 10) %>% 
-  mutate(MM294 = ifelse(MM294_GT == "0/0/0/0", REF, ALT)) %>% 
+filter_homozygous_vars(LR00026_GT, IVP101_GT, snps2, 10) %>% 
+  mutate(LR00026 = ifelse(LR00026_GT == "0/0/0/0", REF, ALT)) %>% 
   mutate(IVP101 = ifelse(IVP101_GT == "0/0", REF, ALT)) %>% 
-  select(CHROM, POS, REF, IVP101, MM294) %>% 
+  select(CHROM, POS, REF, IVP101, LR00026) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>% 
-  write_tsv(., "IVP101-MM294-hom-SNP.tsv", col_names = T) 
+  write_tsv(., "LR00026-IVP101-hom-SNP.tsv", col_names = T) 
 ```
 
 LR00.026 x IVP35 (n=36)
 ```{r}
-filter_homozygous_vars(MM294_GT, IVP35_GT, snps2, 10) %>% 
-  mutate(MM294 = ifelse(MM294_GT == "0/0/0/0", REF, ALT)) %>% 
+filter_homozygous_vars(LR00026_GT, IVP35_GT, snps2, 10) %>% 
+  mutate(LR00026 = ifelse(LR00026_GT == "0/0/0/0", REF, ALT)) %>% 
   mutate(IVP35 = ifelse(IVP35_GT == "0/0", REF, ALT)) %>% 
-  select(CHROM, POS, REF, IVP35, MM294) %>% 
+  select(CHROM, POS, REF, IVP35, LR00026) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>% 
-  write_tsv(., "IVP35-MM294-hom-SNP.tsv", col_names = T)
+  write_tsv(., "LR00026-IVP35-hom-SNP.tsv", col_names = T)
 ```
 
 LR00.026 x PL4 (n=35)
 ```{r}
-filter_homozygous_vars(MM294_GT, PL4_GT, snps2, 10) %>% 
-  mutate(MM294 = ifelse(MM294_GT == "0/0/0/0", REF, ALT)) %>% 
+filter_homozygous_vars(LR00026_GT, PL4_GT, snps2, 10) %>% 
+  mutate(LR00026 = ifelse(LR00026_GT == "0/0/0/0", REF, ALT)) %>% 
   mutate(PL4 = ifelse(PL4_GT == "0/0", REF, ALT)) %>% 
-  select(CHROM, POS, REF, PL4, MM294) %>% 
+  select(CHROM, POS, REF, PL4, LR00026) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>% 
-  write_tsv(., "PL4-MM294-hom-SNP.tsv", col_names = T)
+  write_tsv(., "LR00026-PL4-hom-SNP.tsv", col_names = T)
 ```
 
 Atlantic x IVP35 (n=5)
@@ -178,7 +178,7 @@ filter_homozygous_vars(Atlantic_GT, IVP35_GT, snps2, 10) %>%
   mutate(IVP35 = ifelse(IVP35_GT == "0/0", REF, ALT)) %>% 
   select(CHROM, POS, REF, IVP35, Atlantic) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>% 
-  write_tsv(., "IVP35-Atlantic-hom-SNP.tsv", col_names = T) 
+  write_tsv(., "Atlantic-IVP35-hom-SNP.tsv", col_names = T) 
 ```
 
 Atlantic x PL4 (n=10)
@@ -188,7 +188,7 @@ filter_homozygous_vars(Atlantic_GT, PL4_GT, snps2, 10) %>%
   mutate(PL4 = ifelse(PL4_GT == "0/0", REF, ALT)) %>% 
   select(CHROM, POS, REF, PL4, Atlantic) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>% 
-  write_tsv(., "PL4-Atlantic-hom-SNP.tsv", col_names = T)
+  write_tsv(., "Atlantic-PL4-hom-SNP.tsv", col_names = T)
 ```
 
 Desiree x IVP101 (n=2)
@@ -198,7 +198,7 @@ filter_homozygous_vars(Desiree_GT, IVP101_GT, snps2, 10) %>%
   mutate(IVP101 = ifelse(IVP101_GT == "0/0", REF, ALT)) %>% 
   select(CHROM, POS, REF, IVP101, Desiree) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>%
-  write_tsv(., "IVP101-Desiree-hom-SNP.tsv", col_names = T)
+  write_tsv(., "Desiree-IVP101-hom-SNP.tsv", col_names = T)
 ```
 
 Desiree x IVP35 (n=2)
@@ -209,7 +209,7 @@ filter_homozygous_vars(Desiree_GT, IVP35_GT, snps2, 10) %>%
   select(CHROM, POS, REF, IVP35, Desiree) %>% 
   filter(CHROM %in% sprintf("chr%0.2d", 1:12)) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>% 
-  write_tsv(., "IVP35-Desiree-hom-SNP.tsv", col_names = T)
+  write_tsv(., "Desiree-IVP35-hom-SNP.tsv", col_names = T)
 ```
 
 Desiree x PL4 (n=6)
@@ -220,7 +220,7 @@ filter_homozygous_vars(Desiree_GT, PL4_GT, snps2, 10) %>%
   select(CHROM, POS, REF, PL4, Desiree) %>% 
   filter(CHROM %in% sprintf("chr%0.2d", 1:12)) %>% 
   rename(Chrom = CHROM, Pos = POS, Ref = REF) %>% 
-  write_tsv(., "PL4-Desiree-hom-SNP.tsv", col_names = T)
+  write_tsv(., "Desiree-PL4-hom-SNP.tsv", col_names = T)
 ```
 
 ```{r}
