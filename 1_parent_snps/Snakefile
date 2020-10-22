@@ -114,20 +114,20 @@ rule all:
     input:
         ["data/realigned/{}.bam".format(x) for x in units.index.levels[0]],
         ["data/depths/{}_q20_depth.bed".format(x) for x in units.index.levels[0]],
-        ["data/calls/{}-filtered-MM-calls.vcf.gz".format(x) for x in config["good_chroms"]]
+        ["data/calls/{}-filtered-MM-calls.vcf.gz".format(x) for x in config["good_chroms"]],
+        expand(["data/snplists/{pop}-{mom}-hom-SNP.tsv"], pop=config["pops"], mom=config["moms"])
 
+include: "rules/make_snp_lists.rules"
 include: "rules/vcf_site_filters.rules"
 include: "rules/merge_MM_vcfs.rules"
 include: "rules/freebayes_interval_MM.rules"
-# include: "rules/summarize_q20_depth.rules"
-# include: "rules/summarize_q0_depth.rules"
 include: "rules/samtools_q20_depth.rules"
 include: "rules/samtools_q0_depth.rules"
-include: "rules/realign_indels.rules" # testing placement at this point in the workflow, rule rewritten
-include: "rules/realigner_target_creator.rules" # testing placement at this point in the workflow, rule rewritten
-include: "rules/samtools_index_pe.rules" # change for later indel realign
-include: "rules/samtools_merge.rules" # change for later indel realign
-include: "rules/clip_overlap.rules" # changed for later indel realign
+include: "rules/realign_indels.rules"
+include: "rules/realigner_target_creator.rules"
+include: "rules/samtools_index_pe.rules"
+include: "rules/samtools_merge.rules"
+include: "rules/clip_overlap.rules"
 include: "rules/filter_good_pairs.rules"
 include: "rules/mark_duplicates.rules"
 include: "rules/align.rules"

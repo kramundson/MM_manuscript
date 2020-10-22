@@ -1,13 +1,11 @@
-From results of ```1_dosage``` and ```3_chromosome_ori``` determine whether using
+From results of ```1_parent_snps``` and ```2_dosage``` determine whether using
 pooled euploid dihaploids from WA.077 yields similar results as using WA.077 itself.
 
-There are a couple factors at play:
-If dihaploids have smaller introgressions, loci will not be included in the analysis. The
-number of markers will decrease.
+Specify dihaploids extracted from WA.077 that did not have a trisomy according to 
+```2_dosage``` as "clean" dihaploids. Then, process the alignments of these dihaploids
+for SNP calling and genotyping. Output is a SNP list that can be used for binned
+genotyping as described in ```2_dosage```.
 
-Read type. WA.077 was sequenced 2x 150, all dihaploids were sequenced single-end 100.
-
-From ```1_dosage```, keep the "clean" dihaploids of WA.077, i.e., those that don't have
-a trisomy. Merge reads of these dihaploids and substitute WA.077 for this pool during
-the variant calling step.
+Compare output from both SNP lists. Specifically, I will check the genome-wide and
+per-chromosome HI SNP % and check whether the chr08 breakpoints in MM247 are concordant.
 

@@ -73,7 +73,7 @@ params:
         mq: 20
         bin: 10000
 
-    freebayes: "--hwe-priors-off --min-mapping-quality 20 --min-base-quality 20 --genotype-qualities --ploidy 4 --cnv-map freebayes-cnv-map.bed -n 4"
+    freebayes: "--hwe-priors-off --min-mapping-quality 20 --min-base-quality 20 --genotype-qualities --ploidy 4 --cnv-map freebayes-cnv-map.bed --use-best-n-alleles 4"
 
     bedtools:
         window: 1000000

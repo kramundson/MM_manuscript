@@ -1,8 +1,8 @@
 rule freebayes_interval_MM:
     input:
         ref=config["genome"],
-        bam=["data/realigned/{}.bam".format(x) for x in config["final_samples"]],
-        bai=["data/realigned/{}.bam.bai".format(x) for x in config["final_samples"]]
+        bam=["data/realigned/{}.bam".format(x) for x in units.index.levels[0]],
+        bai=["data/realigned/{}.bam.bai".format(x) for x in units.index.levels[0]]
     output:
         "data/calls/interval_MM/{interval}-calls.vcf"
     params:
