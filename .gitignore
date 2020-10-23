@@ -1,6 +1,8 @@
 data/
 2_dosage/data/
 2_dosage/.snakemake
+2_dosage/analysis/*.txt
 1_parent_snps/data/
 1_parent_snps/.snakemake
+1_parent_snps/analysis/*.tsv
 ref/*fa*
