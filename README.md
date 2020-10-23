@@ -61,17 +61,24 @@ cd ../3_dihaploid_sub_test
 snakemake
 ```
 
-7. Short read QC, alignment and variant calling for HI addition lines. Add in pooled 
-   euploid dihaploids as a substitute for the 4x parent for variant calling.
+7. Chromosome dosage including dihaploid pools
 
 ```
-cd ../4_offchrom
+cd ../4_dihaploid_pools
 snakemake
 ```
 
-8. Haplotype extraction from addition lines and analyses in hybrids.
+8. Short read QC, alignment and variant calling for HI addition lines. Add in pooled 
+   euploid dihaploids as a substitute for the 4x parent for variant calling.
 
 ```
-cd ../5_haplotypes
+cd ../5_offchrom
+snakemake
+```
+
+9. Haplotype extraction from addition lines and analyses in hybrids.
+
+```
+cd ../6_haplotypes
 snakemake
 ```

@@ -1,4 +1,10 @@
 data/
+4_dihaploid_pools/analysis/*.png
+4_dihaploid_pools/analysis/*.txt
+4_dihaploid_pools/data/
+4_dihaploid_pools/.snakemake/
+3_dihaploid_sub_test/data
+3_dihaploid_sub_test/.snakemake/
 2_dosage/data/
 2_dosage/.snakemake
 2_dosage/analysis/*.txt

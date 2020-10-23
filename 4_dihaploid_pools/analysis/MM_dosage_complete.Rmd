@@ -1,11 +1,11 @@
 ---
-title: "1_dosage_analysis"
-author: Kirk Amundson
-date: 2020_1007
+title: "MM Dosage Plots"
+author: "Kirk Amundson"
+date: 2020_10_23
 output: html_notebook
 ---
 
-Aim: Analyses pertaining to Figure 2 in the MM manuscript.
+Aim: Clean version of dosage plots from the MM manuscript
 
 ## Packages:
 ```{r}
@@ -249,7 +249,7 @@ tidy_snp_plot <- function(df, sample_to_plot, spacer_size=30, chroms=sprintf("ch
 # nicely stack dosage and SNP plots atop one another
 stack_plots <- function(sample_to_plot, dosage_dataset, snp_dataset) {
   top <- tidy_dosage_plot(dosage_dataset, sample_to_plot)
-  bottom <- tidy_snp_plot(snp_dataset, sample_to_plot)
+  bottom <- bin_snp_plot(snp_dataset, sample_to_plot)
   combo <- ggarrange(top, bottom, align = "v", ncol = 1)
   return(combo)
   # ggsave(paste0(Sys.Date(), "-", sample_to_plot, "-combo.png"), plot = combo, width = 18, height = 6, units = "in", device = "png")
@@ -423,11 +423,11 @@ bin_snp_plot <- function(df, sample_to_plot, new_binsize = 4e6, chroms = sprintf
 ```
 
 ## Data preprocessing:
-### Read in annotations from MM dataset from Monica. Mostly I need this for the ploidy of each sample, obtained via flow cytometry:
 MD5 (2020_0624_MM_annotated.tsv) = 9becfb4ba49589e961e4eaa01adce61f
 ```{r}
-mm <- read_tsv("2020_0624_MM_annotated.tsv", na = c("NA", "."))
+mm <- read_tsv("../../2_dosage/analysis/2020_0624_MM_annotated.tsv", na = c("NA", "."))
 ```
+
 ### Get mapped read counts in non-overlapping 1Mb bins for each sample in the MM population:
 ```{r}
 bedfiles <- dir(pattern = ".bed",
@@ -460,7 +460,7 @@ bed <- plyr::ldply(bedfiles, function(x) read_tsv(x, col_names = bedcols, col_ty
       Non_inducer == "LR00026" ~ "MM294",
       Non_inducer == "Y84027" ~ "MM295",
       Non_inducer == "C90170" ~ "MM296",
-      Non_inducer == "93003" ~ "MM297",
+      Non_inducer == "93.003" ~ "MM297",
       Non_inducer == "458" ~ "MM298",
       Non_inducer == "C92172" ~ "MM299",
       Non_inducer == "WA104" ~ "MM301",
@@ -482,7 +482,7 @@ bed <- plyr::ldply(bedfiles, function(x) read_tsv(x, col_names = bedcols, col_ty
       Non_inducer == "LR00026" ~ "CIP300093.14",
       Non_inducer == "Y84027" ~ "CIP388676.1",
       Non_inducer == "C90170" ~ "CIP390478.9",
-      Non_inducer == "93003" ~ "CIP390637.1",
+      Non_inducer == "93.003" ~ "CIP390637.1",
       Non_inducer == "458" ~ "CIP391931.1",
       Non_inducer == "C92172" ~ "CIP392780.1",
       Non_inducer == "WA104" ~ "CIP397073.16",
@@ -537,7 +537,9 @@ pooled_single_ctrls <- bed_genomic %>%
 
 ### Join binned SNP data to read count data
 ```{r}
+# left off revisions here
 bin_alleles_files <- dir(pattern = "2020-06-22_bin_alleles")
+bin_alleles_files
 bin_alleles <- map_dfr(bin_alleles_files, function(x) melt_bin_alleles(x)) %>% 
   dplyr::select(Chrom, Start, End, Ind, ObsPerHI, Cov, HIcalls, Non_inducer, Inducer) %>% # worked with 1Mb bin alleles, need to change if bin size changes
   rename(chrom = Chrom,
@@ -563,22 +565,9 @@ bin_alleles <- map_dfr(bin_alleles_files, function(x) melt_bin_alleles(x)) %>%
                                 genomic_hi_perc > 39 ~ "4x"))
 ```
 
-### Deal with large deletions in the 4x parents:
-
-These inflate standardized coverage, particularly in centromeres.
-This can lead to false positive trisomy and monosomy calls, even when averaging up to chromosome.
-For example, C93154 has most of CEN 12 in apparent duplex dosage, which makes the
-standardized coverage values more extreme than their actual copy number. Enough
-of the chromosome is affected to lead to a large number of trisomy calls for chromosome
-12 in dihaploids from C93154, LR00022, LR00026, 93003, and Y84027. I manually corrected these
-calls after observing that CEN12 showed large deletions in C93154, LR00022, LR00026 and 93003.
-
-Read in manual false positive trisomy annotations.
-In the same pipe, left join to chromosome-aggregated data:
-
 ```{r}
 with_man_fp <- left_join(bin_alleles,
-                         read_tsv("2020_0612_chrom_fps.txt", col_names = T, comment = "#"))
+                         read_tsv("../../2_dosage/analysis/2020_0612_chrom_fps.txt", col_names = T, comment = "#"))
 ```
 
 ### Call whole chromosome aneuploids by aggregating read depth up to individual, then standardizing to tetraploid parent as a control:
@@ -594,7 +583,7 @@ with_aneu_calls <- lapply(unique(with_man_fp$Non_inducer[!is.na(with_man_fp$Non_
   # mutate(ploidy_short = str_extract(snp_ploidy, "[0-9]") %>% as.numeric()) %>% 
   mutate(call_update = case_when(is.na(call) ~ 2,
                                  manual_fp == "fp" ~ 2,
-                                 manual_fp == "tp" ~ call)) %>% 
+                                 manual_fp == "tp" ~ 2 + call)) %>% 
   mutate(chromshort = str_remove(chrom, "chr")) %>%
   mutate(chromshort = str_remove(chromshort, "^0"))
 ```
@@ -604,7 +593,7 @@ Centromere estimated from recombination-suppressed regions in a tetraploid F1
 mapping population (Altus x Colomba), n=235.
 ```{r}
 # made a BED file of coords from Bourke et al (2015) Table S2
-bourke_cen <- read_tsv("bourke_cen.bed", col_names = c("chrom", "cen_start", "cen_end"))
+bourke_cen <- read_tsv("../../2_dosage/analysis/bourke_cen.bed", col_names = c("chrom", "cen_start", "cen_end"))
 bourke_cen
 ```
 
@@ -614,17 +603,13 @@ with_cen <- left_join(with_aneu_calls, bourke_cen) %>%
 ```
 
 ```{r}
-# with_cen %>% 
-#   dplyr::select(Non_inducer, ctrl_CIP, Inducer, UCD_Sample_Code, snp_ploidy) %>% 
-#   distinct() %>% 
-#   group_by(Non_inducer, Inducer, snp_ploidy) %>% 
-#   tally() %>% 
-#   split(.$snp_ploidy) %>% 
-#   map(function(x) pivot_wider(x, names_from = Inducer, values_from=n)) %>% 
-#   map(function(x) dplyr::select(x, Non_inducer, snp_ploidy, IVP101, IVP35, PL4))
+with_cen %>% 
+  filter(UCD_Sample_Code == "MM774") %>% 
+  View
 ```
 
-## Figure 2A: Estimated chromosome copy number for all WA077-derived dihaploids:
+
+## Figure 2A Estimated chromosome copy number of 229 dihaploids extracted from WA.077: 
 ```{r}
 fig2a_data <- with_cen %>% 
   filter(Non_inducer == "WA077") %>% 
@@ -693,9 +678,56 @@ fig2a <- fig2a_data %>%
 fig2a
 ```
 
-## Figure 2B: Chromosome parental origin: All WA.077-derived dihaploids
+## Figure 2B: Bar chart of chromosome counts, MM hybrids excluded
 ```{r}
-fig2b <- fig2a_data %>% 
+fig2b_data <- with_cen %>%
+  filter(sample_tot >= 2e4) %>% 
+  filter(snp_ploidy == "2x" | is.na(snp_ploidy)) %>%
+  filter(Monica_ploidy == "2x" | is.na(Monica_ploidy)) %>% 
+  filter(!is.na(ctrl_CIP)) %>%
+  select(chrom,
+                UCD_Sample_Code,
+                manual_fp,
+                # call,
+                call_update,
+                Non_inducer,
+                Inducer,
+                ctrl_CIP,
+                CIP_Sample_Code,
+                Phureja_marker_phenotype,
+                Predicted_chrom_number,
+                Parent_assoc_aneuploidy,
+                Monica_ploidy,
+                snp_ploidy) %>% 
+  distinct() %>%
+  group_by(UCD_Sample_Code) %>%
+  mutate(chrnum = sum(call_update, na.rm = T)) %>% 
+  ungroup() %>%
+  mutate(Parent_assoc_aneuploidy = ifelse(chrnum == 24, "euploid", Parent_assoc_aneuploidy)) %>% 
+  dplyr::select(-chrom, -call_update, -manual_fp) %>% 
+  distinct()
+
+fig2b <- ggplot(fig2b_data, aes(x = factor(chrnum), fill = factor(chrnum))) +
+  geom_bar() +
+  geom_text(stat='count', aes(label=..count..), vjust=-0.2, size = 3) +
+  scale_fill_viridis(discrete = T) +
+  scale_y_continuous(limits = c(0, 1000)) +
+  guides(fill = F) +
+  labs(x = "Chromosome Number", y = "Count") +
+  theme_bw() +
+  theme(
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.background=element_rect(fill="white",color="black"),
+      axis.ticks = element_blank(),
+      plot.margin=margin(20, 20, 5.5, 5.5, "pt")
+  )
+fig2b
+```
+
+## Figure 2C Estimated chromosomes parental origin of 229 dihaploids extracted from WA.077:
+```{r}
+fig2c <- fig2a_data %>% 
   ggplot(., aes(x = sample_num_recode, y = chrom_ObsPerHI, shape = trisomic)) +
   geom_vline(xintercept = adds, color = "gray70") +
   geom_point() +
@@ -740,55 +772,259 @@ fig2b <- fig2a_data %>%
       legend.box = "horizontal",
       legend.background = element_rect(color = "black", fill = "white", size = 0.2, linetype = "solid")
     )
-fig2b
+fig2c
 ```
-
-> Most aneuploids are due to an additional chromosome from the non-inducer parent. Furthermore, there is very little HI allele
-in dihaploids that don't have HI chromosomes, suggesting the impact of smaller introgressions is minimal. Based on this, I'm
-going to try pooling euploid dihaploids to use as a stand-in for the tetraploid parent. This allows chromosome parental
-origin analysis without having to sequence the tetraploid parent.
-
-## Identify euploid dihaploids to pool as a stand-in for the tetraploid parent:
+## Figure 2D: Barchart of aneuploid parental origin, MM hybrids excluded
 ```{r}
-dh_units <- read_tsv("../units.tsv", col_names = T, na = "NaN")
-```
-
-```{r}
-clean_dh <- with_aneu_calls %>% 
+fig2d_data <- with_cen %>% 
+  filter(sample_tot >= 2e4) %>% 
+  filter(snp_ploidy == "2x") %>%
+  filter(Monica_ploidy != "5x") %>% 
+  filter(!is.na(ctrl_CIP)) %>% # gets rid of skim sequenced MM parents
   filter(manual_fp != "fp") %>% 
+  dplyr::select(chrom,
+                UCD_Sample_Code,
+                manual_fp,
+                call,
+                sample_tot,
+                Non_inducer,
+                Inducer,
+                ctrl_CIP,
+                Predicted_chrom_number,
+                Parent_assoc_aneuploidy,
+                Monica_ploidy,
+                snp_ploidy) %>% 
+  distinct() %>% 
   group_by(UCD_Sample_Code) %>% 
   mutate(chrnum = 24 + sum(call, na.rm = T)) %>% 
-  filter(sample_tot >= 2e4) %>% 
-  filter(Monica_ploidy == "2x") %>% 
-  filter(chrnum == 24) %>% 
-  select(UCD_Sample_Code, Non_inducer) %>% 
-  group_by(Non_inducer) %>% 
-  distinct() %>% 
   ungroup() %>% 
-  rename(sample = UCD_Sample_Code) %>% 
-  left_join(., dh_units) %>% 
-  mutate(sample = paste0("clean_", str_remove(Non_inducer, "\\."), "_dihaploids")) %>% 
-  select(sample, unit, fq1, fq2, parhap) %>% 
-  mutate(fq1 = str_replace(fq1, "R1_001.fq.gz", "R1_001.fastq.gz")) %>% 
-  arrange(sample)
+  filter(chrnum > 24) %>% 
+  dplyr::select(chrnum, UCD_Sample_Code, Parent_assoc_aneuploidy, Inducer, Non_inducer) %>% 
+  mutate(Parent_assoc_aneuploidy = ifelse(chrnum == 24, "euploid", Parent_assoc_aneuploidy)) %>% 
+  filter(!is.na(Parent_assoc_aneuploidy)) %>%
+  distinct()
+
+fig2d_data %>% 
+  group_by(chrnum, Parent_assoc_aneuploidy) %>% 
+  tally 
+
+fig2d <- ggplot(fig2d_data, aes(x = factor(chrnum), fill = factor(Parent_assoc_aneuploidy))) +
+    geom_bar(stat = "count", position = position_dodge2(preserve = "single")) +
+    geom_text(stat='count', aes(label=..count..), vjust=-0.4, position = position_dodge2(preserve = "single", width = 0.9), size = 3) +
+    labs(x = "Chromosome Number", y = "Count", fill = "Parent") +
+    scale_fill_manual(values = c("#440154FF", "#73D055FF"), na.value = "#969696") +
+    scale_y_continuous(limits = c(0,75)) +
+    theme_minimal() +
+    theme(
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.background=element_rect(fill="white",color="black"),
+      plot.margin=margin(20, 5.5, 5.5, 5.5, "pt"),
+      axis.ticks = element_blank(), # this plot doesn't show axis ticks by default anyway
+      legend.position = c(0.33, 0.94),
+      legend.text = element_text(size = 8),
+      legend.title = element_blank(),
+      legend.justification = 'left',
+      legend.title.align = 0.0,
+      legend.key.size = unit(0.2, "cm")
+    )
+fig2d
+```
+
+## Combine Fig. 2 panels:
+```{r}
+fig2 <- ggarrange(
+  ggarrange(fig2a, fig2c, labels = c("A", "C"), align = "hv", nrow = 2, ncol = 1, hjust = 0, vjust = 1.5, widths = c(1,1)),
+  ggarrange(fig2b, fig2d, labels = c("B", "D"), align = "hv", nrow = 2, ncol = 1, hjust = 0, vjust = 1.5, widths = c(1,1)),
+  nrow = 1,
+  ncol = 2,
+  heights = c(1,1),
+  widths = c(2.3,1)
+)
+fig2
+ggsave(paste0(Sys.Date(), "-fig2.png"), plot = fig2, width = 7, height = 5, units = "in", device = "png") # need to get the dimensions right here
+```
+
+## Basic stats accompanying Figure 2:
+```{r}
+# Fisher exact of dihaploid introgression count
+fs <- fig2b_data %>% 
+  filter(snp_ploidy == "2x") %>% 
+  mutate(hi_intro = case_when(UCD_Sample_Code == "MM247" ~ "hi_intro",
+                              Parent_assoc_aneuploidy == "inducer" ~ "hi_intro",
+                              Parent_assoc_aneuploidy %in% c("euploid", "non-inducer") ~ "not intro"))
+table(fs$Inducer, fs$hi_intro)
+fisher.test(table(fs$Inducer, fs$hi_intro))
+```
+
+## Figure S1: Chromosome number by maternal parent. Include data from previous studies.
+```{r}
+# make data frame that groups by non inducer and chromosome number
+prop_data <- fig2c_data %>% 
+  mutate(Non_inducer = ctrl_CIP) %>% 
+  group_by(Non_inducer, chrnum) %>% 
+  tally() %>%
+  mutate(Non_inducer_sum = sum(n)) %>% 
+  ungroup() %>%
+  mutate(ref = "This study") %>% 
+  bind_rows(., read_tsv("lit_chromosome_counts.tsv", col_names = T)) %>% 
+  filter(Non_inducer_sum >= 30) %>% 
+  group_by(Non_inducer) %>% 
+  mutate(frac_25 = n[chrnum == "25"] / Non_inducer_sum) %>% 
+  mutate(frac_an = sum(n[chrnum != "24"]) / Non_inducer_sum) %>%
+  # arrange(desc(Non_inducer_sum)) %>% 
+  # arrange(desc(frac_25)) %>% 
+  mutate(chrnum = factor(chrnum, levels = c("23", "24", "25", "26", "27"))) %>%
+  # mutate(chrnum = factor(chrnum, levels = c("27", "26", "25", "24", "23"))) %>%
+  mutate(refshort = case_when(
+    ref=="Wagenvoort and Lange (1975)" ~ "1",
+    ref=="This study" ~ "2",
+    ref=="Pham et al (2019)" ~ "3",
+    ref=="Amundson et al (2019)" ~ "4"))
+prop_data
+
+lab_data <- prop_data %>% 
+  select(Non_inducer, Non_inducer_sum, frac_25, frac_an, refshort) %>% 
+  distinct()
+```
+```{r}
+plt <- prop_data %>% 
+  ggplot(.) +
+  geom_bar(aes(x = reorder(Non_inducer, -frac_25), y = n, fill = factor(chrnum)), stat = "identity", position = position_fill(reverse = T), width = 0.8) +
+  geom_text(data = lab_data, aes(x = reorder(Non_inducer, -frac_25), y = 1.11, label = Non_inducer_sum), hjust = 1, vjust = 0.4) +
+  geom_text(data = lab_data, aes(x = reorder(Non_inducer, -frac_25), y = 1.17, label = refshort), hjust = 0, vjust = 0.4) +
+  annotate("segment", x = 0.42, xend = 21.58, y = 1.12, yend=1.12, color = "black") +
+  annotate("segment", x = 0.42, xend = 21.58, y =1.02, yend=1.02, color = "black") +
+  scale_y_continuous(breaks = seq(0,1,by=0.1), labels=seq(0,1,by=0.1)) +
+  scale_fill_viridis(discrete = T) +
+  # coord_flip(ylim = c(-0.15,1)) +
+  coord_flip(ylim = c(0,1.15)) +
+  guides(shape = F) +
+  annotation_custom(
+    grob = textGrob(label = "N"),
+    xmin = 23,
+    xmax = Inf,
+    ymin = 0.95,
+    ymax = Inf) +
+  annotation_custom(
+    grob = textGrob(label = "Ref"),
+    xmin = 23,
+    xmax = Inf,
+    ymin = 1.12,
+    ymax = Inf) +
+  labs(x = "Tetraploid Parent", y = "Fraction", fill = "Chromosome Number") +
+  theme_bw() +
+  theme(
+   panel.grid.minor = element_blank(),
+   panel.grid.major = element_blank(),
+   panel.background=element_rect(fill="white",color="black"),
+   axis.title.x=element_text(size=12),
+   axis.title.y=element_text(size=12,angle= 90, vjust=0.5),
+   plot.title=element_text(size=20,face="bold",hjust=0,color="black"),
+   axis.text.x=element_text(size=10,color="black"),
+   axis.text.y=element_text(size=10,color="black"),
+   legend.position = "bottom",
+   legend.text = element_text(size = 12, color = "black"),
+   legend.title = element_text(size = 12, color = "black"),
+   # legend.justification = 'left',
+   legend.title.align = 0.5,
+   plot.margin=margin(20, 5.5, 5.5, 5.5, "pt")
+  )
+
+p <- ggplot_gtable(ggplot_build(plt))
+p$layout$clip[p$layout$name == "panel"] <- "off"
+grid.newpage()
+grid.draw(p)
+ggsave("2020-10-23-aneu-by-nonHI.png", plot = p, width = 6, height = 6, units = "in", device = "png")
 ```
 
 ```{r}
-# parent_units <- read_tsv("../../1_parent_snps/units.tsv", col_names = T) %>%
-#   filter(sample != "WA077")
+fig2c_data %>% 
+  mutate(aneu = ifelse(chrnum == 24, "euploid", "aneuploid")) %>% 
+  group_by(Non_inducer, aneu) %>% 
+  tally() %>% 
+  ungroup() %>% 
+  group_by(Non_inducer) %>% 
+  mutate(nonHI_tot = sum(n)) %>% 
+  ungroup() %>% 
+  filter(nonHI_tot >= 30) %>% 
+  select(Non_inducer, aneu, n) %>% 
+  pivot_wider(names_from = aneu, values_from = n) %>% 
+  select(euploid, aneuploid) %>%
+  as.matrix() %>%
+  prop.test()
+```
+
+## Figure S2: Chromosome gains and losses by homolog
+```{r}
+fig_S2_data <- with_cen %>% 
+  filter(snp_ploidy == "2x" | is.na(snp_ploidy)) %>%
+  filter(Monica_ploidy == "2x" | is.na(Monica_ploidy)) %>% 
+  filter(!is.na(ctrl_CIP)) %>%
+  filter(manual_fp != "fp") %>% 
+  filter(sample_tot >= 2e4) %>% 
+  filter(call_update %in% c(1,3)) %>% 
+  select(UCD_Sample_Code, chrom, call_update) %>% 
+  distinct() %>% 
+  mutate(`Chromosome State` = ifelse(call_update == 1, "Loss", "Gain"))
+
+fig_S2 <- fig_S2_data %>% 
+  ggplot(., aes(x = chrom, fill = factor(`Chromosome State`, levels = c("Loss", "Gain")))) +
+  geom_bar(stat = "count", position=position_dodge2(preserve = "single")) +
+  scale_fill_manual(values = c("#1F78B4", "#33A02C")) + # uses 2nd and 4th color of Paired palette, 1st and 2nd too close
+  scale_y_continuous(limits = c(0,15), breaks = seq(0,15,by=5), minor_breaks = seq(0,15,by=1)) +
+  labs(x = "Chromosome", y = "Count", fill = "Chromosome State") +
+  theme_bw() +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_line(color = "black", linetype = "dashed"),
+    panel.grid.minor.y = element_line(color = "gray20", linetype = "dashed"),
+    panel.background=element_rect(fill="white",color="black"),
+    axis.title.x=element_text(size=14),
+    axis.title.y=element_text(size=14,angle= 90, vjust=0.5),
+    plot.title=element_text(size=20,face="bold",hjust=0.5,color="black"),
+    axis.text.x=element_text(size=14,color="black"),
+    axis.text.y=element_text(size=14,color="black"),
+    plot.margin=margin(20, 5.5, 5.5, 20, "pt")
+  )
+fig_S2
+ggsave("2020-10-23-fig-S2.png", plot = fig_S2, width = 10, height = 4, units = "in", device = "png")
 ```
 
 ```{r}
-clean_dh %>% 
-  filter(sample == "clean_WA077_dihaploids") %>% 
-  mutate(fq2 = replace_na(fq2, "NaN")) %>% 
-  # bind_rows(parent_units, .) %>% 
-  write_tsv(., "../../3_dihaploid_sub_test/units.tsv", col_names = T)
+table(fig_S2_data$chrom,fig_S2_data$`Chromosome State`)
 ```
 
 ```{r}
-clean_dh %>% 
-  filter(sample != "clean_WA077_dihaploids") %>% 
-  mutate(fq2 = replace_na(fq2, "NaN")) %>% 
-  write_tsv(., "../../4_dihaploid_pools/units.tsv", col_names = T)
+fig_S2_data %>% 
+  group_by(chrom) %>% 
+  tally() %>% 
+  mutate(tot = sum(n)) %>% 
+  mutate(expect = tot / nrow(.)) %>% 
+  mutate(chisq = (expect-n)**2 / expect) %>% 
+  mutate(chisq_tot = sum(chisq))
+```
+
+> chisq is 15. Is this significant at df=11?
+
+```{r}
+dchisq(15, df=11)
+```
+
+## Figure S3: Combined dosage/SNP plots of eight HI addition dihaploids:
+```{r}
+fig_S3 <- ggarrange(stack_plots("MM246", with_cen, with_cen),
+                    stack_plots("MM247", with_cen, with_cen),
+                    stack_plots("MM523", with_cen, with_cen),
+                    stack_plots("MM537", with_cen, with_cen),
+                    stack_plots("MM546", with_cen, with_cen),
+                    stack_plots("MM774", with_cen, with_cen),
+                    stack_plots("MM890", with_cen, with_cen),
+                    stack_plots("MM1114", with_cen, with_cen),
+                    ncol=2, nrow = 4, align = "hv")
+
+fig_S3
+ggsave("2020-10-23-fig-S3.png", plot = fig_S3, width = 16, height = 16, units = "in", device = "png")
 ```

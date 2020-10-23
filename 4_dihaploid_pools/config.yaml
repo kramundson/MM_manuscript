@@ -1,0 +1,56 @@
+# path or URL to sequencing unit sheet (TSV format, columns: sample, unit, fq1, fq2)
+# Units are technical replicates (e.g., lanes or resequencing of the same biological
+# sample).
+units: "units.tsv"
+
+genome: "../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta"
+windows: "../ref/potato_dm_v404_all_pm_un_chloro_mito_10k_windows.bed"
+
+# junk_scaffolds: ["ChrUn"]
+good_chroms: ["chr01", "chr02", "chr03", "chr04", "chr05", "chr06",
+              "chr07", "chr08", "chr09", "chr10", "chr11", "chr12"]
+
+intervals: "scaffold_intervals.txt"
+
+# sequencing adapter
+adapter: "AGATCGGAAGAGC"
+
+parent_samples: ["Atlantic", "Desiree", "LR00014", "LR00026", "WA077", "DM1_3",
+                 "IVP101", "IVP35", "PL4"]
+
+params:
+
+    prefetch:
+        ascp: "--ascp-path '/share/comailab/kramundson/.aspera/connect/bin/ascp|/home/kramundson/.aspera/connect/etc/asperaweb_id_dsa.openssh' --max-size 50000000000"
+        threads: 4
+
+    cutadapt-pe:
+        qual: "-q 10 -m 40"
+        threads: 8
+    
+    cutadapt-se:
+        qual: "-q 10 -m 40"
+        threads: 8
+    
+    align:
+        threads: 6
+        sort_mem: 4G
+    
+    mark_duplicates:
+        jarpath: "/share/comailab/kramundson/miniconda3/envs/ximena/share/picard-2.18.27-0/picard.jar"
+        java_heap: "-Xms512m -Xmx4g -XX:ParallelGCThreads=1"
+        opt: "REMOVE_DUPLICATES=true TMP_DIR=./tmp ASSUME_SORT_ORDER=coordinate MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000"
+
+    gatk:
+        jvm: "-Xms512m -Xmx1g -XX:ParallelGCThreads=1"
+        jar: "/share/comailab/kramundson/miniconda3/envs/ximena/opt/gatk-3.8/GenomeAnalysisTK.jar"
+        threads: 2
+
+    depth:
+        mq: 20
+        bin: 10000
+
+    freebayes: "--hwe-priors-off --min-mapping-quality 20 --min-base-quality 20 --genotype-qualities --ploidy 4 --cnv-map freebayes-cnv-map.bed --use-best-n-alleles 4"
+
+    bedtools:
+        window: 1000000
