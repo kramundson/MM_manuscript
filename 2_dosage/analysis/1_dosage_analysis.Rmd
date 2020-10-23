@@ -774,14 +774,14 @@ clean_dh <- with_aneu_calls %>%
 ```
 
 ```{r}
-parent_units <- read_tsv("../../1_parent_snps/units.tsv", col_names = T) %>%
-  filter(sample != "WA077")
+# parent_units <- read_tsv("../../1_parent_snps/units.tsv", col_names = T) %>%
+#   filter(sample != "WA077")
 ```
 
 ```{r}
 clean_dh %>% 
   filter(sample == "clean_WA077_dihaploids") %>% 
   mutate(fq2 = replace_na(fq2, "NaN")) %>% 
-  bind_rows(parent_units, .) %>% 
+  # bind_rows(parent_units, .) %>% 
   write_tsv(., "../../3_dihaploid_sub_test/units.tsv", col_names = T)
 ```

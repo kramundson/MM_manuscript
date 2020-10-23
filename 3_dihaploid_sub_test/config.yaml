@@ -15,31 +15,8 @@ intervals: "scaffold_intervals.txt"
 # sequencing adapter
 adapter: "AGATCGGAAGAGC"
 
-step1_samples: ["4x_Atlantic", "4x_Desiree", "4x_MM293", "4x_MM294", "4x_MM302",
-                "2x_IVP101", "2x_IVP35", "2x_PL4"]
-
-step2_samples: ["4x_Atlantic", "4x_Desiree", "4x_MM293", "4x_MM294", "2x_IVP101",
-                "2x_IVP35", "2x_PL4", "clean_WA077_dihaploids"]
-
-step3_samples: ["4x_Atlantic", "4x_Desiree", "4x_MM293", "4x_MM294", "4x_MM302",
-                "2x_IVP101", "2x_IVP35", "2x_PL4", "clean_93003_dihaploids",
-                "clean_C91640_dihaploids", "clean_C93154_dihaploids",
-                "clean_LR00022_dihaploids"]
-
-step4_samples: ["4x_Atlantic", "4x_Desiree", "4x_MM293", "4x_MM294", "4x_MM302",
-                "2x_IVP101", "2x_IVP35", "2x_PL4", "clean_93003_dihaploids",
-                "clean_C91640_dihaploids", "clean_C93154_dihaploids",
-                "clean_LR00022_dihaploids", "2x_MM523", "2x_MM537", "2x_MM546",
-                "2x_MM774", "2x_MM890", "2x_MM246", "2x_MM247", "2x_MM1114"]
-
-final_samples: ["4x_Atlantic", "4x_CIP_Desiree", "4x_MM293", "4x_MM294", "4x_MM302",
-                "2x_IVP101", "2x_IVP35", "2x_PL4", "clean_93003_dihaploids",
-                "clean_C91640_dihaploids", "clean_C93154_dihaploids",
-                "clean_LR00022_dihaploids", "2x_MM523", "2x_MM537", "2x_MM546",
-                "2x_MM774", "2x_MM890", "2x_MM246", "2x_MM247", "2x_MM1114",
-                "clean_WA077_dihaploids", "clean_LR00014_dihaploids", "clean_LR00026_dihaploids",
-                "clean_458_dihaploids", "clean_C01020_dihaploids", "clean_WA104_dihaploids",
-                "clean_Y84027_dihaploids", "clean_Atlantic_dihaploids"]
+parent_samples: ["Atlantic", "Desiree", "LR00014", "LR00026", "WA077", "DM1_3",
+                 "IVP101", "IVP35", "PL4"]
 
 params:
 

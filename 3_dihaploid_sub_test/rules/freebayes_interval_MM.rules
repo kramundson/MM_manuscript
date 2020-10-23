@@ -1,8 +1,10 @@
 rule freebayes_interval_MM:
     input:
         ref=config["genome"],
-        bam=["data/realigned/{}.bam".format(x) for x in config["final_samples"]],
-        bai=["data/realigned/{}.bam.bai".format(x) for x in config["final_samples"]]
+        bam=["data/realigned/{}.bam".format(x) for x in units.index.levels[0]],
+        bai=["data/realigned/{}.bam.bai".format(x) for x in units.index.levels[0]],
+        parent_bams=["../1_parent_snps/data/realigned/{}.bam".format(x) for x in config["parent_samples"]],
+        parent_bais=["../1_parent_snps/data/realigned/{}.bam.bai".format(x) for x in config["parent_samples"]]
     output:
         "data/calls/interval_MM/{interval}-calls.vcf"
     params:
@@ -14,7 +16,7 @@ rule freebayes_interval_MM:
         freebayes \
             -r {params.interval} \
             --fasta-reference {input.ref} \
-            --bam {input.bam} \
+            --bam {input.bam} {input.parent_bams} \
             --vcf {output} \
             {params.options} \
             2> {log}
