@@ -602,13 +602,6 @@ with_cen <- left_join(with_aneu_calls, bourke_cen) %>%
   mutate(is_cen = ifelse(start >= cen_start & end <= cen_end, "cen", "not_cen"))
 ```
 
-```{r}
-with_cen %>% 
-  filter(UCD_Sample_Code == "MM774") %>% 
-  View
-```
-
-
 ## Figure 2A Estimated chromosome copy number of 229 dihaploids extracted from WA.077: 
 ```{r}
 fig2a_data <- with_cen %>% 
@@ -857,10 +850,127 @@ table(fs$Inducer, fs$hi_intro)
 fisher.test(table(fs$Inducer, fs$hi_intro))
 ```
 
-## Figure S1: Chromosome number by maternal parent. Include data from previous studies.
+## Figure S1: Chromosome gains and losses by homolog
+```{r}
+fig_S1_data <- with_cen %>% 
+  filter(snp_ploidy == "2x" | is.na(snp_ploidy)) %>%
+  filter(Monica_ploidy == "2x" | is.na(Monica_ploidy)) %>% 
+  filter(!is.na(ctrl_CIP)) %>%
+  filter(manual_fp != "fp") %>% 
+  filter(sample_tot >= 2e4) %>% 
+  filter(call_update %in% c(1,3)) %>% 
+  select(UCD_Sample_Code, chrom, call_update) %>% 
+  distinct() %>% 
+  mutate(`Chromosome State` = ifelse(call_update == 1, "Loss", "Gain"))
+
+fig_S1 <- fig_S1_data %>% 
+  ggplot(., aes(x = chrom, fill = factor(`Chromosome State`, levels = c("Loss", "Gain")))) +
+  geom_bar(stat = "count", position=position_dodge2(preserve = "single")) +
+  scale_fill_manual(values = c("#1F78B4", "#33A02C")) + # uses 2nd and 4th color of Paired palette, 1st and 2nd too close
+  scale_y_continuous(limits = c(0,15), breaks = seq(0,15,by=5), minor_breaks = seq(0,15,by=1)) +
+  labs(x = "Chromosome", y = "Count", fill = "Chromosome State") +
+  theme_bw() +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_line(color = "black", linetype = "dashed"),
+    panel.grid.minor.y = element_line(color = "gray20", linetype = "dashed"),
+    panel.background=element_rect(fill="white",color="black"),
+    axis.title.x=element_text(size=14),
+    axis.title.y=element_text(size=14,angle= 90, vjust=0.5),
+    plot.title=element_text(size=20,face="bold",hjust=0.5,color="black"),
+    axis.text.x=element_text(size=14,color="black"),
+    axis.text.y=element_text(size=14,color="black"),
+    plot.margin=margin(20, 5.5, 5.5, 20, "pt")
+  )
+fig_S1
+ggsave("2020-10-23-fig-S1.png", plot = fig_S1, width = 10, height = 4, units = "in", device = "png")
+```
+
+```{r}
+table(fig_S1_data$chrom,fig_S1_data$`Chromosome State`)
+```
+
+```{r}
+fig_S1_data %>% 
+  group_by(chrom) %>% 
+  tally() %>% 
+  mutate(tot = sum(n)) %>% 
+  mutate(expect = tot / nrow(.)) %>% 
+  mutate(chisq = (expect-n)**2 / expect) %>% 
+  mutate(chisq_tot = sum(chisq))
+```
+
+> chisq is 15. Is this significant at df=11?
+
+```{r}
+dchisq(15, df=11)
+```
+
+## Figure S2: Chromosome number by HI parent:
+```{r}
+propHI <- fig2b_data %>% 
+  group_by(Inducer, chrnum) %>% 
+  tally() %>% 
+  mutate(Inducer_sum = sum(n)) %>% 
+  mutate(chrnum = factor(chrnum, levels = c("23", "24", "25", "26", "27"))) %>%
+  ungroup()
+head(propHI)
+```
+```{r}
+labHI <- propHI %>% 
+  select(Inducer, Inducer_sum) %>% 
+  distinct()
+head(labHI)
+```
+
+```{r}
+fig_S2 <- ggplot(propHI) +
+  geom_bar(aes(x = Inducer, y = n, fill = chrnum), stat = "identity", position = position_fill(reverse = T), width = 0.8) +
+  geom_text(data = labHI, aes(x = Inducer, y = 1.085, label = Inducer_sum), hjust = 1, vjust = 0.4) +
+  # scale_y_reverse(breaks = seq(0,1,by=0.1), labels=seq(1,0,by=-0.1)) +
+  scale_fill_viridis(discrete = T) +
+  coord_flip(ylim = c(0,1.05)) +
+  annotate("segment", x = 0.4, xend = 3.6, y = 1.02, yend = 1.02, color = "black") +
+  scale_y_continuous(breaks = seq(0,1,by=0.1), labels=seq(0,1,by=0.1)) +
+  labs(x = "Haploid Inducer", y = "Fraction", fill = "Chromosome Number") +
+  annotation_custom(
+    grob = textGrob(label = "N"),
+    xmin = 3.9,
+    xmax = Inf,
+    # ymin = 0.025,
+    ymin = 1.02,
+    ymax = Inf) +
+  theme_bw() +
+  theme(
+   panel.grid.minor = element_blank(),
+   panel.grid.major = element_blank(),
+   panel.background=element_rect(fill="white",color="black"),
+   axis.title.x=element_text(size=12),
+   axis.title.y=element_text(size=12,angle= 90, vjust=0.5),
+   plot.title=element_text(size=20,face="bold",hjust=0,color="black"),
+   axis.text.x=element_text(size=10,color="black"),
+   axis.text.y=element_text(size=10,color="black"),
+   legend.position = "bottom",
+   legend.text = element_text(size = 12, color = "black"),
+   legend.title = element_text(size = 12, color = "black"),
+   legend.justification = 'left',
+   legend.title.align = 0.5,
+   plot.margin=margin(20, 5.5, 5.5, 5.5, "pt")
+  )
+
+p2 <- ggplot_gtable(ggplot_build(fig_S2))
+p2$layout$clip[p2$layout$name == "panel"] <- "off"
+grid.newpage()
+grid.draw(p2)
+ggsave("2020-10-26-fig-S2.png", plot = p2, width = 6, height = 3, units = "in", device = "png")
+```
+
+## Figure S3: Chromosome number by maternal parent. Include data from previous studies.
 ```{r}
 # make data frame that groups by non inducer and chromosome number
-prop_data <- fig2c_data %>% 
+prop_data <- fig2b_data %>% 
   mutate(Non_inducer = ctrl_CIP) %>% 
   group_by(Non_inducer, chrnum) %>% 
   tally() %>%
@@ -890,7 +1000,7 @@ lab_data <- prop_data %>%
 ```{r}
 plt <- prop_data %>% 
   ggplot(.) +
-  geom_bar(aes(x = reorder(Non_inducer, -frac_25), y = n, fill = factor(chrnum)), stat = "identity", position = position_fill(reverse = T), width = 0.8) +
+  geom_bar(aes(x = reorder(Non_inducer, -frac_25), y = n, fill = chrnum), stat = "identity", position = position_fill(reverse = T), width = 0.8) +
   geom_text(data = lab_data, aes(x = reorder(Non_inducer, -frac_25), y = 1.11, label = Non_inducer_sum), hjust = 1, vjust = 0.4) +
   geom_text(data = lab_data, aes(x = reorder(Non_inducer, -frac_25), y = 1.17, label = refshort), hjust = 0, vjust = 0.4) +
   annotate("segment", x = 0.42, xend = 21.58, y = 1.12, yend=1.12, color = "black") +
@@ -935,7 +1045,7 @@ p <- ggplot_gtable(ggplot_build(plt))
 p$layout$clip[p$layout$name == "panel"] <- "off"
 grid.newpage()
 grid.draw(p)
-ggsave("2020-10-23-aneu-by-nonHI.png", plot = p, width = 6, height = 6, units = "in", device = "png")
+ggsave("2020-10-23-fig-S3.png", plot = p, width = 6, height = 6, units = "in", device = "png")
 ```
 
 ```{r}
@@ -955,67 +1065,9 @@ fig2c_data %>%
   prop.test()
 ```
 
-## Figure S2: Chromosome gains and losses by homolog
+## Figure S4: Combined dosage/SNP plots of eight HI addition dihaploids:
 ```{r}
-fig_S2_data <- with_cen %>% 
-  filter(snp_ploidy == "2x" | is.na(snp_ploidy)) %>%
-  filter(Monica_ploidy == "2x" | is.na(Monica_ploidy)) %>% 
-  filter(!is.na(ctrl_CIP)) %>%
-  filter(manual_fp != "fp") %>% 
-  filter(sample_tot >= 2e4) %>% 
-  filter(call_update %in% c(1,3)) %>% 
-  select(UCD_Sample_Code, chrom, call_update) %>% 
-  distinct() %>% 
-  mutate(`Chromosome State` = ifelse(call_update == 1, "Loss", "Gain"))
-
-fig_S2 <- fig_S2_data %>% 
-  ggplot(., aes(x = chrom, fill = factor(`Chromosome State`, levels = c("Loss", "Gain")))) +
-  geom_bar(stat = "count", position=position_dodge2(preserve = "single")) +
-  scale_fill_manual(values = c("#1F78B4", "#33A02C")) + # uses 2nd and 4th color of Paired palette, 1st and 2nd too close
-  scale_y_continuous(limits = c(0,15), breaks = seq(0,15,by=5), minor_breaks = seq(0,15,by=1)) +
-  labs(x = "Chromosome", y = "Count", fill = "Chromosome State") +
-  theme_bw() +
-  theme(
-    legend.position = "bottom",
-    panel.grid.minor.x = element_blank(),
-    panel.grid.major.x = element_blank(),
-    panel.grid.major.y = element_line(color = "black", linetype = "dashed"),
-    panel.grid.minor.y = element_line(color = "gray20", linetype = "dashed"),
-    panel.background=element_rect(fill="white",color="black"),
-    axis.title.x=element_text(size=14),
-    axis.title.y=element_text(size=14,angle= 90, vjust=0.5),
-    plot.title=element_text(size=20,face="bold",hjust=0.5,color="black"),
-    axis.text.x=element_text(size=14,color="black"),
-    axis.text.y=element_text(size=14,color="black"),
-    plot.margin=margin(20, 5.5, 5.5, 20, "pt")
-  )
-fig_S2
-ggsave("2020-10-23-fig-S2.png", plot = fig_S2, width = 10, height = 4, units = "in", device = "png")
-```
-
-```{r}
-table(fig_S2_data$chrom,fig_S2_data$`Chromosome State`)
-```
-
-```{r}
-fig_S2_data %>% 
-  group_by(chrom) %>% 
-  tally() %>% 
-  mutate(tot = sum(n)) %>% 
-  mutate(expect = tot / nrow(.)) %>% 
-  mutate(chisq = (expect-n)**2 / expect) %>% 
-  mutate(chisq_tot = sum(chisq))
-```
-
-> chisq is 15. Is this significant at df=11?
-
-```{r}
-dchisq(15, df=11)
-```
-
-## Figure S3: Combined dosage/SNP plots of eight HI addition dihaploids:
-```{r}
-fig_S3 <- ggarrange(stack_plots("MM246", with_cen, with_cen),
+fig_S4 <- ggarrange(stack_plots("MM246", with_cen, with_cen),
                     stack_plots("MM247", with_cen, with_cen),
                     stack_plots("MM523", with_cen, with_cen),
                     stack_plots("MM537", with_cen, with_cen),
@@ -1025,6 +1077,6 @@ fig_S3 <- ggarrange(stack_plots("MM246", with_cen, with_cen),
                     stack_plots("MM1114", with_cen, with_cen),
                     ncol=2, nrow = 4, align = "hv")
 
-fig_S3
-ggsave("2020-10-23-fig-S3.png", plot = fig_S3, width = 16, height = 16, units = "in", device = "png")
+fig_S4
+ggsave("2020-10-23-fig-S4.png", plot = fig_S4, width = 16, height = 16, units = "in", device = "png")
 ```
