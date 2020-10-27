@@ -43,7 +43,7 @@ def get_bams(wildcards):
 rule all:
     input:
         ["data/bedtools_coverage/{}.bed".format(i[0]) for i in units.index],
-        ["bin_alleles/{}-{}-1Mb-alleles.txt".format(i[0], i[1]) for i in PARENTS]
+        ["data/bin_alleles/{}-{}-1Mb-alleles.txt".format(i[0], i[1]) for i in PARENTS]
 
 include: "rules/bin_by_geno.rules"
 include: "rules/call_alleles.rules"

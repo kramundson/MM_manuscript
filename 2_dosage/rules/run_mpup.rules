@@ -3,7 +3,7 @@ rule run_mpup: # todo chunk this on my own or use Meric's scripts
         ref=config["genome"],
         bams=get_bams
     output:
-        "mpup/{mother}-{inducer}-mpup.txt"
+        "data/mpup/{mother}-{inducer}-mpup.txt"
     params:
         mq=config["params"]["run_mpup"]["map_qual"],
         bq=config["params"]["run_mpup"]["base_qual"],

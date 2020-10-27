@@ -12,9 +12,13 @@ A description of the workflows, in the order they should be run:
    identify whole-chromosome and segmental aneuploids, then determine parental origin.
 3. ```3_dihaploid_sub_test```: Proof of concept in light of results from ```2_dosage```
    Here, I evaluated the use of pooling dihaploids as a stand-in for the tetraploid parent.
-4. ```4_offchrom```: Call variants and look for segmental secondary introgression events
+4. ```4_dihaploid_pools```: Variant calling including pools of euploid dihaploids as a
+   stand-in for tetraploid parents that we didn't sequence.
+5. ```5_dosage_with_pools```: Chromosome parental origin for dihaploids and hybrids for
+   which maternal SNPs were determined from dihaploid pools.
+6. ```6_offchrom```: Call variants and look for segmental secondary introgression events
    in HI addition dihaploids.
-5. ```5_haplotypes```: For tetraploid hybrids, genotype the disome inherited by the HI.
+7. ```7_haplotypes```: For tetraploid hybrids, genotype the disome inherited by the HI.
 
 To run these analyses and reproduce the figures and tables of the manuscript:
 
@@ -61,24 +65,31 @@ cd ../3_dihaploid_sub_test
 snakemake
 ```
 
-7. Chromosome dosage including dihaploid pools
+7. Variant calling including dihaploid pools
 
 ```
 cd ../4_dihaploid_pools
 snakemake
 ```
 
-8. Short read QC, alignment and variant calling for HI addition lines. Add in pooled 
-   euploid dihaploids as a substitute for the 4x parent for variant calling.
+8. Chromosome dosage including dihaploid pools
 
 ```
-cd ../5_offchrom
+cd ../5_dosage_with_pools
 snakemake
 ```
 
-9. Haplotype extraction from addition lines and analyses in hybrids.
+9. Short read QC, alignment and variant calling for HI addition lines. Add in pooled 
+   euploid dihaploids as a substitute for the 4x parent for variant calling.
 
 ```
-cd ../6_haplotypes
+cd ../6_offchrom
+snakemake
+```
+
+10. Haplotype extraction from addition lines and analyses in hybrids.
+
+```
+cd ../7_haplotypes
 snakemake
 ```
