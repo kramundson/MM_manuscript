@@ -1,0 +1,13 @@
+rule run_mpup: # todo chunk this on my own or use Meric's scripts
+    input:
+        ref=config["genome"],
+        bams=get_bams
+    output:
+        "mpup/{mother}-{inducer}-mpup.txt"
+    params:
+        mq=config["params"]["run_mpup"]["map_qual"],
+        bq=config["params"]["run_mpup"]["base_qual"],
+        maxdepth=config["params"]["run_mpup"]["max_depth"]
+    shell: """
+        samtools mpileup -l -d {params.maxdepth} -q {params.bq} -Q {params.mq} -f {output} {input.bams}
+    """

@@ -7,18 +7,19 @@ rule merge_MM_vcfs:
         vcfs=["data/calls/interval_MM/{}-calls.vcf".format(re.sub("\t", "_", x)) for x in intervals],
         intervals=config["intervals"]
     output:
-        "data/calls/MM-calls.vcf"
+        "data/calls/{chrom}-MM-calls.vcf"
     params:
         jarpath=config["params"]["mark_duplicates"]["jarpath"],
         java_heap=config["params"]["mark_duplicates"]["java_heap"]
     log:
-        "logs/cat_MM_vcfs.log"
+        "logs/vcf_merge/{chrom}_MM_vcfs.log"
     shell: """
         sed -e 's/^/data\/calls\/interval_MM\//g' \
             -e 's/$/-calls.vcf/g' {input.intervals} | \
-        tr "\t" "-" > scaffold_calls.list
+        grep {wildcards.chrom} | \
+        tr "\t" "-" > {wildcards.chrom}_scaffold_calls.list
         java {params.java_heap} -jar {params.jarpath} MergeVcfs \
-            I=scaffold_calls.list \
+            I={wildcards.chrom}_scaffold_calls.list \
             O={output} \
             2> {log}
     """

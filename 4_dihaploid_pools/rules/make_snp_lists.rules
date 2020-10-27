@@ -1,0 +1,8 @@
+rule make_snp_lists:
+    input:
+        ["data/calls/{}-filtered-MM-calls.vcf.gz".format(x) for x in config["good_chroms"]]
+    output:
+        expand(["data/snplists/{mom}-{pop}-hom-SNP.tsv"], pop=config["pops"], mom=config["moms"])
+    shell: """
+        Rscript analysis/MM_parent_snps.R
+    """

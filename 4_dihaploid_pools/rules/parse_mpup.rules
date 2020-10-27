@@ -1,0 +1,9 @@
+rule parse_mpup:
+    input:
+        "mpup/{mother}-{inducer}-mpup.txt"
+    output:
+        "parsed_mpup/parsed-{mother}-{inducer}-mpup.txt"
+    threads: 12
+    shell: """
+        python2 scripts/mpileup-parser-v2.py -f {input} -o {output} -t {threads}
+    """
