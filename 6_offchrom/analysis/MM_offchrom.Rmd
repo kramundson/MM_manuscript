@@ -1,0 +1,716 @@
+---
+title: "MM offchrom"
+date: 2020_10_28
+author: "Kirk Amundson"
+output: html_notebook
+---
+
+Aim: rite a routine in R that identifies strings of three or more heterozygous genotype calls
+in each dihaploid. Then, calculate the rate of introgression for each marker by counting
+the number of times it was identified as an introgression in the HI addition lines and
+dividing this number by the number of nonmissing genotypes scored in the dihaploids.
+Then, derive the average rate of introgression in non-overlapping windows.
+
+## Libraries:
+```{r}
+library(tidyverse)
+library(viridis)
+library(ggbeeswarm)
+library(grid)
+library(ggpubr)
+```
+
+## Functions:
+```{r}
+sep <- function(...) {
+  dots <- list(...)
+  separate_(..., into = paste(dots[[2]], attributes[[1]], sep = "_"), convert = T, sep = ":")
+}
+```
+
+## MM246 run annotation:
+```{r}
+file <- "../data/parsed_calls/WA077-IVP35-calls.vcf.gz"
+```
+
+```{r}
+# tidyverse vcf parser
+vcf_header <- system(paste("zgrep '#C'", file), intern = T) %>% 
+  str_replace("^#C", "C") %>% 
+  str_remove_all("[0-9]x_") %>% 
+  str_split(pattern = "\t")
+```
+
+```{r}
+vcf <- read_tsv(file, col_names = vcf_header[[1]], comment = "#", na = c(".", "./.", "././.", "./././.", "NA"))
+```
+
+```{r}
+info  <- str_split(vcf$INFO[1], ";")[[1]] %>% 
+  str_replace("=.+", "")
+info
+
+attributes <- str_split(names(table(vcf$FORMAT)), ":", simplify = F)
+print(attributes)[[1]]
+```
+
+```{r}
+vcf2 <- vcf %>% 
+  mutate(INFO = str_replace_all(INFO, "[A-Za-z]*=", "")) %>%
+  separate(INFO, into = info, sep = ";", convert = T)
+```
+
+```{r}
+MM246 <- vcf2 %>% 
+  select(CHROM, POS, REF, IVP35, MM302, MM246, clean_WA077_dihaploids) %>% 
+  Reduce(f = sep, x = c("IVP35", "MM302", "MM246", "clean_WA077_dihaploids"))
+```
+
+```{r}
+MM246_run_annotation <- MM246 %>% 
+  mutate(MM246_GT_recode = case_when(
+    is.na(MM246_GT) ~ "missing",
+    IVP35_GT == "0/0" & MM246_GT == "1/1" ~ "N/N",
+    IVP35_GT == "1/1" & MM246_GT == "0/0" ~ "N/N",
+    IVP35_GT == "0/0" & MM246_GT == "0/1" ~ "N/H",
+    IVP35_GT == "1/1" & MM246_GT == "0/1" ~ "N/H",
+    IVP35_GT == "1/1" & MM246_GT == "1/1" ~ "H/H",
+    IVP35_GT == "0/0" & MM246_GT == "0/0" ~ "H/H",
+    # cover trisomic cases here
+    # no doses of IVP35 allele
+    IVP35_GT == "0/0" & MM246_GT == "1/1/1" ~ "N/N/N",
+    IVP35_GT == "1/1" & MM246_GT == "0/0/0" ~ "N/N/N",
+    # one dose of IVP35 allele
+    IVP35_GT == "0/0" & MM246_GT == "0/1/1" ~ "N/N/H",
+    IVP35_GT == "1/1" & MM246_GT == "0/0/1" ~ "N/N/H",
+    # two doses of IVP35 allele
+    IVP35_GT == "0/0" & MM246_GT == "0/0/1" ~ "N/H/H",
+    IVP35_GT == "1/1" & MM246_GT == "0/1/1" ~ "N/H/H",
+    # three doses of IVP35 allele
+    IVP35_GT == "0/0" & MM246_GT == "0/0/0" ~ "H/H/H",
+    IVP35_GT == "1/1" & MM246_GT == "1/1/1" ~ "H/H/H"
+  )) %>% 
+  mutate(MM246_is_intro = case_when(MM246_GT_recode %in% c("N/H", "H/H", "N/N/H", "N/H/H", "H/H/H") ~ 1,
+                                    MM246_GT_recode %in% c("N/N", "N/N/N") ~ 0)) %>%  
+  split(.$CHROM) %>% 
+  map_dfr(function(x) mutate(x, MM246_runlen = rle(x$MM246_is_intro) %>% magrittr::extract2("lengths") %>% rep(.,.))) %>% 
+  select(CHROM, POS, REF, starts_with("IVP35"), starts_with("MM302"),
+         starts_with("MM246"),
+         starts_with("clean_WA077")) %>% 
+  mutate(MM246_annotated_IGV = case_when(
+    CHROM == "chr11" ~ "trisomic",
+    CHROM == "chr01" & between(POS, 45392940, 45400039) ~ "good",
+    CHROM == "chr05" & between(POS, 15510198, 15510533) ~ "good",
+    CHROM == "chr07" & between(POS, 7833610, 7844546) ~ "good",
+    CHROM == "chr07" & between(POS, 7880027, 7880413) ~ "good",
+    TRUE ~ "unknown"
+  )) %>% 
+  mutate(MM246_annotated_IGV = ifelse(MM246_is_intro == 1 & MM246_annotated_IGV == "unknown", "bad", MM246_annotated_IGV)) %>%
+  mutate(MM246_ID = ifelse(MM302_GT == "0/0/0/0", MM246_AO, MM246_RO))
+```
+
+```{r}
+MM246_allelerep <- MM246_run_annotation %>% 
+  # filter(CHROM != "chr11") %>% 
+  mutate(trisomic_chrom = ifelse(CHROM == "chr11", "trisomic chr11", "all other chromosomes")) %>% 
+  filter(MM246_is_intro == 1) %>% 
+  ggplot(., aes(x = MM246_ID / MM246_DP)) +
+  geom_histogram(binwidth = 0.01) +
+  ggtitle("MM246") +
+  labs(x = "HI allele depth / Total Depth", y = "Count") +
+  facet_wrap(~trisomic_chrom, ncol = 1, strip.position = "t", scale = "free_y")
+MM246_allelerep
+```
+
+```{r}
+cutoffs_MM246 <- MM246 %>% 
+  select(CHROM, POS, ends_with("DP")) %>% 
+  pivot_longer(ends_with("DP"), names_to = "sample_name", values_to = "depth") %>% 
+  group_by(sample_name, depth) %>% 
+  tally() %>% 
+  ungroup() %>% 
+  filter(!is.na(depth)) %>% 
+  group_by(sample_name) %>% 
+  summarize(ct = max(n), dp = depth[which(n == max(n))]) %>% 
+  mutate(cutoff = dp + 4 * sqrt(dp))
+cutoffs_MM246
+```
+
+```{r}
+MM246_final <- MM246_run_annotation %>% 
+  mutate(MM302_ID = ifelse(MM302_GT == "0/0/0/0", MM302_AO, MM302_RO),
+         clean_WA077_dihaploids_ID = ifelse(MM302_GT == "0/0/0/0", clean_WA077_dihaploids_AO, clean_WA077_dihaploids_RO)) %>% 
+  filter(MM302_ID == 0,
+         MM302_DP <= cutoffs_MM246$cutoff[which(cutoffs_MM246$sample_name == "MM302_DP")]) %>% 
+  filter(clean_WA077_dihaploids_ID < 4) %>%
+  filter(IVP35_DP <= cutoffs_MM246$cutoff[which(cutoffs_MM246$sample_name == "IVP35_DP")]) %>% 
+  filter(MM246_ID >= 6,
+         MM246_ID / MM246_DP >= 0.15,
+         MM246_DP <= cutoffs_MM246$cutoff[which(cutoffs_MM246$sample_name == "MM246_DP")])
+```
+
+```{r}
+MM246_run_annotation %>%
+  filter(HI_intro3) %>%
+  mutate(MM246_ID = ifelse(IVP35_GT == "0/0", MM246_RO, MM246_AO),
+         MM246_ND = ifelse(IVP35_GT == "0/0", MM246_AO, MM246_RO)) %>%
+  group_by(HI_intro_ID) %>%
+  mutate(intro_len = last(POS) - first(POS),
+         intro_n_marker = n(),
+         avg_hi_reads = mean(MM246_ID),
+         obs_per_hi = 100 * sum(MM246_ID) / sum(MM246_DP)) %>%
+  ungroup() %>%
+  write_tsv(., "MM246_candidate_intros.tsv", col_names = T)
+```
+
+## MM247 run annotation:
+```{r}
+MM247 <- vcf2 %>% 
+  select(CHROM, POS, REF, IVP35, MM302, MM247, clean_WA077_dihaploids) %>% 
+  Reduce(f = sep, x = c("IVP35", "MM302", "MM247", "clean_WA077_dihaploids"))
+```
+
+```{r}
+MM247_run_annotation <- MM247 %>% 
+  mutate(MM247_GT_recode = case_when(
+    is.na(MM247_GT) ~ "missing",
+    IVP35_GT == "0/0" & MM247_GT == "1/1" ~ "N/N",
+    IVP35_GT == "1/1" & MM247_GT == "0/0" ~ "N/N",
+    IVP35_GT == "0/0" & MM247_GT == "0/1" ~ "N/H",
+    IVP35_GT == "1/1" & MM247_GT == "0/1" ~ "N/H",
+    IVP35_GT == "1/1" & MM247_GT == "1/1" ~ "H/H",
+    IVP35_GT == "0/0" & MM247_GT == "0/0" ~ "H/H",
+    # cover trisomic cases here
+    # no doses of IVP35 allele
+    IVP35_GT == "0/0" & MM247_GT == "1/1/1" ~ "N/N/N",
+    IVP35_GT == "1/1" & MM247_GT == "0/0/0" ~ "N/N/N",
+    # one dose of IVP35 allele
+    IVP35_GT == "0/0" & MM247_GT == "0/1/1" ~ "N/N/H",
+    IVP35_GT == "1/1" & MM247_GT == "0/0/1" ~ "N/N/H",
+    # two doses of IVP35 allele
+    IVP35_GT == "0/0" & MM247_GT == "0/0/1" ~ "N/H/H",
+    IVP35_GT == "1/1" & MM247_GT == "0/1/1" ~ "N/H/H",
+    # three doses of IVP35 allele
+    IVP35_GT == "0/0" & MM247_GT == "0/0/0" ~ "H/H/H",
+    IVP35_GT == "1/1" & MM247_GT == "1/1/1" ~ "H/H/H"
+  )) %>% 
+  mutate(MM247_is_intro = case_when(MM247_GT_recode %in% c("N/H", "H/H", "N/N/H", "N/H/H", "H/H/H") ~ 1,
+                                    MM247_GT_recode %in% c("N/N", "N/N/N") ~ 0)) %>% 
+  split(.$CHROM) %>% 
+  map_dfr(function(x) mutate(x, MM247_runlen = rle(x$MM247_is_intro) %>% magrittr::extract2("lengths") %>% rep(.,.))) %>% 
+  select(CHROM, POS, REF, starts_with("IVP35"), starts_with("MM302"), 
+         starts_with("MM247"),
+         starts_with("clean_WA077")) %>% 
+  mutate(MM247_ID = ifelse(MM302_GT == "0/0/0/0", MM247_AO, MM247_RO))
+```
+
+```{r}
+MM247_allelerep <- MM247_run_annotation %>% 
+  # filter(CHROM != "chr11") %>% 
+  mutate(trisomic_chrom = ifelse(CHROM == "chr08", "trisomic chr08", "all other chromosomes")) %>% 
+  filter(MM247_is_intro == 1) %>% 
+  ggplot(., aes(x = MM247_ID / MM247_DP)) +
+  geom_histogram(binwidth = 0.01) +
+  ggtitle("MM247") +
+  labs(x = "HI allele depth / Total Depth", y = "Count") +
+  facet_wrap(~trisomic_chrom, ncol = 1, strip.position = "t", scale = "free_y")
+MM247_allelerep
+```
+
+```{r}
+cutoffs_MM247 <- MM247 %>% 
+  select(CHROM, POS, ends_with("DP")) %>% 
+  pivot_longer(ends_with("DP"), names_to = "sample_name", values_to = "depth") %>% 
+  group_by(sample_name, depth) %>% 
+  tally() %>% 
+  ungroup() %>% 
+  filter(!is.na(depth)) %>%
+  group_by(sample_name) %>% 
+  summarize(ct = max(n), dp = depth[which(n == max(n))]) %>% 
+  mutate(cutoff = dp + 4 * sqrt(dp))
+cutoffs_MM247
+```
+
+```{r}
+MM247_final <- MM247_run_annotation %>% 
+  mutate(MM302_ID = ifelse(MM302_GT == "0/0/0/0", MM302_AO, MM302_RO),
+         clean_WA077_dihaploids_ID = ifelse(MM302_GT == "0/0/0/0", clean_WA077_dihaploids_AO, clean_WA077_dihaploids_RO)) %>% 
+  filter(MM302_ID == 0,
+         MM302_DP <= cutoffs_MM247$cutoff[which(cutoffs_MM247$sample_name == "MM302_DP")]) %>% 
+  filter(clean_WA077_dihaploids_ID < 4) %>%
+  filter(IVP35_DP <= cutoffs_MM247$cutoff[which(cutoffs_MM247$sample_name == "IVP35_DP")]) %>% 
+  filter(MM247_ID >= 6,
+         MM247_ID / MM247_DP >= 0.15,
+         MM247_DP <= cutoffs_MM247$cutoff[which(cutoffs_MM247$sample_name == "MM247_DP")])
+```
+
+```{r}
+MM247_run_annotation %>%
+  filter(HI_intro3) %>%
+  mutate(MM247_ID = ifelse(IVP35_GT == "0/0", MM247_RO, MM247_AO),
+         MM247_ND = ifelse(IVP35_GT == "0/0", MM247_AO, MM247_RO)) %>%
+  group_by(HI_intro_ID) %>%
+  mutate(intro_len = last(POS) - first(POS),
+         intro_n_marker = n(),
+         avg_hi_reads = mean(MM247_ID),
+         obs_per_hi = 100 * sum(MM247_ID) / sum(MM247_DP)) %>%
+  ungroup() %>%
+  write_tsv(., "MM247_candidate_intros.tsv", col_names = T)
+```
+
+## MM523 introgression annotation:
+```{r}
+file <- "C91640-PL4-filtered-informative-SNP.vcf.gz"
+vcf523 <- read_tsv(file, col_names = vcf_header[[1]], comment = "#", na = c(".", "./.", "././.", "./././.", "NA")) %>% 
+  mutate(INFO = str_replace_all(INFO, "[A-Za-z]*=", "")) %>%
+  separate(INFO, into = info, sep = ";", convert = T)
+```
+
+```{r}
+MM523 <- vcf523 %>% 
+  select(CHROM, POS, REF, clean_C91640_dihaploids, PL4, MM523) %>% 
+  Reduce(f = sep, x = c("clean_C91640_dihaploids", "PL4", "MM523"))
+```
+
+```{r}
+MM523_run_annotation <- MM523 %>% 
+  mutate(MM523_GT_recode = case_when(is.na(MM523_GT) ~ "missing",
+    PL4_GT == "0/0" & MM523_GT == "1/1" ~ "N/N",
+    PL4_GT == "1/1" & MM523_GT == "0/0" ~ "N/N",
+    PL4_GT == "0/0" & MM523_GT == "0/1" ~ "N/H",
+    PL4_GT == "1/1" & MM523_GT == "0/1" ~ "N/H",
+    PL4_GT == "1/1" & MM523_GT == "1/1" ~ "H/H",
+    PL4_GT == "0/0" & MM523_GT == "0/0" ~ "H/H",
+    # cover trisomic cases here
+    PL4_GT == "0/0" & MM523_GT == "1/1/1" ~ "N/N/N",
+    PL4_GT == "1/1" & MM523_GT == "0/0/0" ~ "N/N/N",
+    # one dose of PL4 allele
+    PL4_GT == "0/0" & MM523_GT == "0/1/1" ~ "N/N/H",
+    PL4_GT == "1/1" & MM523_GT == "0/0/1" ~ "N/N/H",
+    # two doses of PL4 allele
+    PL4_GT == "0/0" & MM523_GT == "0/0/1" ~ "N/H/H",
+    PL4_GT == "1/1" & MM523_GT == "0/1/1" ~ "N/H/H",
+    # three doses of PL4 allele
+    PL4_GT == "0/0" & MM523_GT == "0/0/0" ~ "H/H/H",
+    PL4_GT == "1/1" & MM523_GT == "1/1/1" ~ "H/H/H")) %>% 
+  mutate(MM523_is_intro = case_when(MM523_GT_recode %in% c("N/H", "H/H", "N/N/H", "N/H/H", "H/H/H") ~ 1,
+                                    MM523_GT_recode %in% c("N/N", "N/N/N") ~ 0)) %>%  
+  split(.$CHROM) %>% 
+  map_dfr(function(x) mutate(x, MM523_runlen = rle(x$MM523_is_intro) %>% magrittr::extract2("lengths") %>% rep(.,.))) %>% 
+  select(CHROM, POS, REF, starts_with("PL4"), starts_with("clean_C91640"), starts_with("MM523")) %>% 
+  mutate(MM246_annotated_IGV = case_when(
+    CHROM == "chr11" ~ "trisomic",
+    CHROM == "chr01" & between(POS, 45392940, 45400039) ~ "good",
+    CHROM == "chr05" & between(POS, 15510198, 15510533) ~ "good",
+    CHROM == "chr07" & between(POS, 7833610, 7844546) ~ "good",
+    CHROM == "chr07" & between(POS, 7880027, 7880413) ~ "good",
+    TRUE ~ "unknown"
+  )) %>%
+  mutate(MM523_ID = ifelse(clean_C91640_dihaploids_GT == "0/0/0/0", MM523_AO, MM523_RO)) %>% 
+  mutate(HI_intro3 = NA) %>% 
+  mutate(HI_intro_ID = NA)
+```
+
+```{r}
+MM523_allelerep <- MM523_run_annotation %>% 
+  # filter(CHROM != "chr11") %>% 
+  mutate(trisomic_chrom = ifelse(CHROM == "chr12", "trisomic chr12", "all other chromosomes")) %>% 
+  filter(MM523_is_intro == 1) %>% 
+  ggplot(., aes(x = MM523_ID / MM523_DP)) +
+  geom_histogram(binwidth = 0.01) +
+  ggtitle("MM523") +
+  labs(x = "HI allele depth / Total Depth", y = "Count") +
+  facet_wrap(~trisomic_chrom, ncol = 1, strip.position = "t", scale = "free_y")
+MM523_allelerep
+```
+
+```{r}
+MM523_run_annotation %>%
+  filter(HI_intro3) %>%
+  mutate(MM523_ID = ifelse(PL4_GT == "0/0", MM523_RO, MM523_AO),
+         MM523_ND = ifelse(PL4_GT == "0/0", MM523_AO, MM523_RO)) %>%
+  group_by(HI_intro_ID) %>%
+  mutate(intro_len = last(POS) - first(POS),
+         intro_n_marker = n(),
+         avg_hi_reads = mean(MM523_ID),
+         obs_per_hi = 100 * sum(MM523_ID) / sum(MM523_DP)) %>%
+  ungroup() %>%
+  write_tsv(., "MM523_candidate_intros.tsv", col_names = T)
+```
+
+## MM537 introgression annotation:
+```{r}
+MM537 <- vcf523 %>% 
+  select(CHROM, POS, REF, clean_C91640_dihaploids, PL4, MM537) %>% 
+  Reduce(f = sep, x = c("clean_C91640_dihaploids", "PL4", "MM537"))
+```
+```{r}
+MM537_run_annotation <- MM537 %>% 
+  # filter(CHROM != "chr12") %>%
+  mutate(MM537_GT_recode = case_when(is.na(MM537_GT) ~ "missing",
+    PL4_GT == "0/0" & MM537_GT == "1/1" ~ "N/N",
+    PL4_GT == "1/1" & MM537_GT == "0/0" ~ "N/N",
+    PL4_GT == "0/0" & MM537_GT == "0/1" ~ "N/H",
+    PL4_GT == "1/1" & MM537_GT == "0/1" ~ "N/H",
+    PL4_GT == "1/1" & MM537_GT == "1/1" ~ "H/H",
+    PL4_GT == "0/0" & MM537_GT == "0/0" ~ "H/H",
+    # cover trisomic cases here
+    PL4_GT == "0/0" & MM537_GT == "1/1/1" ~ "N/N/N",
+    PL4_GT == "1/1" & MM537_GT == "0/0/0" ~ "N/N/N",
+    # one dose of PL4 allele
+    PL4_GT == "0/0" & MM537_GT == "0/1/1" ~ "N/N/H",
+    PL4_GT == "1/1" & MM537_GT == "0/0/1" ~ "N/N/H",
+    # two doses of PL4 allele
+    PL4_GT == "0/0" & MM537_GT == "0/0/1" ~ "N/H/H",
+    PL4_GT == "1/1" & MM537_GT == "0/1/1" ~ "N/H/H",
+    # three doses of PL4 allele
+    PL4_GT == "0/0" & MM537_GT == "0/0/0" ~ "H/H/H",
+    PL4_GT == "1/1" & MM537_GT == "1/1/1" ~ "H/H/H")) %>% 
+  mutate(MM537_is_intro = case_when(MM537_GT_recode %in% c("N/H", "H/H", "N/N/H", "N/H/H", "H/H/H") ~ 1,
+                                    MM537_GT_recode %in% c("N/N", "N/N/N") ~ 0)) %>%  
+  split(.$CHROM) %>% 
+  map_dfr(function(x) mutate(x, MM537_runlen = rle(x$MM537_is_intro) %>% magrittr::extract2("lengths") %>% rep(.,.))) %>% 
+  select(CHROM, POS, REF, starts_with("PL4"), starts_with("clean_C91640"), starts_with("MM537")) %>% 
+  mutate(MM537_ID = ifelse(clean_C91640_dihaploids_GT == "0/0/0/0", MM537_AO, MM537_RO)) %>% 
+  mutate(HI_intro3 = NA) %>% 
+  mutate(HI_intro_ID = NA)
+```
+```{r}
+MM537_allelerep <- MM537_run_annotation %>% 
+  # filter(CHROM != "chr11") %>% 
+  mutate(trisomic_chrom = ifelse(CHROM == "chr12", "trisomic chr12", "all other chromosomes")) %>% 
+  filter(MM537_is_intro == 1) %>% 
+  ggplot(., aes(x = MM537_ID / MM537_DP)) +
+  geom_histogram(binwidth = 0.01) +
+  ggtitle("MM537") +
+  labs(x = "HI allele depth / Total Depth", y = "Count") +
+  facet_wrap(~trisomic_chrom, ncol = 1, strip.position = "t", scale = "free_y")
+MM537_allelerep
+```
+
+```{r}
+MM537_run_annotation %>%
+  filter(HI_intro3) %>%
+  mutate(MM537_ID = ifelse(PL4_GT == "0/0", MM537_RO, MM537_AO),
+         MM537_ND = ifelse(PL4_GT == "0/0", MM537_AO, MM537_RO)) %>%
+  group_by(HI_intro_ID) %>%
+  mutate(intro_len = last(POS) - first(POS),
+         intro_n_marker = n(),
+         avg_hi_reads = mean(MM537_ID),
+         obs_per_hi = 100 * sum(MM537_ID) / sum(MM537_DP)) %>%
+  ungroup() %>%
+  write_tsv(., "MM537_candidate_intros.tsv", col_names = T)
+```
+
+## MM546 introgression annotation:
+```{r}
+MM546 <- vcf523 %>% 
+  select(CHROM, POS, REF, clean_C91640_dihaploids, PL4, MM546) %>% 
+  Reduce(f = sep, x = c("clean_C91640_dihaploids", "PL4", "MM546"))
+```
+
+```{r}
+MM546_run_annotation <- MM546 %>% 
+  # filter(CHROM != "chr12") %>%
+  mutate(MM546_GT_recode = case_when(is.na(MM546_GT) ~ "missing",
+    PL4_GT == "0/0" & MM546_GT == "1/1" ~ "N/N",
+    PL4_GT == "1/1" & MM546_GT == "0/0" ~ "N/N",
+    PL4_GT == "0/0" & MM546_GT == "0/1" ~ "N/H",
+    PL4_GT == "1/1" & MM546_GT == "0/1" ~ "N/H",
+    PL4_GT == "1/1" & MM546_GT == "1/1" ~ "H/H",
+    PL4_GT == "0/0" & MM546_GT == "0/0" ~ "H/H",
+    # cover trisomic cases here
+    PL4_GT == "0/0" & MM546_GT == "1/1/1" ~ "N/N/N",
+    PL4_GT == "1/1" & MM546_GT == "0/0/0" ~ "N/N/N",
+    # one dose of PL4 allele
+    PL4_GT == "0/0" & MM546_GT == "0/1/1" ~ "N/N/H",
+    PL4_GT == "1/1" & MM546_GT == "0/0/1" ~ "N/N/H",
+    # two doses of PL4 allele
+    PL4_GT == "0/0" & MM546_GT == "0/0/1" ~ "N/H/H",
+    PL4_GT == "1/1" & MM546_GT == "0/1/1" ~ "N/H/H",
+    # three doses of PL4 allele
+    PL4_GT == "0/0" & MM546_GT == "0/0/0" ~ "H/H/H",
+    PL4_GT == "1/1" & MM546_GT == "1/1/1" ~ "H/H/H")) %>% 
+  mutate(MM546_is_intro = case_when(MM546_GT_recode %in% c("N/H", "H/H", "N/N/H", "N/H/H", "H/H/H") ~ 1,
+                                    MM546_GT_recode %in% c("N/N", "N/N/N") ~ 0)) %>%  
+  split(.$CHROM) %>% 
+  map_dfr(function(x) mutate(x, MM546_runlen = rle(x$MM546_is_intro) %>% magrittr::extract2("lengths") %>% rep(.,.))) %>% 
+  select(CHROM, POS, REF, starts_with("PL4"), starts_with("clean_C91640"), starts_with("MM546")) %>% 
+  mutate(MM546_ID = ifelse(clean_C91640_dihaploids_GT == "0/0/0/0", MM546_AO, MM546_RO)) %>% 
+  mutate(HI_intro3 = NA) %>% 
+  mutate(HI_intro_ID = NA)
+```
+```{r}
+MM546_allelerep <- MM546_run_annotation %>% 
+  mutate(trisomic_chrom = ifelse(CHROM %in% c("chr08", "chr10"), "trisomic chr08 chr10", "all other chromosomes")) %>% 
+  filter(MM546_is_intro == 1) %>% 
+  ggplot(., aes(x = MM546_ID / MM546_DP)) +
+  geom_histogram(binwidth = 0.01) +
+  ggtitle("MM546") +
+  labs(x = "HI allele depth / Total Depth", y = "Count") +
+  facet_wrap(~trisomic_chrom, ncol = 1, strip.position = "t", scale = "free_y")
+MM546_allelerep
+```
+
+```{r}
+MM546_run_annotation %>%
+  filter(HI_intro3) %>%
+  mutate(MM546_ID = ifelse(PL4_GT == "0/0", MM546_RO, MM546_AO),
+         MM546_ND = ifelse(PL4_GT == "0/0", MM546_AO, MM546_RO)) %>%
+  group_by(HI_intro_ID) %>%
+  mutate(intro_len = last(POS) - first(POS),
+         intro_n_marker = n(),
+         avg_hi_reads = mean(MM546_ID),
+         obs_per_hi = 100 * sum(MM546_ID) / sum(MM546_DP)) %>%
+  ungroup() %>%
+  write_tsv(., "MM546_candidate_intros.tsv", col_names = T)
+```
+
+
+## MM774 introgression annotation:
+```{r}
+file <- "C93154-IVP35-filtered-informative-SNP.vcf.gz"
+vcf774 <- read_tsv(file, col_names = vcf_header[[1]], comment = "#", na = c(".", "./.", "././.", "./././.", "NA")) %>% 
+  mutate(INFO = str_replace_all(INFO, "[A-Za-z]*=", "")) %>%
+  separate(INFO, into = info, sep = ";", convert = T)
+```
+
+```{r}
+MM774 <- vcf774 %>% 
+  select(CHROM, POS, REF, clean_C93154_dihaploids, IVP35, MM774) %>% 
+  Reduce(f = sep, x = c("clean_C93154_dihaploids", "IVP35", "MM774"))
+```
+
+```{r}
+MM774_run_annotation <- MM774 %>% 
+  mutate(MM774_GT_recode = case_when(is.na(MM774_GT) ~ "missing",
+    IVP35_GT == "0/0" & MM774_GT == "1/1" ~ "N/N",
+    IVP35_GT == "1/1" & MM774_GT == "0/0" ~ "N/N",
+    IVP35_GT == "0/0" & MM774_GT == "0/1" ~ "N/H",
+    IVP35_GT == "1/1" & MM774_GT == "0/1" ~ "N/H",
+    IVP35_GT == "1/1" & MM774_GT == "1/1" ~ "H/H",
+    IVP35_GT == "0/0" & MM774_GT == "0/0" ~ "H/H",
+    # cover trisomic cases here
+    IVP35_GT == "0/0" & MM774_GT == "1/1/1" ~ "N/N/N",
+    IVP35_GT == "1/1" & MM774_GT == "0/0/0" ~ "N/N/N",
+    # one dose of IVP35 allele
+    IVP35_GT == "0/0" & MM774_GT == "0/1/1" ~ "N/N/H",
+    IVP35_GT == "1/1" & MM774_GT == "0/0/1" ~ "N/N/H",
+    # two doses of IVP35 allele
+    IVP35_GT == "0/0" & MM774_GT == "0/0/1" ~ "N/H/H",
+    IVP35_GT == "1/1" & MM774_GT == "0/1/1" ~ "N/H/H",
+    # three doses of IVP35 allele
+    IVP35_GT == "0/0" & MM774_GT == "0/0/0" ~ "H/H/H",
+    IVP35_GT == "1/1" & MM774_GT == "1/1/1" ~ "H/H/H")) %>% 
+  mutate(MM774_is_intro = case_when(MM774_GT_recode %in% c("N/H", "H/H", "N/N/H", "N/H/H", "H/H/H") ~ 1,
+                                    MM774_GT_recode %in% c("N/N", "N/N/N") ~ 0)) %>%  
+  split(.$CHROM) %>% 
+  map_dfr(function(x) mutate(x, MM774_runlen = rle(x$MM774_is_intro) %>% magrittr::extract2("lengths") %>% rep(.,.))) %>% 
+  select(CHROM, POS, REF, starts_with("IVP35"), starts_with("clean_C93154"), starts_with("MM774")) %>% 
+  mutate(MM774_ID = ifelse(clean_C93154_dihaploids_GT == "0/0/0/0", MM774_AO, MM774_RO)) %>% 
+  mutate(HI_intro3 = NA) %>% 
+  mutate(HI_intro_ID = NA)
+```
+
+```{r}
+MM774_allelerep <- MM774_run_annotation %>% 
+  mutate(trisomic_chrom = ifelse(CHROM %in% c("chr04", "chr05", "chr06"), "trisomic chr04 chr05 chr06", "all other chromosomes")) %>% 
+  filter(MM774_is_intro == 1) %>% 
+  ggplot(., aes(x = MM774_ID / MM774_DP)) +
+  geom_histogram(binwidth = 0.01) +
+  ggtitle("MM774") +
+  labs(x = "HI allele depth / Total Depth", y = "Count") +
+  facet_wrap(~trisomic_chrom, ncol = 1, strip.position = "t", scale = "free_y")
+MM774_allelerep
+```
+
+```{r}
+MM774_run_annotation %>%
+  filter(HI_intro3) %>%
+  mutate(MM774_ID = ifelse(IVP35_GT == "0/0", MM774_RO, MM774_AO),
+         MM774_ND = ifelse(IVP35_GT == "0/0", MM774_AO, MM774_RO)) %>%
+  group_by(HI_intro_ID) %>%
+  mutate(intro_len = last(POS) - first(POS),
+         intro_n_marker = n(),
+         avg_hi_reads = mean(MM774_ID),
+         obs_per_hi = 100 * sum(MM774_ID) / sum(MM774_DP)) %>%
+  ungroup() %>%
+  write_tsv(., "MM774_candidate_intros.tsv", col_names = T)
+```
+
+
+## MM890 introgression annotation:
+```{r}
+file <- "C93154-PL4-filtered-informative-SNP.vcf.gz"
+vcf890 <- read_tsv(file, col_names = vcf_header[[1]], comment = "#", na = c(".", "./.", "././.", "./././.", "NA")) %>% 
+  mutate(INFO = str_replace_all(INFO, "[A-Za-z]*=", "")) %>%
+  separate(INFO, into = info, sep = ";", convert = T)
+```
+
+```{r}
+MM890 <- vcf890 %>% 
+  select(CHROM, POS, REF, clean_C93154_dihaploids, PL4, MM890) %>% 
+  Reduce(f = sep, x = c("clean_C93154_dihaploids", "PL4", "MM890"))
+```
+
+```{r}
+MM890_run_annotation <- MM890 %>% 
+  mutate(MM890_GT_recode = case_when(is.na(MM890_GT) ~ "missing",
+    PL4_GT == "0/0" & MM890_GT == "1/1" ~ "N/N",
+    PL4_GT == "1/1" & MM890_GT == "0/0" ~ "N/N",
+    PL4_GT == "0/0" & MM890_GT == "0/1" ~ "N/H",
+    PL4_GT == "1/1" & MM890_GT == "0/1" ~ "N/H",
+    PL4_GT == "1/1" & MM890_GT == "1/1" ~ "H/H",
+    PL4_GT == "0/0" & MM890_GT == "0/0" ~ "H/H",
+    # cover trisomic cases here
+    PL4_GT == "0/0" & MM890_GT == "1/1/1" ~ "N/N/N",
+    PL4_GT == "1/1" & MM890_GT == "0/0/0" ~ "N/N/N",
+    # one dose of PL4 allele
+    PL4_GT == "0/0" & MM890_GT == "0/1/1" ~ "N/N/H",
+    PL4_GT == "1/1" & MM890_GT == "0/0/1" ~ "N/N/H",
+    # two doses of PL4 allele
+    PL4_GT == "0/0" & MM890_GT == "0/0/1" ~ "N/H/H",
+    PL4_GT == "1/1" & MM890_GT == "0/1/1" ~ "N/H/H",
+    # three doses of PL4 allele
+    PL4_GT == "0/0" & MM890_GT == "0/0/0" ~ "H/H/H",
+    PL4_GT == "1/1" & MM890_GT == "1/1/1" ~ "H/H/H")) %>% 
+  mutate(MM890_is_intro = case_when(MM890_GT_recode %in% c("N/H", "H/H", "N/N/H", "N/H/H", "H/H/H") ~ 1,
+                                    MM890_GT_recode %in% c("N/N", "N/N/N") ~ 0)) %>%  
+  split(.$CHROM) %>% 
+  map_dfr(function(x) mutate(x, MM890_runlen = rle(x$MM890_is_intro) %>% magrittr::extract2("lengths") %>% rep(.,.))) %>% 
+  select(CHROM, POS, REF, starts_with("PL4"), starts_with("clean_C93154"), starts_with("MM890")) %>% 
+  mutate(MM890_ID = ifelse(clean_C93154_dihaploids_GT == "0/0/0/0", MM890_AO, MM890_RO)) %>% 
+  mutate(HI_intro3 = NA) %>% 
+  mutate(HI_intro_ID = NA)
+```
+```{r}
+MM890_allelerep <- MM890_run_annotation %>% 
+  mutate(trisomic_chrom = ifelse(CHROM %in% c("chr05"), "trisomic chr05", "all other chromosomes")) %>% 
+  filter(MM890_is_intro == 1) %>% 
+  ggplot(., aes(x = MM890_ID / MM890_DP)) +
+  geom_histogram(binwidth = 0.01) +
+  ggtitle("MM890") +
+  labs(x = "HI allele depth / Total Depth", y = "Count") +
+  facet_wrap(~trisomic_chrom, ncol = 1, strip.position = "t", scale = "free_y")
+MM890_allelerep
+```
+
+```{r}
+MM890_run_annotation %>%
+  filter(HI_intro3) %>%
+  mutate(MM890_ID = ifelse(PL4_GT == "0/0", MM890_RO, MM890_AO),
+         MM890_ND = ifelse(PL4_GT == "0/0", MM890_AO, MM890_RO)) %>%
+  group_by(HI_intro_ID) %>%
+  mutate(intro_len = last(POS) - first(POS),
+         intro_n_marker = n(),
+         avg_hi_reads = mean(MM890_ID),
+         obs_per_hi = 100 * sum(MM890_ID) / sum(MM890_DP)) %>%
+  ungroup() %>%
+  write_tsv(., "MM890_candidate_intros.tsv", col_names = T)
+```
+
+## MM1114 introgression annotation:
+```{r}
+file <- "MM302-IVP101-filtered-informative-SNP.vcf.gz"
+vcf1114 <- read_tsv(file, col_names = vcf_header[[1]], comment = "#", na = c(".", "./.", "././.", "./././.", "NA")) %>% 
+  mutate(INFO = str_replace_all(INFO, "[A-Za-z]*=", "")) %>%
+  separate(INFO, into = info, sep = ";", convert = T)
+```
+
+```{r}
+MM1114 <- vcf1114 %>% 
+  select(CHROM, POS, REF, MM302, IVP101, MM1114, clean_WA077_dihaploids) %>% 
+  Reduce(f = sep, x = c("MM302", "IVP101", "MM1114", "clean_WA077_dihaploids"))
+```
+
+```{r}
+MM1114_run_annotation <- MM1114 %>% 
+  # filter(!(CHROM %in% c("chr03", "chr08", "chr09"))) %>%
+  mutate(MM1114_GT_recode = case_when(
+    is.na(MM1114_GT) ~ "missing",
+    IVP101_GT == "0/0" & MM1114_GT == "1/1" ~ "N/N",
+    IVP101_GT == "1/1" & MM1114_GT == "0/0" ~ "N/N",
+    IVP101_GT == "0/0" & MM1114_GT == "0/1" ~ "N/H",
+    IVP101_GT == "1/1" & MM1114_GT == "0/1" ~ "N/H",
+    IVP101_GT == "1/1" & MM1114_GT == "1/1" ~ "H/H",
+    IVP101_GT == "0/0" & MM1114_GT == "0/0" ~ "H/H",
+    # cover trisomic cases here
+    # no doses of IVP35 allele
+    IVP101_GT == "0/0" & MM1114_GT == "1/1/1" ~ "N/N/N",
+    IVP101_GT == "1/1" & MM1114_GT == "0/0/0" ~ "N/N/N",
+    # one dose of IVP35 allele
+    IVP101_GT == "0/0" & MM1114_GT == "0/1/1" ~ "N/N/H",
+    IVP101_GT == "1/1" & MM1114_GT == "0/0/1" ~ "N/N/H",
+    # two doses of IVP35 allele
+    IVP101_GT == "0/0" & MM1114_GT == "0/0/1" ~ "N/H/H",
+    IVP101_GT == "1/1" & MM1114_GT == "0/1/1" ~ "N/H/H",
+    # three doses of IVP35 allele
+    IVP101_GT == "0/0" & MM1114_GT == "0/0/0" ~ "H/H/H",
+    IVP101_GT == "1/1" & MM1114_GT == "1/1/1" ~ "H/H/H"
+  )) %>% 
+  mutate(MM1114_is_intro = case_when(MM1114_GT_recode %in% c("N/H", "H/H", "N/N/H", "N/H/H", "H/H/H") ~ 1,
+                                    MM1114_GT_recode %in% c("N/N", "N/N/N") ~ 0)) %>% 
+  split(.$CHROM) %>% 
+  map_dfr(function(x) mutate(x, MM1114_runlen = rle(x$MM1114_is_intro) %>% magrittr::extract2("lengths") %>% rep(.,.))) %>% 
+  
+  select(CHROM, POS, REF, starts_with("IVP101"), starts_with("MM302"), 
+         starts_with("MM1114"),
+         starts_with("clean_WA077")) %>% 
+  mutate(MM1114_ID = ifelse(MM302_GT == "0/0/0/0", MM1114_AO, MM1114_RO))
+```
+
+```{r}
+MM1114_allelerep <- MM1114_run_annotation %>% 
+  mutate(trisomic_chrom = ifelse(CHROM %in% c("chr03", "chr08", "chr09"), "trisomic chr03 chr08 chr09", "all other chromosomes")) %>% 
+  filter(MM1114_is_intro == 1) %>% 
+  ggplot(., aes(x = MM1114_ID / MM1114_DP)) +
+  geom_histogram(binwidth = 0.01) +
+  ggtitle("MM1114") +
+  labs(x = "HI allele depth / Total Depth", y = "Count") +
+  facet_wrap(~trisomic_chrom, ncol = 1, strip.position = "t", scale = "free_y")
+MM1114_allelerep
+```
+
+```{r}
+cutoffs_MM1114 <- MM1114 %>% 
+  select(CHROM, POS, ends_with("DP")) %>% 
+  pivot_longer(ends_with("DP"), names_to = "sample_name", values_to = "depth") %>% 
+  group_by(sample_name, depth) %>% 
+  tally() %>% 
+  ungroup() %>% 
+  filter(!is.na(depth)) %>%
+  group_by(sample_name) %>% 
+  summarize(ct = max(n), dp = depth[which(n == max(n))]) %>% 
+  mutate(cutoff = dp + 4 * sqrt(dp))
+cutoffs_MM1114
+```
+
+```{r}
+MM1114_final <- MM1114_run_annotation %>% 
+  mutate(MM302_ID = ifelse(MM302_GT == "0/0/0/0", MM302_AO, MM302_RO),
+         clean_WA077_dihaploids_ID = ifelse(MM302_GT == "0/0/0/0", clean_WA077_dihaploids_AO, clean_WA077_dihaploids_RO)) %>% 
+  filter(MM302_ID == 0,
+         MM302_DP <= cutoffs$cutoff[which(cutoffs_MM1114$sample_name == "MM302_DP")]) %>% 
+  filter(clean_WA077_dihaploids_ID < 4) %>%
+  filter(IVP101_DP <= cutoffs$cutoff[which(cutoffs_MM1114$sample_name == "IVP101_DP")]) %>% 
+  filter(MM1114_ID >= 6,
+         MM1114_ID / MM1114_DP >= 0.15,
+         MM1114_DP <= cutoffs$cutoff[which(cutoffs_MM1114$sample_name == "MM1114_DP")])
+```
+
+## Supplemental Fig. S5
+```{r}
+figS3 <- ggarrange(MM246_allelerep,
+                    MM247_allelerep,
+                    MM523_allelerep,
+                    MM537_allelerep,
+                    MM546_allelerep,
+                    MM774_allelerep,
+                    MM890_allelerep,
+                    MM1114_allelerep,
+                    ncol = 2,
+                    nrow = 4,
+                    align = "hv")
+fig_s3
+ggsave("FigS3.png", plot = figS3, width = 10, height = 10, units = "in", device = "png")
+```
