@@ -1,0 +1,13 @@
+rule intersect_offchrom:
+    input:
+        "../4_dihaploid_pools/data/snplists/{mom}-{pop}-hom-SNP.tsv",
+        "data/calls/MM-calls.vcf"
+    output:
+        "data/parsed_calls/{mom}-{pop}-calls.vcf"
+    params:
+    shell: """
+        cut -f 1-2 {input[0]} | \
+        tail -n +2 | \
+        awk -v OFS="\t" '{{print {{$1}},{{$2}}-1,{{$2}}}}' | \
+        bedtools intersect -a {input[0]} -b stdin -sorted -header > {output}
+    """

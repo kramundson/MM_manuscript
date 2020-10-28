@@ -1,0 +1,25 @@
+rule freebayes_interval_MM:
+    input:
+        ref=config["genome"],
+        bam=["data/realigned/{}.bam".format(x) for x in units.index.levels[0]],
+        bai=["data/realigned/{}.bam.bai".format(x) for x in units.index.levels[0]],
+        parent_bams=["../1_parent_snps/data/realigned/{}.bam".format(x) for x in config["parent_samples"]],
+        parent_bais=["../1_parent_snps/data/realigned/{}.bam.bai".format(x) for x in config["parent_samples"]],
+        dhpool_bams=["../4_dihaploid_pools/data/realigned/{}.bam".format(x) for x in config["dihaploid_pools"]],
+        dhpool_bais=["../4_dihaploid_pools/data/realigned/{}.bam.bai".format(x) for x in config["dihaploid_pools"]]
+    output:
+        "data/calls/interval_MM/{interval}-calls.vcf"
+    params:
+        interval=lambda wildcards: re.sub(r"_(\d+)_", r":\1-", wildcards.interval),
+        options=config["params"]["freebayes"]
+    log:
+        "log/freebayes/{interval}.log"
+    shell: """
+        freebayes \
+            -r {params.interval} \
+            --fasta-reference {input.ref} \
+            --bam {input.bam} {input.parent_bams} \
+            --vcf {output} \
+            {params.options} \
+            2> {log}
+    """

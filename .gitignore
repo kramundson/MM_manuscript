@@ -1,4 +1,8 @@
 data/
+6_offchrom/analysis/*.png
+6_offchrom/analysis/*.txt
+6_offchrom/data/
+6_offchrom/.snakemake/
 5_dosage_with_pools/analysis/*.png
 5_dosage_with_pools/analysis/*.txt
 5_dosage_with_pools/data/
