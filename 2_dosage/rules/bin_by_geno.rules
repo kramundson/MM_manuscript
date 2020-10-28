@@ -1,7 +1,7 @@
 rule bin_by_geno:
     input:
-        alleles="alleles/{mother}-{inducer}-alleles.txt",
-        snplist="../1_parent_snps/analysis/{mother}-{inducer}-hom-SNP.tsv"
+        alleles="data/alleles/{mother}-{inducer}-alleles.txt",
+        snplist="../1_parent_snps/data/snplists/{mother}-{inducer}-hom-SNP.tsv"
     output:
         "data/bin_alleles/{mother}-{inducer}-1Mb-alleles.txt"
     log:
