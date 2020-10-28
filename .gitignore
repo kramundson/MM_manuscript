@@ -1,4 +1,8 @@
 data/
+5_dosage_with_pools/analysis/*.png
+5_dosage_with_pools/analysis/*.txt
+5_dosage_with_pools/data/
+5_dosage_with_pools/.snakemake/
 4_dihaploid_pools/analysis/*.png
 4_dihaploid_pools/analysis/*.txt
 4_dihaploid_pools/data/

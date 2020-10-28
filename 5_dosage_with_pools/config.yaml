@@ -1,0 +1,54 @@
+units: "units.tsv"
+
+genome: "../ref/potato_dm_v404_all_pm_un_chloro_mito.fasta"
+windows: "../ref/potato_dm_v404_all_pm_un_chloro_mito_1M_windows.bed"
+
+moms: [ "LR00014",
+        "LR00026",
+        "WA077",
+        "Atlantic",
+        "Desiree",
+        "clean_93003_dihaploids",
+        "clean_C91640_dihaploids",
+        "clean_C93154_dihaploids",
+        "clean_LR00022_dihaploids"]
+        
+pops: ["IVP101", "IVP35", "PL4"]
+
+# sequencing adapter
+adapter: AGATCGGAAGAGC
+
+params:
+
+    cutadapt_pe:
+        qual: "-q 10 -m 40"
+        threads: 2
+    
+    cutadapt_se:
+        qual: "-q 10 -m 40"
+        threads: 2
+    
+    cutadapt_hardtrim:
+        qual: "-q 10 -m 40 -l 50"
+        threads: 2
+    
+    align:
+        threads: 4
+        sort_mem: 4G
+    
+    mark_duplicates:
+        jarpath: "/share/comailab/kramundson/miniconda3/envs/ximena/share/picard-2.14.1-0/picard.jar" # run on cluster
+        java_heap: "-Xms512m -Xmx4g"
+        opt: "REMOVE_DUPLICATES=true TMP_DIR=./tmp ASSUME_SORT_ORDER=coordinate MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000"
+
+    map_qual_filter: "-q 10"
+
+    bedtools:
+        window: 1000000
+
+    run_mpup:
+        map_qual: 20
+        base_qual: 20
+        max_depth: 8000
+        
+    binsize: 1000000

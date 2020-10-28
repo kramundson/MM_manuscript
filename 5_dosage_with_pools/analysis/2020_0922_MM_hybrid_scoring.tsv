@@ -1,0 +1,167 @@
+UCD_Sample_Code	Non_inducer	Inducer	Notes	Monica_ploidy	snp_ploidy	genomic_hi_perc	sample_tot	Other notes	Fig_filter	KRA_ploidy	Phureja_marker_phenotype	numerical_aneuploidy	broken_chromosome	chr01	chr02	chr03	chr04	chr05	chr06	chr07	chr08	chr09	chr10	chr11	chr12
+MM1000	LR00022	PL4	not a hybrid	3x-4x	NA	3.820750993	1400702	not a hybrid	FAIL	NA	putDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1003	93.003	PL4	suspect these are hi gains and losses; evidence scant though	2x-3x	3x	33.3135864	1529334	dosage ok; snp noisy; shatter watch	PASS	NA	putDH	numerical	broken	ok	ok	ok	ok	ok	full loss mom	ok	full gain hi	ok	full loss hi	ok	full gain hi
+MM1005	C93154	PL4		4x	4x_self	0.35797536	1269858	not a hybrid	FAIL	NA	putDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1006	C93154	PL4		4x	4x_self	0.06211482	1475754	not a hybrid	FAIL	NA	putDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1007	C93154	PL4		4x	4x_self	0.03910254	1411440	not a hybrid	FAIL	NA	putDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1010	C93154	PL4		4x	4x_self	0.02149761	1679457	not a hybrid	FAIL	NA	putDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1011	C93154	PL4		4x	4x_self	0.06574346	1061163	not a hybrid	FAIL	NA	putDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1012	WA077	IVP35		4x	4x	51.5419585	1652273	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1014	C93154	PL4		4x	4x_self	0.06878724	1358610	not a hybrid	FAIL	NA	putDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1024	C93154	PL4		4x	4x_self	0.05066509	1606528	not a hybrid	FAIL	NA	putDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1034	C93154	PL4		4x	4x	53.152095	1589521	shatter watch	PASS	NA	atiPM	NA	broken	partial loss hi	ok	partial loss hi	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1035	C93154	PL4		4x	4x	52.0511697	1712604	shatter watch	PASS	NA	atiPM	NA	broken	ok	ok	ok	ok	partial loss hi	ok	ok	ok	partial loss hi	ok	ok	ok
+MM1057	LR00014	IVP101		3x	3x	30.188322	1797388	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1058	LR00014	IVP101		3x	3x	29.2621837	1720169	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1059	LR00014	IVP101		4x	4x	41.5034135	1798780	NA	PASS	hyb	atiPM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1060	LR00014	IVP101		3x	3x	36.2417003	1601711	NA	PASS	hyb	PM	numerical	NA	full loss mom	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1061	LR00014	IVP101		3x	3x	27.9533455	1766779	NA	PASS	hyb	putDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1062	LR00014	IVP101		2x	4x	51.2659591	1750421	NA	PASS	hyb	putDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1064	LR00022	IVP101	double partial loss hi; same region	4x	4x	53.0368585	1782576	shatter watch	PASS	NA	atiPM	NA	broken	ok	partial loss hi	ok	ok	ok	ok	partial loss hi	ok	ok	ok	double partial loss hi	ok
+MM1068	C01020	IVP101		4x	4x	46.6519435	1768837	shatter watch	PASS	NA	putDH	NA	broken	partial loss hi	ok	partial loss hi	ok	ok	ok	partial loss hi	ok	ok	ok	ok	ok
+MM1074	Y84027	IVP101		4x	NA	NA	1678810	shatter watch	FAIL	NA	atiPM	NA	broken	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	partial loss u
+MM1092	458	IVP101		4x	NA	NA	1281952	shatter watch	FAIL	NA	PM	numerical	NA	ok	ok	full loss u	ok	ok	ok	ok	full loss u	ok	ok	ok	ok
+MM1103	WA077	IVP101	not a hybrid	4x	4x_self	0.08011568	989105	NA	FAIL	hap	putDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1125	WA077	IVP101		4x	4x	40.7971166	1633569	shatter watch	PASS	hyb	atiPM	NA	broken	partial loss hi	ok	partial loss hi	ok	ok	ok	partial loss hi	ok	ok	ok	full loss mom	ok
+MM1126	WA077	IVP101	check with SNP update	4x	4x	54.0280244	1408748	shatter watch; consistent with 6 copies of 12S, 2 from inducer 4 from non-inducer	PASS	hyb	PM	numerical	broken	ok	ok	ok	ok	full loss mom	ok	ok	ok	ok	ok	ok	partial gain hi
+MM1127	WA077	IVP101		3x	3x	30.1972786	1357619	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1141	LR00014	IVP35		2x	4x	48.9042804	1765815	NA	PASS	hyb	putDH	NA	broken	partial loss hi	ok	full loss hi	full loss hi	ok	partial loss hi	ok	ok	ok	ok	ok	ok
+MM1158	LR00014	IVP35		3x	3x	33.7125882	1280027	recheck when I have better SNPs	PASS	hyb	atiPM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1159	LR00014	IVP35		4x	4x	49.1069324	1445705	recheck when I have better SNPs	PASS	hyb	atiPM	NA	broken	partial loss hi	ok	ok	partial loss hi	ok	ok	ok	ok	ok	partial loss hi	ok	ok
+MM1160	LR00014	IVP35		3x	3x	34.6695825	1451122	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1161	LR00014	IVP35		3x	3x	34.4277911	1359652	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1162	LR00014	IVP35		3x	3x	34.5528108	1520323	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1163	LR00014	IVP35		3x	3x	34.7090652	1513286	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1164	LR00014	IVP35		3x	3x	34.845286	1571340	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1165	LR00014	IVP35		3x	3x	33.9722146	1439943	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1166	LR00022	IVP35		4x	4x	55.0283695	1376237	shatter watch	PASS	NA	atiPM	numerical	broken	ok	ok	ok	ok	ok	ok	full loss hi	ok	ok	partial loss u	ok	full loss mom
+MM1167	LR00022	IVP35		4x	4x	51.9987373	1534093	shatter watch	PASS	NA	PM	numerical	NA	ok	partial gain mom	ok	ok	full loss hi	ok	ok	ok	ok	ok	ok	ok
+MM1190	Y84027	IVP35		4x	NA	NA	2108382	shatter watch	FAIL	NA	atiPM	NA	broken	ok	ok	partial loss u	ok	ok	ok	partial loss u; partial gain u	ok	ok	ok	partial loss u	ok
+MM1191	Y84027	IVP35		4x	NA	NA	1826621	shatter watch	FAIL	NA	atiPM	NA	broken	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	partial loss u
+MM1196	WA077	IVP35		4x	4x	51.1334931	1764158	shatter watch	PASS	hyb	PM	numerical	broken	ok	full loss hi	ok	ok	ok	ok	partial loss hi	ok	ok	ok	ok	partial loss hi
+MM1197	WA077	IVP35		4x	4x	51.029898	1607665	shatter watch	PASS	hyb	PM	NA	broken	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	partial loss hi	partial loss hi
+MM1198	WA077	IVP35		4x	4x	50.2074689	1491771	shatter watch	PASS	hyb	PM	numerical	broken	ok	full loss hi	ok	ok	ok	ok	ok	partial loss hi	ok	ok	ok	ok
+MM1199	WA077	IVP35		4x	4x	52.874513	1605243	NA	PASS	hyb	PM	numerical	NA	ok	ok	full loss mom	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1200	WA077	IVP101		4x	4x	52.9727531	1610767	shatter watch	PASS	hyb	PM	NA	broken	ok	ok	ok	ok	partial loss hi	ok	ok	ok	ok	ok	ok	ok
+MM1201	WA077	IVP101		4x	4x	51.4040515	1561917	shatter watch	PASS	hyb	PM	NA	broken	ok	ok	ok	ok	ok	partial loss hi	ok	ok	partial loss hi	ok	ok	ok
+MM1202	WA077	IVP101		3x	3x	34.5525253	1468145	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1203	WA077	IVP101		4x	4x	43.5529345	1445213	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1204	WA077	IVP101		4x	4x	41.5606354	1704071	shatter watch	PASS	hyb	atiPM	NA	broken	ok	ok	ok	ok	partial loss hi	ok	partial loss hi	ok	ok	ok	ok	ok
+MM1205	WA077	IVP101		4x	4x	47.7873954	1734049	severe female aneuploidy	PASS	hyb	PM	numerical	broken	full loss mom	ok	ok	full loss mom	ok	full loss mom	ok	ok	ok	ok	ok	ok
+MM1206	WA077	IVP101		3x	3x	28.4588849	1552883	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1208	WA077	IVP101		4x	4x	42.213871	1877990	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1209	WA077	IVP101		4x	4x	44.1807651	1768525	shatter watch	PASS	hyb	PM	numerical	broken	ok	ok	ok	ok	ok	partial loss mom	ok	ok	ok	ok	full loss mom	partial loss hi
+MM1210	LR00026	IVP35	10 loss preexisting	4x	4x	52.1791521	1924888	shatter watch; 3 and 10 are recurring changes	PASS	hyb	PM	NA	broken	ok	ok	prepartial loss mom	ok	ok	ok	ok	ok	ok	prepartial loss mom	ok	ok
+MM1211	LR00026	IVP35		4x	4x	51.9447327	2059567	shatter watch	PASS	hyb	PM	NA	broken	ok	ok	ok	partial loss hi	partial loss hi	ok	ok	ok	ok	ok	ok	ok
+MM1213	LR00026	IVP35	10 loss preexisting	4x	4x	50.788736	1456253	shatter watch	PASS	hyb	atiPM	numerical	broken	ok	full loss hi	ok	ok	ok	ok	partial loss hi	ok	ok	prepartial loss mom	ok	ok
+MM1214	LR00026	IVP35	check pop overlay for chr06 interpretation	4x	4x	53.1456272	1697539	shatter watch	PASS	hyb	PM	numerical	broken	partial loss hi	full loss hi	ok	ok	partial loss hi	ok	ok	ok	ok	ok	ok	ok
+MM1215	LR00026	IVP35	3 loss preexisting	4x	4x	51.4105669	1588865	shatter watch	PASS	hyb	PM	NA	broken	ok	ok	prepartial loss mom	ok	ok	ok	ok	ok	ok	ok	ok	partial loss hi
+MM1216	LR00026	IVP35	3 loss preexisting	4x	4x	52.5413093	1794598	shatter watch	PASS	hyb	PM	NA	broken	ok	ok	prepartial loss mom	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1217	LR00026	IVP35	3 loss preexisting	3x	3x	36.4418135	1706218	NA	PASS	hyb	PM	numerical	NA	ok	full loss mom	prepartial loss mom	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1218	LR00026	IVP35	3 loss preexisting	4x	4x	52.089772	1804303	shatter watch	PASS	hyb	PM	numerical	broken	ok	full gain mom	prepartial loss mom	ok	ok	ok	ok	ok	ok	ok	full loss mom	ok
+MM1219	LR00026	IVP35		4x	4x	52.4036585	2157671	NA	PASS	hyb	PM	numerical	NA	ok	ok	ok	ok	ok	full loss mom	ok	ok	ok	ok	ok	ok
+MM1220	LR00026	IVP35	10 loss preexisting	4x	4x	50.4147508	2378846	NA	PASS	hyb	PM	numerical	broken	ok	ok	ok	ok	ok	ok	ok	ok	ok	prepartial loss mom	ok	full gain mom
+MM1221	LR00026	IVP35		4x	4x	50.9659382	2027935	NA	PASS	hyb	PM	numerical	broken	ok	full loss hi	ok	ok	ok	ok	ok	ok	full gain mom	partial loss hi	ok	ok
+MM1222	LR00026	IVP101	come back to; chromosome 1 has low HI SNP	4x	4x	52.5891201	2082822	shatter watch; SNP on chr01 suggest inducer deficiency	PASS	hyb	PM	NA	NA	ok	ok	prepartial loss mom	ok	ok	partial gain u	ok	ok	ok	ok	ok	full loss mom
+MM1223	LR00026	IVP101		4x	4x	51.9369089	1926943	shatter watch	PASS	hyb	PM	NA	broken	ok	ok	ok	ok	ok	partial loss hi	ok	ok	ok	ok	partial loss hi	ok
+MM1224	LR00026	IVP101	come back to; chromosome 1 has low HI SNP; double partial loss hi same region; 10 loss preexisting	4x	4x	51.5927527	1767186	NA	PASS	hyb	PM	numerical	broken	ok	ok	partial loss hi 	ok	ok	ok	ok	ok	partial loss hi	prepartial loss mom	ok	ok
+MM1225	LR00026	PL4		4x	4x	53.0245138	2129953	shatter watch	PASS	hyb	PM	numerical	broken	ok	ok	full loss mom	ok	ok	ok	ok	ok	full loss mom	ok	ok	ok
+MM1226	LR00026	PL4		4x	4x	53.3069189	1807394	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM1227	LR00026	PL4		4x	4x	50.6918467	2270364	shatter watch	PASS	hyb	PM	numerical	broken	full loss hi	ok	full loss hi	ok	partial gain hi	partial loss hi	ok	partial gain hi	ok	ok	ok	ok
+MM46	LR00014	IVP35		3x	3x	36.387026	1185262	recheck when I have better SNPs	PASS	hyb	NA	numerical	NA	ok	ok	ok	ok	ok	full loss mom	ok	ok	ok	ok	ok	ok
+MM48	LR00014	IVP35		3x	3x	34.3144159	2440542	recheck when I have better SNPs	PASS	hyb	NA	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM582	LRY2125	IVP101		4x	NA	NA	1684373	shatter watch	FAIL	NA	PM	NA	broken	partial gain u	ok	ok	ok	ok	ok	ok	partial gain u	ok	full loss u	ok	partial loss u
+MM583	LRY2125	IVP101		4x	NA	NA	1668440	shatter watch	FAIL	NA	atiPM	NA	broken	ok	ok	ok	ok	ok	partial loss u	partial gain u	partial loss u	partial loss u	ok	ok	ok
+MM584	LRY2125	IVP101		4x	NA	NA	1871093	shatter watch	FAIL	NA	atiPM	NA	broken	ok	ok	full loss u	ok	partial loss u	ok	ok	full loss u	ok	ok	ok	ok
+MM618	WA104	IVP101		3x-4x	NA	NA	1552317	hypothesizing 4x	FAIL	NA	atiPM	numerical	NA	full loss u	full loss u	ok	ok	full loss u	ok	full loss u	full loss u	ok	ok	ok	full loss u
+MM629	LR00014	IVP35		4x	4x	51.393371	1553321	recheck when I have better SNPs	PASS	hyb	PM	NA	broken	ok	ok	partial loss hi	ok	ok	full gain mom	ok	ok	partial gain u	ok	ok	ok
+MM630	LR00014	IVP35		4x	4x	48.9583648	1609539	recheck when I have better SNPs	PASS	hyb	PM	NA	broken	partial loss hi	ok	ok	partial loss hi	ok	partial loss hi	ok	ok	partial gain hi	ok	ok	partial loss hi
+MM635	458	IVP35		3x-4x	NA	NA	2170792	shatter watch	FAIL	NA	atiPM	NA	broken	ok	ok	ok	ok	partial loss u	ok	partial loss u	ok	ok	partial loss u	partial loss u	full loss u
+MM638	C93154	IVP35		4x	4x_self	0.16320364	1934059	not a hybrid	FAIL	NA	putDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM665	WA077	IVP35	looks triploid	4x	3x	34.4388793	1497189	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM666	WA077	IVP35	wasn't in original list	3x-4x	4x	53.094976	1435764	NA	PASS	hyb	PM	numerical	NA	ok	ok	full loss mom	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM667	WA077	IVP35		4x	4x	48.3416701	1826355	shatter watch	PASS	hyb	PM	NA	broken	partial loss hi	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM668	WA077	IVP35		4x	4x	51.9777689	1908681	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM670	WA077	IVP35		2x	3x	35.9071565	1789225	NA	PASS	hyb	putDH	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	partial gain u
+MM671	WA077	IVP35		4x	4x	50.6857612	1432155	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	full gain mom	ok	ok	ok
+MM673	WA077	IVP35		4x	4x	50.0011049	1744015	shatter watch	PASS	hyb	PM	NA	broken	ok	partial loss hi	ok	ok	ok	partial loss hi	ok	ok	ok	ok	partial loss hi	ok
+MM680	LR00014	PL4		4x	4x	51.4967169	1466067	shatter watch	PASS	hyb	PM	NA	broken	ok	ok	partial loss hi	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM684	LR00014	PL4		3x	3x	34.098471	1875197	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM708	93.003	IVP35		3x	3x	32.0476944	898467	snps noisy; shatter watch	PASS	NA	atiPM	NA	NA	ok	ok	ok	ok	ok	ok	partial loss hi	ok	ok	ok	ok	ok
+MM709	93.003	IVP35		4x	4x	46.6408062	729248	snps noisy; shatter watch	PASS	NA	atiPM	NA	broken	partial loss hi	partial loss hi	partial loss hi	partial loss hi	ok	ok	partial loss hi	ok	ok	ok	ok	partial loss hi
+MM750	C93154	IVP35		4x	4x_self	0.09708013	710759	not a hybrid	FAIL	NA	atiDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM769	C93154	IVP35		4x	4x_self	0.15168965	664942	not a hybrid	FAIL	NA	putDH	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM813	WA077	IVP35	not a hybrid	4x	4x_self	0.09437219	1661254	not a hybrid	FAIL	hap	putDH	numerical	NA	ok	ok	ok	ok	ok	ok	full loss mom	full gain mom	ok	ok	ok	ok
+MM822	WA077	IVP35	not a hybrid	3x	NA	0.521710553	597449	NA	FAIL	hap	atiDH	numerical	NA	ok	ok	ok	ok	full gain mom	ok	ok	ok	ok	ok	ok	ok
+MM823	WA077	IVP35	not a hybrid	4x	4x_self	0.09691096	1757058	NA	FAIL	hap	atiPM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM832	WA077	IVP35		4x	4x	53.3728621	2296997	NA	PASS	hyb	PM	numerical	NA	ok	ok	ok	ok	full loss mom	ok	ok	ok	ok	ok	ok	ok
+MM833	WA077	IVP35		3x	3x	35.1722031	2181405	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM834	WA077	IVP35		4x	4x	54.206362	1383384	shatter watch; excess of rearranged inducer chrom	PASS	hyb	atiPM	NA	NA	ok	ok	ok	ok	ok	partial gain hi	ok	ok	ok	ok	ok	ok
+MM835	WA077	IVP35		4x	4x	51.4497007	1891349	shatter watch	PASS	hyb	PM	numerical	broken	partial loss hi	ok	ok	ok	ok	ok	ok	full loss mom	ok	partial loss hi	ok	ok
+MM836	WA077	IVP35		4x	4x	51.4379549	2483047	NA	PASS	hyb	PM	NA	broken	ok	ok	ok	ok	ok	ok	partial loss hi	ok	ok	ok	full gain mom	ok
+MM837	WA077	IVP35		4x	4x	53.4305285	976807	NA	PASS	hyb	atiPM	numerical	NA	ok	partial loss hi	partial loss hi	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM838	WA077	IVP35	nullisomic! crazy!	4x	4x	55.6724008	2278025	severe female aneuploidy; 1 of 2 postembryonic maternal elimination	PASS	hyb	atiPM	numerical	NA	ok	ok	full loss mom	ok	ok	 double full loss mom	ok	full loss mom	ok	ok	ok	full loss mom
+MM843	LR00022	PL4		4x	NA	NA	25509	withhold	FAIL	NA	PM	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+MM853	Y84027	PL4		4x	NA	NA	2191948	shatter watch	FAIL	NA	atiPM	NA	broken	ok	ok	ok	ok	partial loss u	ok	ok	ok	ok	ok	partial loss u	full loss u
+MM876	C93154	PL4		4x	4x_self	0.02843522	2286259	not a hybrid	FAIL	NA	putDH	numerical	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	full gain mom	ok
+MM907	C93154	PL4		4x	4x	53.1405175	1624349	shatter watch; too noisy with data at hand	PASS	NA	PM	NA	broken	ok	ok	ok	partial gain hi	ok	ok	ok	partial loss hi	ok	ok	ok	ok
+MM908	C93154	PL4		4x	4x	50.8866511	1486226	shatter watch; too noisy with data at hand	PASS	NA	PM	numerical	NA	ok	partial loss hi	ok	ok	ok	ok	ok	full loss hi	ok	ok	ok	ok
+MM910	WA104	PL4	double partial loss u	4x	NA	NA	1976523	NA	FAIL	NA	atiPM	NA	broken	ok	ok	ok	ok	ok	ok	partial loss u	ok	ok	ok	ok	ok
+MM932	LR00014	IVP101		4x	4x	41.8700392	1640522	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM933	LR00014	IVP101		4x	4x	41.6418957	1923459	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM934	LR00014	IVP101		4x	4x	49.775465	1799100	NA	PASS	hyb	PM	NA	broken	ok	ok	ok	partial loss hi	ok	ok	ok	ok	partial loss hi	ok	ok	ok
+MM935	LR00014	IVP101		4x	4x	42.0801775	1555945	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM936	LR00014	IVP101		4x	4x	43.1806254	1739940	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM937	LR00014	IVP101		4x	4x	41.6473919	1353370	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM938	LR00014	IVP101		4x	4x	55.8948369	1243581	shatter watch	PASS	hyb	PM	NA	broken	ok	ok	ok	ok	ok	ok	ok	ok	ok	full loss mom	ok	ok
+MM939	LR00014	IVP101		4x	4x	41.6205724	1503693	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM940	LR00014	IVP101		4x	4x	42.1140407	1669307	shatter watch	PASS	hyb	PM	NA	broken	partial loss hi	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM941	LR00014	IVP101		3x	3x	28.9299706	1726844	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM942	LR00014	IVP101		4x	4x	42.189955	1495050	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM943	LR00014	IVP35		3x	3x	34.2268896	1659574	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM944	LR00014	IVP35		4x	4x	50.3629751	1763653	recheck when I have better SNPs	PASS	hyb	PM	NA	broken	ok	ok	partial loss hi	ok	partial loss hi	ok	ok	ok	ok	ok	ok	ok
+MM945	LR00014	IVP35		3x	3x	34.9273157	778191	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM946	LR00014	IVP35		4x	4x	51.4236502	1156843	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM947	LR00014	IVP35		4x	4x	50.9666458	1275000	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM948	LR00014	IVP35		4x	4x	50.9798547	1255203	recheck when I have better SNPs	PASS	hyb	PM	NA	broken	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	partial loss hi
+MM949	LR00014	IVP35		3x	3x	34.6651133	1309378	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM950	LR00014	IVP35		4x	4x	49.4847071	1196146	recheck when I have better SNPs	PASS	hyb	PM	NA	broken	ok	ok	partial loss hi	ok	ok	ok	partial loss hi	ok	ok	ok	ok	ok
+MM951	LR00014	IVP35		3x	3x	34.6776761	1180689	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM952	LR00014	IVP35		4x	4x	51.0828977	1208834	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM953	LR00014	IVP35		4x	4x	50.9795338	904770	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM954	LR00014	IVP35		4x	4x	51.5544186	914792	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM955	LR00014	IVP35		4x	4x	50.87194	1385890	recheck when I have better SNPs	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM960	LR00014	PL4	double partial loss hi; same region lost	4x	4x	48.9312433	1429901	shatter watch	PASS	hyb	PM	numerical	broken	ok	ok	ok	partial loss hi	full loss hi	ok	ok	ok	double partial loss hi	ok	ok	ok
+MM961	LR00014	PL4		4x	4x	49.0133817	1303698	shatter watch	PASS	hyb	PM	numerical	NA	ok	ok	full loss hi	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM962	LR00014	PL4		4x	4x	50.8341642	1337118	NA	PASS	hyb	PM	numerical	NA	ok	full loss mom	ok	ok	ok	ok	ok	ok	partial gain hi	ok	ok	ok
+MM963	LR00014	PL4		4x	4x	51.8409855	1306151	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM964	LR00014	PL4		4x	4x	50.696494	1605515	shatter watch	PASS	hyb	PM	NA	broken	ok	ok	partial loss hi	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM965	LR00014	PL4		4x	4x	50.7929986	1974544	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM966	LR00014	PL4		4x	4x	48.8684121	1665959	shatter watch	PASS	hyb	PM	NA	broken	partial loss hi	partial loss hi	ok	ok	ok	ok	ok	ok	ok	ok	ok	partial loss hi
+MM968	WA077	PL4		4x	4x	53.2581484	1831947	shatter watch	PASS	hyb	atiPM	NA	broken	ok	ok	partial loss hi	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM969	WA077	PL4		4x	4x	49.3738026	877992	shatter watch	PASS	hyb	atiPM	numerical	broken	partial loss hi	ok	ok	partial loss hi	partial loss hi	full loss hi	ok	ok	ok	partial loss hi	ok	ok
+MM970	WA077	PL4		3x	3x	36.8154756	1474927	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM971	WA077	PL4		4x	4x	51.1010521	1374221	shatter watch	PASS	hyb	atiPM	numerical	broken	full loss hi	ok	full loss hi	ok	ok	ok	ok	ok	ok	ok	partial loss mom	ok
+MM972	WA077	PL4		4x	4x	52.6944	1464665	NA	PASS	hyb	atiPM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM974	WA077	PL4		4x	4x	53.7622208	1307057	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM975	WA077	PL4		4x	4x	52.9613119	966633	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM976	WA077	PL4		4x	4x	53.1971639	1353552	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM977	WA077	PL4		4x	NA	NA	152628	NA	FAIL	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM978	WA077	PL4		4x	4x	51.9471367	1588176	NA	PASS	hyb	PM	numerical	NA	ok	full loss mom	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM979	WA077	PL4		3x	3x	31.089758	1608933	NA	PASS	hyb	PM	numerical	NA	ok	ok	full gain mom	ok	ok	ok	ok	ok	ok	ok	full loss mom	ok
+MM980	WA077	PL4		4x	4x	42.9495496	1623261	NA	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM981	WA077	PL4		4x	4x	51.8502633	1521079	shatter watch	PASS	hyb	PM	NA	broken	partial loss hi	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM982	WA077	IVP35	double partial loss hi	4x	4x	51.748723	1645414	NA	PASS	hyb	PM	NA	broken	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	double partial loss hi
+MM984	WA077	IVP35		4x	4x	50.5053065	1299464	shatter watch	PASS	hyb	atiPM	numerical	broken	partial loss hi	partial gain hi	ok	ok	ok	full loss hi	ok	ok	ok	ok	full loss mom	partial loss hi
+MM985	WA077	IVP35	nullisomic! crazy	4x	4x	59.332959	1707596	severe maternal aneuploidy; 2 of 2 postembryonic maternal elimination	PASS	hyb	atiPM	numerical	NA	ok	ok	full loss mom	ok	ok	full loss mom	full loss mom	ok	full gain mom	full loss mom	double full loss mom	ok
+MM986	WA077	IVP35		5x	NA	20.78135619	1671387	NA	FAIL	hyb	PM	numerical	broken	ok	ok	ok	full gain mom	ok	ok	ok	ok	ok	ok	partial loss mom	ok
+MM987	WA077	IVP35		3x	3x	35.9477448	1840311	NA	PASS	hyb	atiPM	NA	broken	partial loss mom	ok	ok	partial loss mom	ok	ok	ok	ok	ok	ok	ok	ok
+MM988	WA077	IVP35		4x	4x	51.6661681	1835697	shatter watch	PASS	hyb	PM	numerical	broken	ok	ok	partial loss hi	ok	ok	ok	full gain mom	partial loss hi	ok	ok	ok	ok
+MM989	WA077	IVP35		4x	4x	51.3925626	1773285	shatter watch	PASS	hyb	PM	NA	broken	ok	ok	partial loss hi	partial loss hi	ok	ok	ok	ok	ok	ok	ok	ok
+MM990	WA077	IVP35		3x	3x	34.4474851	1816786	NA	PASS	hyb	PM	numerical	NA	ok	ok	ok	ok	ok	ok	ok	full gain u	ok	ok	ok	ok
+MM991	WA077	IVP35		4x	4x	54.6137361	1815944	NA	PASS	hyb	PM	numerical	NA	ok	full loss mom	ok	partial gain u	ok	ok	ok	ok	ok	ok	ok	ok
+MM992	LR00014	PL4		4x	4x	49.4162553	1761992	baseline chorm RD is low	PASS	hyb	PM	numerical	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	full gain mom	ok	ok
+MM996	LR00014	PL4		4x	4x	49.0257662	1561125	shatter watch	PASS	hyb	PM	numerical	broken	ok	ok	ok	partial loss hi	ok	partial loss hi	ok	ok	ok	ok	ok	full loss hi
+MM997	LR00014	PL4		4x	4x	45.6960629	1537706	shatter watch	PASS	hyb	atiPM	numerical	broken	full loss hi	ok	partial gain hi	full loss hi	ok	ok	ok	ok	partial loss hi	partial loss hi	ok	partial loss hi
+MM998	LR00014	PL4		4x	4x	50.787339	1542073	10L inducer SNP deficiency	PASS	hyb	PM	NA	NA	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok	ok
+MM999	LR00022	PL4		4x	4x	55.5732175	1608272	shatter watch	PASS	NA	atiPM	NA	broken	ok	ok	ok	ok	ok	ok	ok	ok	partial loss hi	ok	ok	ok

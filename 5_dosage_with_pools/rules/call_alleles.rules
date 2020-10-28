@@ -1,0 +1,11 @@
+rule call_alleles:
+    input:
+        pmpup="../2_dosage/data/parsed_mpup/parsed-{mother}-{inducer}-mpup.txt",
+        snplist="../4_dihaploid_pools/data/snplists/{mother}-{inducer}-hom-SNP.tsv"
+    output:
+        "data/alleles/{mother}-{inducer}-alleles.txt"
+    log:
+        "log/call_alleles/{mother}-{inducer}.log"
+    shell: """
+        python2 ../2_dosage/scripts/CallAllelesAB.py {input.pmpup} {output} {input.snplist} > {log} 2>&1
+    """

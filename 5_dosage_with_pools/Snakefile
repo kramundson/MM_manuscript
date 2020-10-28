@@ -1,0 +1,18 @@
+shell.executable("bash")
+import os, re
+import pandas as pd
+from Bio import SeqIO
+
+configfile: "config.yaml"
+units = pd.read_csv(config["units"], index_col=["sample","unit"], dtype=str, sep="\t")
+units.index = units.index.set_levels([i.astype(str) for i in units.index.levels])
+
+OFFSPRING=units[(units["parhap"]=="haploid") & (units["mother"].isin(config["moms"]))]
+PARENTS=set(zip(OFFSPRING.mother, OFFSPRING.inducer))
+
+rule all:
+    input:
+        ["data/bin_alleles/{}-{}-1Mb-alleles.txt".format(i[0], i[1]) for i in PARENTS]
+
+include: "rules/bin_by_geno.rules"
+include: "rules/call_alleles.rules"
