@@ -1,4 +1,7 @@
 data/
+7_haplotypes/data
+7_haplotypes/.snakemake/
+7_haplotypes/*.tsv
 6_offchrom/analysis/*.png
 6_offchrom/analysis/*.txt
 6_offchrom/data/

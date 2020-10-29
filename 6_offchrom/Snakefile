@@ -115,9 +115,12 @@ rule all:
         ["data/realigned/{}.bam".format(x) for x in units.index.levels[0]],
         ["data/depths/{}_q20_depth.bed".format(x) for x in units.index.levels[0]],
         "data/calls/MM-calls.vcf",
+        ["data/calls/{}-MM-filtered-calls.vcf.gz".format(x) for x in config["good_chroms"]],
         expand(["data/parsed_calls/{mom}-{pop}-calls.vcf.gz"], mom=config["moms"], pop=config["pops"])
 
 include: "rules/intersect_offchrom.rules"
+include: "rules/vcf_site_filters.rules"
+include: "rules/merge_MM_vcfs_to_chrom.rules"
 include: "rules/merge_MM_vcfs.rules"
 include: "rules/freebayes_interval_MM.rules"
 include: "rules/samtools_q20_depth.rules"

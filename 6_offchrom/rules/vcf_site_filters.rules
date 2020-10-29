@@ -2,7 +2,7 @@ rule vcf_site_filters:
     input:
         "data/calls/{chrom}-MM-calls.vcf"
     output:
-        "data/calls/{chrom}-filtered-MM-calls.vcf.gz"
+        "data/calls/{chrom}-MM-filtered-calls.vcf.gz"
     shell: """
         Rscript scripts/2019_0225_filter_cheat_MM.R {input}
     """
