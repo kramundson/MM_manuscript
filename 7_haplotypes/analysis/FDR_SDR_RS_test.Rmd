@@ -1,0 +1,281 @@
+---
+title: "FDR SDR RS test"
+author: "Kirk Amundson"
+date: 2020_1030
+output: html_notebook
+---
+
+Aim: Evaluate output of haplotype analysis, done to genotype the disome contributed by the HI
+for each tetraploid hybrid. Triploid hybrids were evaluated as a control.
+
+## Packages
+```{r}
+library(tidyverse)
+library(ggbeeswarm)
+library(viridis)
+```
+
+## Functions:
+```{r}
+melt_bin_alleles <- function(x) {
+  df <- read_tsv(x, na = ".")
+  
+  ObsHI <- df %>% 
+    dplyr::select(Chrom,Start,End,Max,matches("Obs%A$")) %>% 
+    mutate(chrbin = floor(Start/df$End[1])) %>% 
+    gather(Ind, ObsPerHI, -Chrom, -Start, -End, -Max, -chrbin) %>% 
+    mutate(Ind = str_replace_all(Ind, "v-(.+)-Obs%A", "\\1"))
+  
+  CalcHI <- df %>% 
+    dplyr::select(Chrom, Start, End, Max, matches('Calc%A$')) %>% 
+    mutate(chrbin = floor(Start/df$End[1])) %>% 
+    gather(Ind, CalcPerHI, -Chrom, -Start, -End, -Max, -chrbin) %>% 
+    mutate(Ind = str_replace_all(Ind, "v-(.+)-Calc%A", "\\1")) 
+  
+  Cov <- df %>% 
+    dplyr::select(Chrom, Start, End, Max, matches('Cov$')) %>% 
+    mutate(chrbin = floor(Start/df$End[1])) %>% 
+    gather(Ind, Cov, -Chrom, -Start, -End, -Max, -chrbin) %>% 
+    mutate(Ind = str_replace_all(Ind, "v-(.+)-Cov", "\\1"))
+  
+  df2 <- ObsHI %>% 
+    inner_join(.,Cov) %>% 
+    mutate(HIcalls = round(Cov * ObsPerHI / 100)) %>% 
+    filter(Chrom %in% sprintf("chr%0.2d", 1:12)) %>% 
+    # filter(!grepl("sub", Ind)) %>% 
+    # mutate(prenducer = str_extract(Ind, "(SRR6123031)|(SRR6123183)")) %>% 
+    # mutate(Inducer = ifelse(prenducer == "SRR6123031", "PL4", NA)) %>% 
+    # mutate(Inducer = ifelse(prenducer == "SRR6123183", "IVP101", Inducer)) %>% 
+    mutate(ObsPerHI_filt = ifelse(Cov >= 10, ObsPerHI, NA)) %>% 
+    mutate(start_cen = Start + (End-Start)/2) 
+  # print(head(df2))
+  
+  return(df2)
+}
+```
+
+```{r}
+# function that extracts one hybrid and draws a plot
+# plan to ggarrange this with dosage and SNP information
+fdr_plot <- function(df, sample_to_plot, cen_coords) {
+  
+  plt_data <- df %>% 
+    filter(Ind == sample_to_plot) %>% 
+    mutate(parent_summary = ifelse(is.na(parent_summary), "not a hybrid", parent_summary)) %>% 
+    mutate(parent_summary = factor(parent_summary, levels = c("HI only", "Both", "NonHI only", "not a hybrid", "Euploid")))
+  
+  cens <- cen_coords %>% 
+    filter(Chrom %in% unique(plt_data$Chrom))
+  
+  psum <- unique(plt_data$parent_summary)
+  print(psum)
+  
+  if (psum == "HI only") {linecolor = viridis(5)[1]}
+  else if (psum == "Both") {linecolor = viridis(5)[2]}
+  else if (psum == "NonHI only") {linecolor = viridis(5)[3]}
+  else if (psum == "not a hybrid") {linecolor = viridis(5)[4]}
+  else if (psum == "Euploid") {linecolor = viridis(5)[5]}
+    
+  plt <- ggplot(plt_data, aes(fill = Ind)) +
+    geom_rect(data = cens, aes(xmin = start, xmax = end, ymin = 0, ymax = 100), fill = "red", alpha = 0.2) +
+    geom_point(aes(x = start_cen, y = ObsPerHI), color = linecolor) +
+    geom_line(aes(x = start_cen, y = ObsPerHI), color = linecolor) +
+    ggtitle(paste0(sample_to_plot, " FDR test plot")) +
+    labs(x = "Position (Mb)", y = "Percent H' allele") +
+    scale_x_continuous(breaks = seq(0, max(add_ploidy_2$start_cen), by=1e7), labels = seq(0, max(add_ploidy_2$start_cen)/1e6, by = 10)) +
+    scale_y_continuous(limits = c(0,100)) +
+    guides(fill = F) +
+    facet_wrap(~Chrom, nrow = 1, strip.position = "r")
+  
+  ggsave(paste0("2020-08-06-", sample_to_plot, "-fdr-test.png"), plot = plt, width = 8, height = 2, units = "in", device = "png")
+  
+  return(plt)
+}
+```
+
+## Read in data:
+
+### Centromere coordinates from Bourke et al (2015)
+```{r}
+bourke_cen <- read_tsv("../../2_dosage/analysis/bourke_cen.bed",
+                       col_names = c("chrom", "start", "end"))
+```
+
+### MM hybrid dosage scoring by chromosome
+```{r}
+hybs <- read_tsv("../../5_dosage_with_pools/analysis/2020_0922_MM_hybrid_scoring.tsv",
+                 col_names = T)
+
+hybs_long <- hybs %>% 
+  pivot_longer(starts_with("chr"), names_to = "chrom", values_to = "score") %>% 
+  arrange(Non_inducer, Inducer, UCD_Sample_Code) %>% 
+  group_by(UCD_Sample_Code) %>% 
+  mutate(maternal_aneuploidy = any(grepl("mom", score) & !grepl("prepartial", score))) %>%
+  mutate(paternal_aneuploidy = any(grepl("hi", score))) %>% 
+  mutate(maternal_lesion_count = sum(grepl("mom", score))) %>% 
+  mutate(paternal_lesion_count = sum(grepl("hi", score))) %>% 
+  mutate(any_parental_origin_unknown = ifelse(any(grepl(" u", score)), "unknown", "known")) %>% 
+  mutate(only_parental_origin_unknown = ifelse(any(grepl(" u", score)) & !maternal_aneuploidy & !paternal_aneuploidy, "unknown", "known")) %>%
+  ungroup() %>% 
+  mutate(aneuploidy = ifelse(maternal_aneuploidy | paternal_aneuploidy, "aneuploid", "euploid")) %>% 
+  mutate(parent_summary = case_when(maternal_aneuploidy & paternal_aneuploidy ~ "Both",
+                                    maternal_aneuploidy & !paternal_aneuploidy ~ "NonHI only",
+                                    !maternal_aneuploidy & paternal_aneuploidy ~ "HI only",
+                                    !maternal_aneuploidy & !paternal_aneuploidy ~ "Euploid")) %>% 
+  mutate(full_segmental = case_when(grepl("full", score) ~ "chromosomal",
+                                    grepl("prepartial", score) ~ "ok",
+                                    grepl("^partial|^double partial", score) ~ "segmental",
+                                    grepl("ok", score) ~ "ok")) %>%
+  mutate(gain_loss = case_when(full_segmental == "ok" ~ "neither",
+                               grepl("gain", score) ~ "gain",
+                               grepl("loss", score) ~ "loss")) %>% 
+  mutate(parental_origin = case_when(grepl(" u", score) ~ "unknown",
+                                     grepl("hi", score) ~ "inducer",
+                                     grepl("mom", score) ~ "non_inducer"))
+```
+
+### Binned haplotype alleles, using only the set with the phased HI allele not matching the 4x parent
+```{r}
+nonmatch_files <- dir(pattern = "2020.+n.+match.+4Mb",
+                      path = "../data/bin_alleles",
+                      full.names = T)
+nonmatch_files
+```
+
+```{r}
+nonmatch <- nonmatch_files %>% 
+  map_dfr(melt_bin_alleles) %>% 
+  rename(UCD_Sample_Code = Ind,
+         chrom = Chrom)
+```
+
+### Binned haplotype alleles, using only the set with the phased HI matching the 4x parent
+```{r}
+match_files <- dir(pattern = "2020.+-match.+4",
+                   path = "../data/bin_alleles",
+                   full.names = T)
+match_files
+```
+
+```{r}
+match <- match_files %>% 
+  map_dfr(melt_bin_alleles) %>% 
+  rename(UCD_Sample_Code = Ind,
+         chrom = Chrom)
+```
+
+```{r}
+fig5c_data_match <- full_join(hybs_long, match) %>%
+  filter(Non_inducer %in% c("WA077", "LR00014")) %>% 
+  arrange(Inducer) %>% 
+  mutate(scored_chrom_aneuploid = case_when(Inducer == "IVP101" & chrom %in% sprintf("chr%0.2d", c(3,8,9)) & full_segmental != "ok" ~ "aneuploid",
+                                            Inducer == "IVP35" & chrom == "chr11" & full_segmental != "ok" ~ "aneuploid",
+                                            Inducer == "PL4" & chrom == "chr10" & full_segmental != "ok" ~ "aneuploid",
+                                            TRUE ~ "euploid")) %>% 
+  filter(snp_ploidy == "4x") %>% 
+  filter(!UCD_Sample_Code %in% c("MM813", "MM823")) %>% 
+  filter(chrom == "chr11" & between(Start, bourke_cen$start[11], bourke_cen$end[11]) |
+         chrom == "chr03" & between(Start, bourke_cen$start[3], bourke_cen$end[3]) |
+         chrom == "chr08" & between(Start, bourke_cen$start[8], bourke_cen$end[8]) |
+         chrom == "chr09" & between(Start, bourke_cen$start[9], bourke_cen$end[9]) |
+         chrom == "chr10" & between(start_cen, bourke_cen$start[10], bourke_cen$end[10])) %>% 
+  filter(!chrom %in% c("chr03", "chr09")) %>%
+  filter(!(chrom == "chr08" & Inducer == "PL4")) %>% 
+  group_by(Inducer, Non_inducer, UCD_Sample_Code, chrom, parent_summary, scored_chrom_aneuploid) %>% 
+  summarize(cen_cov = sum(Cov, na.rm = T),
+            cen_calls = sum(HIcalls, na.rm = T)) %>% 
+  mutate(cen_per = 100 * cen_calls / cen_cov)
+```
+
+## Figure 5C: Average representation of phased HI allele across the centromere of 4x hybrids
+```{r}
+pad_size <- 1e6
+fig5c_data_nonmatch <- full_join(hybs_long, nonmatch) %>% 
+  filter(Non_inducer %in% c("LR00014", "WA077")) %>% 
+  arrange(Inducer) %>% 
+  mutate(scored_chrom_aneuploid = case_when(Inducer == "IVP101" & chrom %in% sprintf("chr%0.2d", c(3,8,9)) & full_segmental != "ok" ~ "aneuploid",
+                                            Inducer == "IVP35" & chrom == "chr11" & full_segmental != "ok" ~ "aneuploid",
+                                            Inducer == "PL4" & chrom %in% c("chr08", "chr10") & full_segmental != "ok" ~ "aneuploid",
+                                            TRUE ~ "euploid")) %>% 
+  filter(snp_ploidy == "4x") %>% 
+  filter(!UCD_Sample_Code %in% c("MM813", "MM823")) %>% 
+  filter(chrom == "chr11" & between(start_cen, bourke_cen$start[which(bourke_cen$chrom == "chr11")], bourke_cen$end[which(bourke_cen$chrom == "chr11")]) |
+         chrom == "chr03" & between(start_cen, bourke_cen$start[which(bourke_cen$chrom == "chr03")], bourke_cen$end[which(bourke_cen$chrom == "chr03")]) |
+         chrom == "chr08" & between(start_cen, bourke_cen$start[which(bourke_cen$chrom == "chr08")], bourke_cen$end[which(bourke_cen$chrom == "chr08")] + pad_size) |
+         chrom == "chr09" & between(start_cen, bourke_cen$start[which(bourke_cen$chrom == "chr09")], bourke_cen$end[which(bourke_cen$chrom == "chr09")]) |
+         chrom == "chr10" & between(start_cen, bourke_cen$start[which(bourke_cen$chrom == "chr10")], bourke_cen$end[which(bourke_cen$chrom == "chr10")]) ) %>% 
+  filter(!chrom %in% c("chr03", "chr09")) %>%
+  filter(!(chrom == "chr08" & Inducer == "PL4")) %>% 
+  group_by(Inducer, Non_inducer, UCD_Sample_Code, chrom, parent_summary, scored_chrom_aneuploid) %>% 
+  summarize(cen_cov = sum(Cov, na.rm = T),
+            cen_calls = sum(HIcalls, na.rm = T)) %>% 
+  mutate(cen_per = 100 * cen_calls / cen_cov)
+```
+
+```{r}
+fig5c_nonmatch <- ggplot(fig5c_data_nonmatch, aes(x = Inducer, y = cen_per, shape = scored_chrom_aneuploid, color = Non_inducer)) +
+  geom_quasirandom() +
+  labs(x = "Haploid Inducer", y = "% H' allele", color = "Tetraploid Parent", shape = "Assayed Chrom. Aneuploidy") +
+  scale_y_continuous(limits = c(0,100)) +
+  # guides(shape = F) +
+  theme_bw() +
+  theme(legend.position = c(0.354, 0.828),
+        legend.justification = "left",
+        legend.title = element_text(size = 6, face = "bold"),
+        legend.title.align = 0.5,
+        legend.text = element_text(size = 6),
+        legend.margin = margin(1,1,1,1),
+        legend.box = "horizontal",
+        legend.background = element_rect(color = "black", fill = "white", size = 0.2, linetype = "solid"))
+fig5c_nonmatch
+```
+
+```{r}
+ggsave("fig5c.png", plot = fig5c_nonmatch, width = 3.746, height = 2.352, units = "in", device = "png")
+```
+
+## Supplementary Figure S7: Average representation of phased HI allele across the centromere of 3x hybrids
+```{r}
+triploids <- full_join(hybs_long, nonmatch) %>% 
+  filter(Non_inducer == "WA077") %>% 
+  mutate(scored_chrom_aneuploid = case_when(Inducer == "IVP101" & chrom %in% sprintf("chr%0.2d", c(3,8,9)) & full_segmental != "ok" ~ "assayed chrom. aneuploid",
+                                            Inducer == "IVP35" & chrom == "chr11" & full_segmental != "ok" ~ "assayed chrom. aneuploid",
+                                            TRUE ~ "assayed chrom. euploid")) %>% 
+  filter(snp_ploidy == "3x")
+```
+
+```{r}
+figS7 <- triploids %>% 
+  filter(chrom == "chr11",
+         Inducer == "IVP35") %>% 
+  ggplot(., aes(x = Start, y = ObsPerHI)) +
+  annotate(geom = "rect", xmin = bourke_cen$start[11], xmax = bourke_cen$end[11], ymin = 0, ymax = 100, alpha = 0.2, color = "red") +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = seq(0,4e7, by = 1e7), labels = seq(0, 40, by = 10)) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(y = "% H' allele", x = "Position (Mb)") +
+  facet_wrap(~UCD_Sample_Code) +
+  theme_bw()
+figS7
+ggsave("figS7.png", plot = figS7, width = 5, height = 2.5, units = "in", device = "png")
+```
+
+## Supplementary Figure S8: Average representation of phased HI alleles across the centromere of 4x hybrids:
+```{r}
+fig5c_match <- ggplot(fig5c_data_match, aes(x = Inducer, y = cen_per, shape = scored_chrom_aneuploid, color = Non_inducer)) +
+  geom_quasirandom(size = 0.9) +
+  labs(x = "Haploid Inducer", y = "% H' allele", shape = "Assayed Chrom. Aneuploidy", color = "Tetraploid Parent") +
+  scale_y_continuous(limits = c(0,100)) +
+  theme_bw() +
+  theme(legend.position = c(0.354, 0.174),
+        legend.justification = "left",
+        legend.title = element_text(size = 6, face = "bold"),
+        legend.title.align = 0.5,
+        legend.text = element_text(size = 6),
+        legend.margin = margin(1,1,1,1),
+        legend.box = "horizontal",
+        legend.background = element_rect(color = "black", fill = "white", size = 0.2, linetype = "solid"))
+fig5c_match
+ggsave("figS8.png", plot = fig5c_match, width = 5, height = 3, units = "in", device = "png")
+```

@@ -1,0 +1,771 @@
+#' ---
+#' title: "MM Haploid Inducer Haplotypes"
+#' date: 2020_1028
+#' author: "Kirk Amundson"
+#' output: html_notebook
+#' ---
+#' 
+#' Aim: Use the trisomic chromosome in each HI addition dihaploid to derive a phased HI haplotype for that
+#' chromosome. These haplotypes will be used to determine the average percentage of phased alleles in triploid
+#' and tetraploid hybrids produced as byproducts of the 4x by 2x HI potato haploid induction cross.
+#' 
+#' ## Packages:
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+library(tidyverse)
+library(viridis)
+library(grid)
+library(ggpubr)
+
+#' 
+#' ## Functions:
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+sep <- function(...) {
+  dots <- list(...)
+  separate_(..., into = paste(dots[[2]], attributes[[1]], sep = "_"), convert = T, sep = ":")
+}
+
+#' 
+#' ## Read in approximate centromere coordinates from Bourke et al (2015) Genetics.
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# coordinates correspond to recombination-suppressed domains of each chromosome in a tetraploid F1 mapping population
+bourke_cen <- read_tsv("../2_dosage/analysis/bourke_cen.bed", col_names = c('chrom', 'start', 'end'))
+
+#' 
+#' ## Make SNP lists for WA.077 x IVP35 using MM246 chromosome 11 phased alleles:
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+file <- "../6_offchrom/data/calls/chr11-MM-filtered-calls.vcf.gz"
+vcf <- read_tsv(file, col_names = T) %>% 
+  rename(WA077 = MM302,
+         LR00014 = MM293,
+         LR00026 = MM294)
+
+#' 
+#' Define site and sample column names.
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+attributes <- str_split(names(table(vcf$FORMAT)), ":", simplify = F)
+print(attributes)[[1]]
+site_vars <- colnames(vcf)[c(1:49, ncol(vcf))]
+sample_vars <- colnames(vcf)[-c(1:49, ncol(vcf))]
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# let's call whatever haplotype in the haploid inducers H0
+# All haploid inducers are 0/1.
+# If the non inducer is 0/0/0/0
+# and the dihaploid is 0/0/0,
+# then H0 is the reference allele at that position,
+# else it is the alternate allele
+haplo_test <- vcf %>% 
+  dplyr::select(all_of(site_vars), MM246, WA077, IVP35, clean_WA077_dihaploids) %>% 
+  Reduce(f = sep, x = c("MM246", "WA077", "IVP35", "clean_WA077_dihaploids")) %>%
+  filter(IVP35_GT == "0/1",
+         WA077_GT %in% c("0/0/0/0", "1/1/1/1")) %>% 
+  mutate(IVP35_H0 = case_when(
+    WA077_GT == "0/0/0/0" & MM246_GT == "0/0/0" ~ REF,
+    WA077_GT == "0/0/0/0" & MM246_GT == "0/0/1" ~ ALT,
+    WA077_GT == "1/1/1/1" & MM246_GT == "0/1/1" ~ REF,
+    WA077_GT == "1/1/1/1" & MM246_GT == "1/1/1" ~ ALT
+  )) %>% 
+  mutate(IVP35_H1 = ifelse(IVP35_H0 == REF, ALT, REF)) %>% 
+  mutate(hprime_match_tet = case_when(
+    WA077_GT == "0/0/0/0" & MM246_GT == "0/0/0" ~ "match",
+    WA077_GT == "1/1/1/1" & MM246_GT == "1/1/1" ~ "match",
+    WA077_GT == "0/0/0/0" & MM246_GT == "0/0/1" ~ "no match",
+    WA077_GT == "1/1/1/1" & MM246_GT == "0/1/1" ~ "no match"
+  )) %>% 
+  filter(!is.na(hprime_match_tet)) 
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+candidate_out_IVP35 <- haplo_test %>% 
+  mutate(hprime_match_tet = case_when(
+    WA077_GT == "0/0/0/0" & MM246_GT == "0/0/0" ~ "match",
+    WA077_GT == "1/1/1/1" & MM246_GT == "1/1/1" ~ "match",
+    WA077_GT == "0/0/0/0" & MM246_GT == "0/0/1" ~ "no match",
+    WA077_GT == "1/1/1/1" & MM246_GT == "0/1/1" ~ "no match"
+  )) %>% 
+  mutate(IVP35_H0 = case_when(
+    WA077_GT == "0/0/0/0" & MM246_GT == "0/0/0" ~ REF,
+    WA077_GT == "0/0/0/0" & MM246_GT == "0/0/1" ~ ALT,
+    WA077_GT == "1/1/1/1" & MM246_GT == "0/1/1" ~ REF,
+    WA077_GT == "1/1/1/1" & MM246_GT == "1/1/1" ~ ALT
+  )) %>%
+  filter(!is.na(IVP35_H0)) %>% 
+  mutate(WA077_ID = ifelse(WA077_GT == "0/0/0/0", WA077_AO, WA077_RO)) %>% 
+  filter(WA077_ID == 0,
+         between(WA077_DP, 20, 70),
+         between(IVP35_DP, 20, 60),
+         between(MM246_DP, 20, 50))
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+candidate_out_IVP35 %>% 
+  filter(hprime_match_tet == "match") %>% 
+  dplyr::select(CHROM, POS, REF, IVP35_H0, IVP35_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "WA077-IVP35-Hprime-match.tsv", col_names = T)
+
+candidate_out_IVP35 %>% 
+  filter(hprime_match_tet == "no match") %>% 
+  dplyr::select(CHROM, POS, REF, IVP35_H0, IVP35_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "WA077-IVP35-Hprime-nomatch.tsv", col_names = T)
+
+#' 
+#' ## Use the IVP35 chromosome 11 haplotype phased in MM246 to genotype 12 LR00.014 x IVP35 hybrids:
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap246 <- vcf %>%
+  dplyr::select(all_of(site_vars), MM246, IVP35, WA077, clean_WA077_dihaploids, LR00014, clean_LR00014_dihaploids) %>%
+  Reduce(f = sep, x = c("MM246", "IVP35", "WA077", "clean_WA077_dihaploids", "LR00014", "clean_LR00014_dihaploids")) %>%
+  filter(IVP35_GT == "0/1",
+         WA077_GT %in% c("0/0/0/0", "1/1/1/1")) %>%
+  mutate(IVP35_H0 = case_when(
+    WA077_GT == "0/0/0/0" & MM246_GT == "0/0/0" ~ REF,
+    WA077_GT == "0/0/0/0" & MM246_GT == "0/0/1" ~ ALT,
+    WA077_GT == "1/1/1/1" & MM246_GT == "0/1/1" ~ REF,
+    WA077_GT == "1/1/1/1" & MM246_GT == "1/1/1" ~ ALT
+  )) %>%
+  mutate(IVP35_H1 = ifelse(IVP35_H0 == REF, ALT, REF)) %>% 
+  mutate(hprime_match_tet = case_when(
+    WA077_GT == "0/0/0/0" & MM246_GT == "0/0/0" ~ "match",
+    WA077_GT == "1/1/1/1" & MM246_GT == "1/1/1" ~ "match",
+    WA077_GT == "0/0/0/0" & MM246_GT == "0/0/1" ~ "no match",
+    WA077_GT == "1/1/1/1" & MM246_GT == "0/1/1" ~ "no match"
+  )) %>% 
+  filter(!is.na(hprime_match_tet))
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+table(hap246$WA077_GT, hap246$LR00014_GT)
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+nrow(hap246)
+100 * (20349 + 1242) / nrow(hap246)
+
+#' 
+#' > About 74% of markers lift over to LR00014. Lower carryover makes sense to me here - LR00.014 is more
+#' distantly related to WA.077 than C93.154 is. CIP pedigree shows that C93.154 is the male parent of WA.077.
+#' C93.154 is also the male parent of LR00.022 and LR00.026. Keep this in mind when doing the liftover, we may
+#' want to use haplotypes phased in the context of C93.154 HI addition lines to maximixe the number of markers.
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap246_to_LR00014 <- hap246 %>% 
+  filter(LR00014_GT == WA077_GT)
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# coverage histograms
+hap246_to_LR00014 %>% 
+  dplyr::select(CHROM, POS, ends_with("_DP")) %>% 
+  pivot_longer(ends_with("DP"), names_to = "bioid", values_to = "depth") %>% 
+  ggplot(., aes(x = depth)) +
+  geom_histogram(binwidth = 1) +
+  facet_wrap(~bioid, ncol = 1) +
+  geom_vline(xintercept = c(10, 30), color = "red", linetype = "dashed") + # LR00014
+  geom_vline(xintercept = c(20, 60), color = "blue", linetype = "dashed") + # IVP35
+  geom_vline(xintercept = c(20, 50), color = "green", linetype = "dashed") + # MM246
+  theme_bw()
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# coverage filters
+hap246_to_LR00014_dpf <- hap246_to_LR00014 %>% 
+  mutate(LR00014_ID = ifelse(LR00014_GT == "0/0/0/0", LR00014_AO, LR00014_RO)) %>% 
+  filter(LR00014_ID == 0) %>% 
+  filter(between(IVP35_DP, 20, 60),
+         between(LR00014_DP, 10, 30),
+         between(MM246_DP, 20, 50))
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# histogram marker count
+ggplot(hap246_to_LR00014_dpf, aes(x = POS, fill = hprime_match_tet)) +
+  geom_histogram(binwidth = 1e6, position = position_dodge2()) +
+  geom_vline(xintercept = c(bourke_cen$start[11], bourke_cen$end[11]), color = "red", linetype = "dashed") +
+  theme_bw()
+
+# all marker count
+hap246_to_LR00014_dpf %>% 
+  group_by(hprime_match_tet, CHROM) %>% 
+  tally()
+
+# centromeric marker count, chromosome 11
+hap246_to_LR00014_dpf %>% 
+  filter(CHROM == "chr11") %>% 
+  filter(between(POS, bourke_cen$start[11], bourke_cen$end[11])) %>% 
+  group_by(hprime_match_tet, CHROM) %>% 
+  tally
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap246_to_LR00014_dpf %>% 
+  filter(hprime_match_tet == "match") %>% 
+  dplyr::select(CHROM, POS, REF, IVP35_H0, IVP35_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "LR00014-IVP35-Hprime-match.tsv", col_names = T)
+
+hap246_to_LR00014_dpf %>% 
+  filter(hprime_match_tet == "no match") %>% 
+  dplyr::select(CHROM, POS, REF, IVP35_H0, IVP35_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "LR00014-IVP35-Hprime-nomatch.tsv", col_names = T)
+
+#' 
+#' 
+#' ## Make SNP lists for WA.077 x IVP101 using MM1114 chromosome 3, 8 and 9 phased alleles:
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+files <- c("../6_offchrom/data/calls/chr03-MM-filtered-calls.vcf.gz",
+           "../6_offchrom/data/calls/chr08-MM-filtered-calls.vcf.gz",
+           "../6_offchrom/data/calls/chr09-MM-filtered-calls.vcf.gz")
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+vcf2 <- files %>% 
+  map(read_tsv, col_names = T) %>% 
+  bind_rows() %>% 
+  rename(WA077 = MM302,
+         LR00014 = MM293,
+         LR00026 = MM294)
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+attributes <- str_split(names(table(vcf2$FORMAT)), ":", simplify = F)
+print(attributes)[[1]]
+site_vars <- colnames(vcf2)[c(1:49, ncol(vcf2))]
+sample_vars <- colnames(vcf2)[-c(1:49, ncol(vcf2))]
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+haplo <- vcf2 %>%
+  dplyr::select(all_of(site_vars), MM1114, WA077, IVP101) %>%
+  Reduce(f = sep, x = c("MM1114", "WA077", "IVP101")) %>%
+  filter(IVP101_GT == "0/1",
+         WA077_GT %in% c("0/0/0/0", "1/1/1/1")) %>%
+  mutate(IVP101_H0 = case_when(
+    WA077_GT == "0/0/0/0" & MM1114_GT == "0/0/0" ~ REF,
+    WA077_GT == "0/0/0/0" & MM1114_GT == "0/0/1" ~ ALT,
+    WA077_GT == "1/1/1/1" & MM1114_GT == "0/1/1" ~ REF,
+    WA077_GT == "1/1/1/1" & MM1114_GT == "1/1/1" ~ ALT
+  )) %>%
+  mutate(IVP101_H1 = ifelse(IVP101_H0 == REF, ALT, REF))
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+candidate_out_IVP101 <- haplo %>% 
+  mutate(hprime_match_tet = case_when(
+    WA077_GT == "0/0/0/0" & MM1114_GT == "0/0/0" ~ "match",
+    WA077_GT == "1/1/1/1" & MM1114_GT == "1/1/1" ~ "match",
+    WA077_GT == "0/0/0/0" & MM1114_GT == "0/0/1" ~ "no match",
+    WA077_GT == "1/1/1/1" & MM1114_GT == "0/1/1" ~ "no match"
+  )) %>% 
+  mutate(IVP101_H0 = case_when(
+    WA077_GT == "0/0/0/0" & MM1114_GT == "0/0/0" ~ REF,
+    WA077_GT == "0/0/0/0" & MM1114_GT == "0/0/1" ~ ALT,
+    WA077_GT == "1/1/1/1" & MM1114_GT == "0/1/1" ~ REF,
+    WA077_GT == "1/1/1/1" & MM1114_GT == "1/1/1" ~ ALT
+  )) %>%
+  filter(!is.na(IVP101_H0)) %>% 
+  mutate(WA077_ID = ifelse(WA077_GT == "0/0/0/0", WA077_AO, WA077_RO)) %>% 
+  filter(WA077_ID == 0) %>% 
+  filter(between(WA077_DP, 20, 70),
+         between(IVP101_DP, 20, 60),
+         between(MM1114_DP, 20, 70))
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+candidate_out_IVP101 %>% 
+  filter(hprime_match_tet == "no match") %>% 
+  dplyr::select(CHROM, POS, REF, IVP101_H0, IVP101_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "WA077-IVP101-Hprime-nomatch.tsv")
+
+candidate_out_IVP101 %>% 
+  filter(hprime_match_tet == "match") %>% 
+  dplyr::select(CHROM, POS, REF, IVP101_H0, IVP101_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "WA077-IVP101-Hprime-match.tsv")
+
+#' 
+#' ## Use the IVP101 chromosome 3, 8 or 9 haplotypes phased in MM1114 to make a SNP list for genotyping 11 LR00.014 x IVP101 hybrids:
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# read in vcf2
+hap1114 <- vcf2 %>%
+  dplyr::select(all_of(site_vars), MM1114, WA077, IVP101, LR00014, clean_LR00014_dihaploids) %>%
+  Reduce(f = sep, x = c("MM1114", "WA077", "IVP101", "LR00014", "clean_LR00014_dihaploids")) %>%
+  filter(IVP101_GT == "0/1",
+         WA077_GT %in% c("0/0/0/0", "1/1/1/1")) %>%
+  mutate(IVP101_H0 = case_when(
+    WA077_GT == "0/0/0/0" & MM1114_GT == "0/0/0" ~ REF,
+    WA077_GT == "0/0/0/0" & MM1114_GT == "0/0/1" ~ ALT,
+    WA077_GT == "1/1/1/1" & MM1114_GT == "0/1/1" ~ REF,
+    WA077_GT == "1/1/1/1" & MM1114_GT == "1/1/1" ~ ALT
+  )) %>%
+  mutate(IVP101_H1 = ifelse(IVP101_H0 == REF, ALT, REF)) %>% 
+  mutate(hprime_match_tet = case_when(
+    WA077_GT == "0/0/0/0" & MM1114_GT == "0/0/0" ~ "match",
+    WA077_GT == "1/1/1/1" & MM1114_GT == "1/1/1" ~ "match",
+    WA077_GT == "0/0/0/0" & MM1114_GT == "0/0/1" ~ "no match",
+    WA077_GT == "1/1/1/1" & MM1114_GT == "0/1/1" ~ "no match"
+  )) %>% 
+  filter(!is.na(hprime_match_tet))
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap1114_to_LR00014 <- hap1114 %>% 
+  filter(WA077_GT == LR00014_GT)
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap1114_to_LR00014 %>% 
+  dplyr::select(CHROM, POS, ends_with("_DP")) %>% 
+  pivot_longer(ends_with("DP"), names_to = "bioid", values_to = "depth") %>% 
+  ggplot(., aes(x = depth)) +
+  geom_histogram(binwidth = 1) +
+  facet_wrap(~bioid, ncol = 1) +
+  geom_vline(xintercept = c(10, 30), color = "red", linetype = "dashed") + # LR00014
+  geom_vline(xintercept = c(20, 60), color = "blue", linetype = "dashed") + # IVP101
+  geom_vline(xintercept = c(20, 60), color = "green", linetype = "dashed") + # MM1114
+  theme_bw()
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap1114_to_LR00014_dpf <- hap1114_to_LR00014 %>% 
+  mutate(LR00014_ID = ifelse(LR00014_GT == "0/0/0/0", LR00014_AO, LR00014_RO)) %>% 
+  filter(between(LR00014_DP, 10, 30),
+         between(IVP101_DP, 20, 60),
+         between(MM1114_DP, 20, 60),
+         LR00014_ID == 0)
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+colnames(hap1114_to_LR00014_dpf)
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# histogram marker count
+ggplot(hap1114_to_LR00014_dpf, aes(x = POS, fill = hprime_match_tet)) +
+  geom_histogram(binwidth = 1e6, position = position_dodge2()) +
+  # geom_vline(xintercept = c(bourke_cen$start[11], bourke_cen$end[11]), color = "red", linetype = "dashed") +
+  facet_wrap(~CHROM, ncol = 1, strip.position = "r") +
+  theme_bw()
+
+# all marker count
+hap1114_to_LR00014_dpf %>% 
+  group_by(hprime_match_tet, CHROM) %>% 
+  tally()
+
+# centromeric marker count, chromosome 3
+hap1114_to_LR00014_dpf %>% 
+  filter(CHROM == "chr03") %>% 
+  filter(between(POS, bourke_cen$start[3], bourke_cen$end[3])) %>% 
+  group_by(hprime_match_tet, CHROM) %>% 
+  tally
+
+# centromeric marker count, chromosome 8
+hap1114_to_LR00014_dpf %>% 
+  filter(CHROM == "chr08") %>% 
+  filter(between(POS, bourke_cen$start[8], bourke_cen$end[8])) %>% 
+  group_by(hprime_match_tet, CHROM) %>% 
+  tally
+
+# centromeric marker count, chromosome 9
+hap1114_to_LR00014_dpf %>% 
+  filter(CHROM == "chr03") %>% 
+  filter(between(POS, bourke_cen$start[9], bourke_cen$end[9])) %>% 
+  group_by(hprime_match_tet, CHROM) %>% 
+  tally
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+top <- hap1114_to_LR00014_dpf %>% 
+  filter(CHROM == "chr03") %>% 
+  ggplot(., aes(x = POS, fill = hprime_match_tet)) +
+  # annotate(geom = "rect", xmin = bourke_cen$start[3], xmax = bourke_cen$end[3], ymin = 0, ymax = 1500, fill = "red", alpha = 0.1) +
+  geom_vline(xintercept = c(bourke_cen$start[3], xmax = bourke_cen$end[3]), color = "red", linetype = "dashed") +
+  geom_histogram(binwidth = 1e6, position = position_dodge2()) +
+  facet_wrap(~CHROM, ncol = 1, strip.position = "r") +
+  theme_bw()
+top
+
+mid <- hap1114_to_LR00014_dpf %>% 
+  filter(CHROM == "chr08") %>% 
+  ggplot(., aes(x = POS, fill = hprime_match_tet)) +
+  # annotate(geom = "rect", xmin = bourke_cen$start[8], xmax = bourke_cen$end[8], ymin = 0, ymax = 1500, fill = "red", alpha = 0.1) +
+  geom_vline(xintercept = c(bourke_cen$start[8], xmax = bourke_cen$end[8]), color = "red", linetype = "dashed") +
+  geom_histogram(binwidth = 1e6, position = position_dodge2()) +
+  facet_wrap(~CHROM, ncol = 1, strip.position = "r") +
+  theme_bw()
+mid
+
+bottom <- hap1114_to_LR00014_dpf %>% 
+  filter(CHROM == "chr09") %>% 
+  ggplot(., aes(x = POS, fill = hprime_match_tet)) +
+  # annotate(geom = "rect", xmin = bourke_cen$start[9], xmax = bourke_cen$end[9], ymin = 0, ymax = 1500, fill = "red", alpha = 0.1) +
+  geom_vline(xintercept = c(bourke_cen$start[9], xmax = bourke_cen$end[9]), color = "red", linetype = "dashed") +
+  geom_histogram(binwidth = 1e6, position = position_dodge2()) +
+  facet_wrap(~CHROM, ncol = 1, strip.position = "r") +
+  theme_bw()
+bottom
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+LR00014_IVP101_marker_histo <- ggarrange(top, mid, bottom, ncol = 1, align = "v")
+ggsave("2020-09-16-LR00014-IVP101-marker-count.png", plot = LR00014_IVP101_marker_histo, width = 7, height = 7, units = "in", device = "png")
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+top <- hap1114_to_LR00014_dpf %>% 
+  filter(CHROM == "chr03",
+         between(POS, bourke_cen$start[3], bourke_cen$end[3])) %>% 
+  ggplot(., aes(x = POS, fill = hprime_match_tet)) +
+  # annotate(geom = "rect", xmin = bourke_cen$start[3], xmax = bourke_cen$end[3], ymin = 0, ymax = 1500, fill = "red", alpha = 0.1) +
+  geom_vline(xintercept = c(bourke_cen$start[3], xmax = bourke_cen$end[3]), color = "red", linetype = "dashed") +
+  geom_histogram(binwidth = 1e6, position = position_dodge2()) +
+  facet_wrap(~CHROM, ncol = 1, strip.position = "r") +
+  theme_bw()
+top
+
+mid <- hap1114_to_LR00014_dpf %>% 
+  filter(CHROM == "chr08",
+         between(POS, bourke_cen$start[8], bourke_cen$end[8])) %>% 
+  ggplot(., aes(x = POS, fill = hprime_match_tet)) +
+  # annotate(geom = "rect", xmin = bourke_cen$start[8], xmax = bourke_cen$end[8], ymin = 0, ymax = 1500, fill = "red", alpha = 0.1) +
+  geom_vline(xintercept = c(bourke_cen$start[8], xmax = bourke_cen$end[8]), color = "red", linetype = "dashed") +
+  geom_histogram(binwidth = 1e6, position = position_dodge2()) +
+  facet_wrap(~CHROM, ncol = 1, strip.position = "r") +
+  theme_bw()
+mid
+
+bottom <- hap1114_to_LR00014_dpf %>% 
+  filter(CHROM == "chr09",
+         between(POS, bourke_cen$start[9], bourke_cen$end[9])) %>% 
+  ggplot(., aes(x = POS, fill = hprime_match_tet)) +
+  # annotate(geom = "rect", xmin = bourke_cen$start[9], xmax = bourke_cen$end[9], ymin = 0, ymax = 1500, fill = "red", alpha = 0.1) +
+  geom_vline(xintercept = c(bourke_cen$start[9], xmax = bourke_cen$end[9]), color = "red", linetype = "dashed") +
+  geom_histogram(binwidth = 1e6, position = position_dodge2()) +
+  facet_wrap(~CHROM, ncol = 1, strip.position = "r") +
+  theme_bw()
+bottom
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+LR00014_IVP101_marker_histo <- ggarrange(top, mid, bottom, ncol = 1, align = "v")
+ggsave("2020-09-16-LR00014-IVP101-cen-marker-count.png", plot = LR00014_IVP101_marker_histo, width = 7, height = 7, units = "in", device = "png")
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap1114_to_LR00014_dpf %>% 
+  filter(hprime_match_tet == "match") %>% 
+  dplyr::select(CHROM, POS, REF, IVP101_H0, IVP101_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "LR00014-IVP101-Hprime-match.tsv", col_names = T)
+
+hap1114_to_LR00014_dpf %>% 
+  filter(hprime_match_tet == "no match") %>% 
+  dplyr::select(CHROM, POS, REF, IVP101_H0, IVP101_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "LR00014-IVP101-Hprime-nomatch.tsv", col_names = T)
+
+#' 
+#' ## Make SNP lists for C91.640 x PL4 using MM546 chromosome 8 and 10 phased alleles:
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+file <- c("../6_offchrom/data/calls/chr08-MM-filtered-calls.vcf.gz",
+          "../6_offchrom/data/calls/chr10-MM-filtered-calls.vcf.gz")
+vcf <- file %>% map_dfr(read_tsv, col_names = T) %>% 
+  rename(WA077 = MM302,
+         LR00014 = MM293,
+         LR00026 = MM294)
+attributes <- str_split(names(table(vcf$FORMAT)), ":", simplify = F)
+print(attributes)[[1]]
+site_vars <- colnames(vcf)[c(1:49, ncol(vcf))]
+sample_vars <- colnames(vcf)[-c(1:49, ncol(vcf))]
+
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap546 <- vcf %>%
+  dplyr::select(all_of(site_vars), MM546, clean_C91640_dihaploids, PL4, WA077, clean_WA077_dihaploids) %>%
+  Reduce(f = sep, x = c("MM546", "clean_C91640_dihaploids", "PL4", "WA077", "clean_WA077_dihaploids")) %>%
+  filter(PL4_GT == "0/1",
+         clean_C91640_dihaploids_GT %in% c("0/0/0/0", "1/1/1/1")) %>%
+  mutate(PL4_H0 = case_when(
+    clean_C91640_dihaploids_GT == "0/0/0/0" & MM546_GT == "0/0/0" ~ REF,
+    clean_C91640_dihaploids_GT == "0/0/0/0" & MM546_GT == "0/0/1" ~ ALT,
+    clean_C91640_dihaploids_GT == "1/1/1/1" & MM546_GT == "0/1/1" ~ REF,
+    clean_C91640_dihaploids_GT == "1/1/1/1" & MM546_GT == "1/1/1" ~ ALT
+  )) %>%
+  mutate(PL4_H1 = ifelse(PL4_H0 == REF, ALT, REF)) %>% 
+  mutate(hprime_match_tet = case_when(
+    clean_C91640_dihaploids_GT == "0/0/0/0" & MM546_GT == "0/0/0" ~ "match",
+    clean_C91640_dihaploids_GT == "1/1/1/1" & MM546_GT == "1/1/1" ~ "match",
+    clean_C91640_dihaploids_GT == "0/0/0/0" & MM546_GT == "0/0/1" ~ "no match",
+    clean_C91640_dihaploids_GT == "1/1/1/1" & MM546_GT == "0/1/1" ~ "no match"
+  )) %>% 
+  filter(!is.na(hprime_match_tet))
+
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# coverage check
+hap546 %>% 
+  ggplot(., aes(x = clean_C91640_dihaploids_DP)) +
+  geom_histogram(binwidth = 1) +
+  geom_vline(xintercept = c(14, 40)) +
+  theme_bw()
+
+hap546 %>% 
+  ggplot(., aes(x = PL4_DP)) +
+  geom_histogram(binwidth = 1) +
+  geom_vline(xintercept = c(30, 90)) +
+  theme_bw()
+
+hap546 %>% 
+  ggplot(., aes(x = MM546_DP)) +
+  geom_histogram(binwidth = 1) +
+  geom_vline(xintercept = c(30, 90)) +
+  theme_bw()
+
+ggplot(hap546, aes(x = POS, fill = hprime_match_tet)) +
+  geom_histogram(binwidth = 1e6, position = position_dodge2()) +
+  geom_vline(xintercept = c(6e6, 3.36e7), color = "red", linetype = "dashed") +
+  geom_vline(xintercept = c(7.72e6, 4.14e7), color = "blue", linetype = "dashed") +
+  labs(x = "Position", y = "Marker Count") +
+  facet_wrap(~CHROM, ncol = 1, strip.position = "r") +
+  theme_bw()
+
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# coverage filters
+filt_hap546 <- hap546 %>% 
+  filter(!is.na(PL4_H0)) %>% 
+  mutate(clean_C91640_dihaploids_ID = ifelse(clean_C91640_dihaploids_GT == "0/0/0/0", clean_C91640_dihaploids_AO, clean_C91640_dihaploids_RO)) %>% 
+  filter(clean_C91640_dihaploids_ID == 0) %>% 
+  filter(between(clean_C91640_dihaploids_DP, 14, 40), 
+         between(PL4_DP, 30, 90),
+         between(MM546_DP, 30, 90))
+
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+filt_hap546 %>% 
+  filter(CHROM == "chr08" & between(POS, 6e6, 3.36e7) | CHROM == "chr10" & between(POS, 7.71e6, 3.19e7)) %>% 
+  group_by(CHROM, hprime_match_tet) %>% 
+  tally
+
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+filt_hap546 %>% 
+  filter(CHROM == "chr08") %>% 
+  ggplot(., aes(x = POS, y = PL4_RO / PL4_DP)) +
+  geom_point(size = 0.1, alpha = 0.05) +
+  facet_wrap(~hprime_match_tet, strip.position = "r", ncol = 1) +
+  geom_vline(xintercept = c(bourke_cen$start[10], bourke_cen$end[10]), color = "red", linetype = "dashed") +
+  theme_bw()
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+filt_hap546 %>% 
+  filter(hprime_match_tet == "match") %>% 
+  dplyr::select(CHROM, POS, REF, PL4_H0, PL4_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "C91640-PL4-Hprime-match.tsv", col_names = T)
+
+filt_hap546 %>% 
+  filter(hprime_match_tet == "no match") %>% 
+  dplyr::select(CHROM, POS, REF, PL4_H0, PL4_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "C91640-PL4-Hprime-nomatch.tsv", col_names = T)
+
+#' 
+#' ## Use the PL4 chromosome 8 and 10 haplotypes phased in MM546 to make a SNP list for genotyping 12 LR00.014 x PL4 hybrids:
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap546 <- vcf %>% 
+  dplyr::select(all_of(site_vars), MM546, clean_C91640_dihaploids, PL4, LR00014, clean_LR00014_dihaploids, WA077) %>% 
+  Reduce(f = sep, x = c("MM546", "clean_C91640_dihaploids", "PL4", "LR00014", "clean_LR00014_dihaploids", "WA077")) %>% 
+  filter(PL4_GT == "0/1",
+         clean_C91640_dihaploids_GT %in% c("0/0/0/0", "1/1/1/1")) %>%
+  mutate(PL4_H0 = case_when(
+    clean_C91640_dihaploids_GT == "0/0/0/0" & MM546_GT == "0/0/0" ~ REF,
+    clean_C91640_dihaploids_GT == "0/0/0/0" & MM546_GT == "0/0/1" ~ ALT,
+    clean_C91640_dihaploids_GT == "1/1/1/1" & MM546_GT == "0/1/1" ~ REF,
+    clean_C91640_dihaploids_GT == "1/1/1/1" & MM546_GT == "1/1/1" ~ ALT
+  )) %>%
+  mutate(PL4_H1 = ifelse(PL4_H0 == REF, ALT, REF)) %>% 
+  mutate(hprime_match_tet = case_when(
+    clean_C91640_dihaploids_GT == "0/0/0/0" & MM546_GT == "0/0/0" ~ "match",
+    clean_C91640_dihaploids_GT == "1/1/1/1" & MM546_GT == "1/1/1" ~ "match",
+    clean_C91640_dihaploids_GT == "0/0/0/0" & MM546_GT == "0/0/1" ~ "no match",
+    clean_C91640_dihaploids_GT == "1/1/1/1" & MM546_GT == "0/1/1" ~ "no match"
+  )) %>% 
+  filter(!is.na(hprime_match_tet))
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap546_to_LR00014 <- hap546 %>% 
+  filter(LR00014_GT == clean_C91640_dihaploids_GT)
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# coverage histograms
+hap546_to_LR00014 %>% 
+  dplyr::select(CHROM, POS, ends_with("_DP")) %>% 
+  pivot_longer(ends_with("DP"), names_to = "bioid", values_to = "depth") %>% 
+  ggplot(., aes(x = depth)) +
+  geom_histogram(binwidth = 1) +
+  facet_wrap(~bioid, ncol = 1) +
+  geom_vline(xintercept = c(10, 30), color = "red", linetype = "dashed") + # LR00014
+  geom_vline(xintercept = c(30, 90), color = "blue", linetype = "dashed") + # PL4
+  geom_vline(xintercept = c(30, 90), color = "green", linetype = "dashed") + # MM546
+  theme_bw()
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# depth filter
+hap546_to_LR00014_dpf <- hap546_to_LR00014 %>% 
+  mutate(LR00014_ID = ifelse(LR00014_GT == "0/0/0/0", LR00014_AO, LR00014_RO)) %>% 
+  filter(LR00014_ID == 0) %>% 
+  filter(between(LR00014_DP, 10, 30),
+         between(MM546_DP, 30, 90),
+         between(PL4_DP, 30, 90))
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# count markers
+ggplot(hap546_to_LR00014_dpf, aes(x = POS, fill = hprime_match_tet)) +
+  geom_histogram(binwidth = 1e6, position = position_dodge2()) +
+  geom_vline(xintercept = c(bourke_cen$start[8], bourke_cen$end[8]), color = "blue", linetype = "dashed") +  
+  geom_vline(xintercept = c(bourke_cen$start[10], bourke_cen$end[10]), color = "red", linetype = "dashed") +
+  facet_wrap(~CHROM, ncol = 1, strip.position = "r") +
+  theme_bw()
+
+# all marker count
+hap546_to_LR00014_dpf %>% 
+  group_by(hprime_match_tet, CHROM) %>% 
+  tally()
+
+# centromeric marker count, chromosome 8
+hap546_to_LR00014_dpf %>% 
+  filter(CHROM == "chr08") %>% 
+  filter(between(POS, bourke_cen$start[8], bourke_cen$end[8])) %>% 
+  group_by(hprime_match_tet, CHROM) %>% 
+  tally
+
+# centromeric marker count, chromosome 10
+hap546_to_LR00014_dpf %>% 
+  filter(CHROM == "chr10") %>% 
+  filter(between(POS, bourke_cen$start[10], bourke_cen$end[10])) %>% 
+  group_by(hprime_match_tet, CHROM) %>% 
+  tally
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap546_to_LR00014_dpf %>% 
+  filter(hprime_match_tet == "match") %>% 
+  dplyr::select(CHROM, POS, REF, PL4_H0, PL4_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "LR00014-PL4-Hprime-match.tsv", col_names = T)
+
+hap546_to_LR00014_dpf %>% 
+  filter(hprime_match_tet == "no match") %>% 
+  dplyr::select(CHROM, POS, REF, PL4_H0, PL4_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "LR00014-PL4-Hprime-nomatch.tsv", col_names = T)
+
+#' 
+#' ## Use the PL4 chromosome 8 and 10 haplotypes phased in MM546 to make a SNP list for genotyping 11 WA.077 x PL4 hybrids:
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap546_to_WA077 <- hap546 %>% 
+  filter(WA077_GT == clean_C91640_dihaploids_GT)
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# histogram marker count
+ggplot(hap546_to_WA077, aes(x = POS, fill = hprime_match_tet)) +
+  geom_histogram(binwidth = 1e6, position = position_dodge2()) +
+  geom_vline(xintercept = c(bourke_cen$start[11], bourke_cen$end[11]), color = "red", linetype = "dashed") +
+  theme_bw()
+
+# all marker count
+hap546_to_WA077 %>% 
+  group_by(hprime_match_tet, CHROM) %>% 
+  tally()
+
+# centromeric marker count, chromosome 8
+hap546_to_WA077 %>% 
+  filter(CHROM == "chr08") %>% 
+  filter(between(POS, bourke_cen$start[8], bourke_cen$end[8])) %>% 
+  group_by(hprime_match_tet, CHROM) %>% 
+  tally
+
+# centromeric marker count, chromosome 10
+hap546_to_WA077 %>% 
+  filter(CHROM == "chr10") %>% 
+  filter(between(POS, bourke_cen$start[10], bourke_cen$end[10])) %>% 
+  group_by(hprime_match_tet, CHROM) %>% 
+  tally
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap546_to_WA077 %>% 
+  dplyr::select(CHROM, POS, ends_with("_DP")) %>% 
+  pivot_longer(ends_with("DP"), names_to = "bioid", values_to = "depth") %>% 
+  ggplot(., aes(x = depth)) +
+  geom_histogram(binwidth = 1) +
+  facet_wrap(~bioid, ncol = 1) +
+  geom_vline(xintercept = c(20, 70), color = "red", linetype = "dashed") +
+  geom_vline(xintercept = c(30, 90), color = "blue", linetype = "dashed") +
+  # geom_vline(xintercept = c(20, 50), color = "green", linetype = "dashed") +
+  theme_bw()
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap546_to_WA077_dpf <- hap546_to_WA077 %>% 
+  mutate(WA077_ID = ifelse(WA077_GT == "0/0/0/0", WA077_AO, WA077_RO)) %>% 
+  filter(WA077_ID == 0) %>% 
+  filter(between(WA077_DP, 20, 70),
+         between(MM546_DP, 30, 90),
+         between(PL4_DP, 30, 90))
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+hap546_to_WA077_dpf %>% 
+  filter(hprime_match_tet == "match") %>% 
+  dplyr::select(CHROM, POS, REF, PL4_H0, PL4_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "WA077-PL4-Hprime-match.tsv", col_names = T)
+
+hap546_to_WA077_dpf %>% 
+  filter(hprime_match_tet == "no match") %>% 
+  dplyr::select(CHROM, POS, REF, PL4_H0, PL4_H1) %>% 
+  rename(Chrom = CHROM,
+         Pos = POS,
+         Ref = REF) %>% 
+  write_tsv(., "WA077-PL4-Hprime-nomath.tsv", col_names = T)
+
+#' 
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+knitr::purl("MM_inducer_haplotypes.Rmd", documentation = 2)
+
+#' 

@@ -1,4 +1,5 @@
 data/
+7_haplotypes/analysis/*.tsv
 7_haplotypes/data
 7_haplotypes/.snakemake/
 7_haplotypes/*.tsv

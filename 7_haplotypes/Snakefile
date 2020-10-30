@@ -1,0 +1,49 @@
+shell.executable("bash")
+
+MOMS = ["LR00014", "WA077"]
+POPS = ["IVP101", "IVP35", "PL4"]
+TYPES = ["match", "nomatch"]
+
+rule all:
+    input:
+        expand(["data/bin_alleles/{mom}-{pop}-Hprime-{type}-4Mb-alleles.txt"],
+                mom = MOMS,
+                pop = POPS,
+                type = TYPES)
+        
+rule extract_haplotype_snps:
+    input:
+        expand(["../6_offchrom/data/calls/chr{num}-MM-filtered-calls.vcf.gz"], num = ["03", "08", "09", "10", "11"])
+    output:
+        expand(["analysis/{mom}-{pop}-Hprime-{type}.tsv"], mom=MOMS, pop=POPS, type=TYPES)
+    log:
+        "logs/extract_haplotype_snps/extract_haplotype_snps.log"
+    shell: """
+        Rscript analysis/MM_inducer_haploytpes.R > {log} 2>&1
+    """
+
+rule call_alleles:
+    input:
+        pmpup="../2_dosage/data/parsed_mpup/parsed-{mom}-{pop}-mpup.txt",
+        snplist="analysis/{mom}-{pop}-Hprime-{type}.tsv",
+    output:
+        "data/alleles/{mom}-{pop}-Hprime-{type}-alleles.txt"
+    log:
+        "logs/call_alleles/{mom}-{pop}-{type}.log"
+    shell: """
+        python2 ../2_dosage/scripts/CallAllelesAB.py {input.pmpup} {output} {input.snplist} > {log} 2>&1
+    """
+
+rule bin_by_geno:
+    input:
+        alleles="data/alleles/{mom}-{pop}-Hprime-{type}-alleles.txt",
+        snplist="analysis/{mom}-{pop}-Hprime-{type}.tsv"
+    output:
+        "data/bin_alleles/{mom}-{pop}-Hprime-{type}-4Mb-alleles.txt"
+    log:
+        "logs/bin_by_geno/{mom}-{pop}-{type}.log"
+    params:
+        binsize=4000000
+    shell: """
+        python2 ../2_dosage/scripts/bin-by-genotypeC.py {input.alleles} {output} {params.binsize} {input.snplist} > {log} 2>&1
+    """
