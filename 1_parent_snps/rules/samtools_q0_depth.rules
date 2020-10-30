@@ -3,6 +3,8 @@ rule samtools_q0_depth:
         "data/realigned/{sample}.bam"
     output:
         "data/depths/{sample}_q0_depth.bed"
+    conda:
+        "envs/bwa-samtools.yaml"
     shell: """
         samtools depth -a {input} > {output[0]}
     """

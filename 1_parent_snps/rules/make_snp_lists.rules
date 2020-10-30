@@ -3,6 +3,8 @@ rule make_snp_lists:
         ["data/calls/{}-filtered-MM-calls.vcf.gz".format(x) for x in config["good_chroms"]]
     output:
         expand(["data/snplists/{mom}-{pop}-hom-SNP.tsv"], pop=config["pops"], mom=config["moms"])
+    conda:
+        "envs/r_tidyverse.yaml"
     shell: """
         Rscript analysis/MM_parent_snps.R
     """

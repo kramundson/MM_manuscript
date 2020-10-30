@@ -8,6 +8,8 @@ rule filter_good_pairs:
         "data/dedup/{sample}-{unit}.bam"
     output:
         "data/pairfilt/{sample}-{unit}.bam"
+    conda:
+        "envs/bwa-samtools.yaml"
     shell: """
         samtools view -h {input} | awk '{{if ($7 == "=" || $7 == "*" || $1 ~ /@[A-Za-z]{{2}}/) print $0}}' | \
             samtools view -b -o {output} -

@@ -5,6 +5,8 @@ rule samtools_q20_depth:
         "data/depths/{sample}_q20_depth.bed"
     params:
         MQ=config["params"]["depth"]["mq"]
+    conda:
+        "envs/bwa-samtools.yaml"
     shell: """
         samtools depth -a -Q {params.MQ} {input} > {output[0]}
     """

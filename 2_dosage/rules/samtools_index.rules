@@ -3,5 +3,7 @@ rule samtools_index:
         "data/mapQ-filter/{sample}.bam"
     output:
         "data/mapQ-filter/{sample}.bam.bai"
+    conda:
+        "../envs/bwa-samtools.yaml"
     shell:
         "samtools index {input}"

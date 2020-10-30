@@ -16,6 +16,8 @@ rule realign_indels:
     log:
         # "logs/realigned/{sample}-{unit}.log"
         "logs/realigned/{sample}.log"
+    conda:
+        "envs/bwa-samtools.yaml"
     threads: config['params']['gatk']['threads']
     shell: """
         java {params.jvm} -jar {params.jar} \

@@ -5,5 +5,7 @@ rule bam_mapqual_filter:
         "data/mapQ-filter/{sample}.bam"
     params:
         config["params"]["map_qual_filter"]
+    conda:
+        "../envs/bwa-samtools.yaml"
     shell:
         "samtools view -b {params} -o {output} {input}"

@@ -9,5 +9,7 @@ rule cutadapt:
         "-a {} {}".format(config["adapter"], config["params"]["cutadapt_se"]["qual"])
     log:
         "logs/cutadapt/{sample}-{unit}.log"
+    conda:
+        "../envs/cutadapt.yaml"
     wrapper:
         "0.17.4/bio/cutadapt/se"

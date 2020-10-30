@@ -12,6 +12,8 @@ rule bedtools_coverage:
         bai="data/mapQ-filter/{sample}.bam.bai"
     output:
         "data/bedtools_coverage/{sample}.bed"
+    conda:
+        "../envs/bedtools.yaml"
     shell: '''
         bedtools coverage -sorted -nonamecheck -header -g {input.genome} \
             -F 0.5 -a {input.windows} -b {input.bam} > {output}

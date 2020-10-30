@@ -10,6 +10,8 @@ rule freebayes_interval_MM:
         options=config["params"]["freebayes"]
     log:
         "log/freebayes/{interval}.log"
+    conda:
+        "envs/freebayes.yaml"
     shell: """
         freebayes \
             -r {params.interval} \

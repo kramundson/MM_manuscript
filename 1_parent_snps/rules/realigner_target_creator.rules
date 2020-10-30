@@ -13,6 +13,8 @@ rule realigner_target_creator:
     threads: config["params"]["gatk"]["threads"]
     log:
         "logs/gatk3/realigntarget-{sample}.log"
+    conda:
+        "envs/bwa-samtools.yaml"
     shell: """
          samtools index {input.bam}
          java {params.jvm} -jar {params.jar} \

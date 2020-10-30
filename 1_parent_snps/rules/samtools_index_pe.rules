@@ -3,5 +3,7 @@ rule samtools_index_pe:
         "data/merged/{sample}.bam"
     output:
         "data/merged/{sample}.bam.bai"
+    conda:
+        "envs/bwa-samtools.yaml"
     shell:
         "samtools index {input}"

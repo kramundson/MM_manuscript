@@ -8,6 +8,8 @@ rule clip_overlap:
         "data/clipOverlap/{sample}-{unit}.bam"
     log:
         "logs/clipOverlap/{sample}-{unit}.log"
+    conda:
+        "envs/clipOverlap.yaml"
     shell: """
         bam clipOverlap --in {input} --out {output} --stats --unmapped 2> {log}
     """

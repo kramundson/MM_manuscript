@@ -3,5 +3,7 @@ rule samtools_merge:
         lambda x: samples[x.sample] # this accesses all files and wildcards properly
     output:
         "data/merged/{sample}.bam"
+    conda:
+        "envs/bwa-samtools.yaml"
     shell:
         "samtools merge {output} {input}"

@@ -3,6 +3,8 @@ rule vcf_site_filters:
         "data/calls/{chrom}-MM-calls.vcf"
     output:
         "data/calls/{chrom}-filtered-MM-calls.vcf.gz"
+    conda:
+        "envs/r_tidyverse.yaml"
     shell: """
         Rscript scripts/2019_0225_filter_cheat_MM.R {input}
     """

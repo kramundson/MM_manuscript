@@ -14,6 +14,8 @@ rule merge_MM_vcfs:
         java_heap=config["params"]["mark_duplicates"]["java_heap"]
     log:
         "logs/{chrom}_MM_vcfs.log"
+    conda:
+        "envs/picard.yaml"
     shell: """
         sed -e 's/^/data\/calls\/interval_MM\//g' \
             -e 's/$/-calls.vcf/g' {input.intervals} | \

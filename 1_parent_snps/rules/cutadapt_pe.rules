@@ -10,5 +10,7 @@ rule cutadapt_pe:
         "-a {} -A {} {}".format(config["adapter"], config["adapter"], config["params"]["cutadapt-pe"]["qual"])
     log:
         "logs/cutadapt/{sample}-{unit}.log"
+    conda:
+        "envs/cutadapt.yaml"
     wrapper:
         "0.17.4/bio/cutadapt/pe"

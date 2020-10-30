@@ -14,6 +14,8 @@ rule align:
         bwa_threads=3*config["params"]["align"]["threads"] // 4,
         sort_threads=config["params"]["align"]["threads"] // 4,
         sort_mem=config["params"]["align"]["sort_mem"]
+    conda:
+        "../envs/bwa-samtools.yaml"
     shell:
         "bwa mem -R {params.rg} -t {params.bwa_threads} {input.ref} {input.reads} | "
         "samtools sort -@{params.sort_threads} -m {params.sort_mem} -o {output} -"
