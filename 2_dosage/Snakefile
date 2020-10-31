@@ -45,16 +45,205 @@ rule all:
         ["data/bedtools_coverage/{}.bed".format(i[0]) for i in units.index],
         ["data/bin_alleles/{}-{}-1Mb-alleles.txt".format(i[0], i[1]) for i in PARENTS]
 
-include: "rules/bin_by_geno.rules"
-include: "rules/call_alleles.rules"
-include: "rules/parse_mpup.rules"
-include: "rules/run_mpup.rules"
-include: "rules/bedtools_coverage.rules"
-include: "rules/samtools_index.rules"
-include: "rules/bam_mapqual_filter.rules"
-include: "rules/mark_duplicates.rules"
-include: "rules/samtools_merge.rules"
-include: "rules/align.rules"
-include: "rules/cutadapt_pe.rules"
-include: "rules/cutadapt.rules"
-include: "rules/cutadapt_hardtrim.rules"
+
+# include: "rules/bin_by_geno.rules"
+# include: "rules/call_alleles.rules"
+# include: "rules/parse_mpup.rules"
+# include: "rules/run_mpup.rules"
+# include: "rules/bedtools_coverage.rules"
+# include: "rules/samtools_index.rules"
+# include: "rules/bam_mapqual_filter.rules"
+# include: "rules/mark_duplicates.rules"
+# include: "rules/samtools_merge.rules"
+# include: "rules/align.rules"
+# include: "rules/cutadapt_pe.rules"
+# include: "rules/cutadapt.rules"
+# include: "rules/cutadapt_hardtrim.rules"
+
+rule cutadapt_hardtrim:
+    input:
+        get_fastq_control
+    output:
+        fastq="data/trimmed/{sample}-{unit}.fastq.gz",
+        qc="data/trimmed/{sample}-{unit}.qc.txt"
+    threads: config["params"]["cutadapt_hardtrim"]["threads"]
+    params:
+        "-a {} {}".format(config["adapter"], config["params"]["cutadapt_hardtrim"]["qual"])
+    log:
+        "logs/cutadapt/{sample}-{unit}.log"
+    conda:
+        "../envs/cutadapt.yaml"
+    wrapper:
+        "0.17.4/bio/cutadapt/se"
+        
+rule cutadapt:
+    input:
+        get_fastq_test
+    output:
+        fastq="data/trimmed/{sample}-{unit}.fastq.gz",
+        qc="data/trimmed/{sample}-{unit}.qc.txt"
+    threads: config["params"]["cutadapt_se"]["threads"]
+    params:
+        "-a {} {}".format(config["adapter"], config["params"]["cutadapt_se"]["qual"])
+    log:
+        "logs/cutadapt/{sample}-{unit}.log"
+    conda:
+        "../envs/cutadapt.yaml"
+    wrapper:
+        "0.17.4/bio/cutadapt/se"
+        
+rule cutadapt_pe:
+    input:
+        get_fastq
+    output:
+        fastq1="data/trimmed/{sample}-{unit}-1.fastq.gz",
+        fastq2="data/trimmed/{sample}-{unit}-2.fastq.gz",
+        qc="data/trimmed/{sample}-{unit}.qc.txt"
+    threads: config["params"]["cutadapt_pe"]["threads"]
+    params:
+        "-a {} -A {} {}".format(config["adapter"], config["adapter"], config["params"]["cutadapt_pe"]["qual"])
+    log:
+        "logs/cutadapt/{sample}-{unit}.log"
+    conda:
+        "../envs/cutadapt.yaml"
+    wrapper:
+        "0.17.4/bio/cutadapt/pe"
+        
+rule align:
+    input:
+        reads=get_trimmed,
+        ref=config["genome"],
+        index=config["genome"]+'.bwt'
+    output:
+        "data/aligned_reads/{sample}-{unit}.bam"
+    log:
+        "logs/bwa_mem/{sample}-{unit}.log"
+    threads:
+        config["params"]["align"]["threads"]
+    params:
+        rg="'@RG\\tID:{unit}\\tSM:{sample}'",
+        bwa_threads=3*config["params"]["align"]["threads"] // 4,
+        sort_threads=config["params"]["align"]["threads"] // 4,
+        sort_mem=config["params"]["align"]["sort_mem"]
+    conda:
+        "../envs/bwa-samtools.yaml"
+    shell:
+        "bwa mem -R {params.rg} -t {params.bwa_threads} {input.ref} {input.reads} | "
+        "samtools sort -@{params.sort_threads} -m {params.sort_mem} -o {output} -"
+
+rule samtools_merge:
+    input:
+        lambda x: samples[x.sample] # this accesses all files and wildcards properly
+    output:
+        "data/merged/{sample}.bam"
+    conda:
+        "../envs/bwa-samtools.yaml"
+    shell:
+        "samtools merge {output} {input}"
+
+rule mark_duplicates:
+    input:
+        "data/merged/{sample}.bam"
+    output:
+        bam="data/dedup/{sample}.bam",
+        metrics="data/dedup/{sample}-metrics.txt"
+    log:
+        "logs/picard/{sample}.log"
+    params:
+        jarpath=config["params"]["mark_duplicates"]["jarpath"],
+        java_heap=config["params"]["mark_duplicates"]["java_heap"],
+        opt=config["params"]["mark_duplicates"]["opt"]
+    conda:
+        "../envs/picard.yaml"
+    shell:
+        "java {params.java_heap} -jar {params.jarpath} MarkDuplicates INPUT={input} "
+        "OUTPUT={output.bam} METRICS_FILE={output.metrics} {params.opt} 2> {log}"
+
+rule bam_mapqual_filter:
+    input:
+        "data/dedup/{sample}.bam"
+    output:
+        "data/mapQ-filter/{sample}.bam"
+    params:
+        config["params"]["map_qual_filter"]
+    conda:
+        "../envs/bwa-samtools.yaml"
+    shell:
+        "samtools view -b {params} -o {output} {input}"
+
+rule samtools_index:
+    input:
+        "data/mapQ-filter/{sample}.bam"
+    output:
+        "data/mapQ-filter/{sample}.bam.bai"
+    conda:
+        "../envs/bwa-samtools.yaml"
+    shell:
+        "samtools index {input}"
+
+rule bedtools_coverage:
+    input:
+        genome=re.sub("(\.fasta$|\.fa$)", ".genome", config["genome"]),
+        windows=config["windows"],
+        bam="data/mapQ-filter/{sample}.bam",
+        bai="data/mapQ-filter/{sample}.bam.bai"
+    output:
+        "data/bedtools_coverage/{sample}.bed"
+    conda:
+        "../envs/bedtools.yaml"
+    shell: '''
+        bedtools coverage -sorted -nonamecheck -header -g {input.genome} \
+            -F 0.5 -a {input.windows} -b {input.bam} > {output}
+    '''
+
+rule run_mpup: # todo chunk this on my own or use Meric's scripts
+    input:
+        ref=config["genome"],
+        bams=get_bams
+    output:
+        "data/mpup/{mother}-{inducer}-mpup.txt"
+    params:
+        mq=config["params"]["run_mpup"]["map_qual"],
+        bq=config["params"]["run_mpup"]["base_qual"],
+        maxdepth=config["params"]["run_mpup"]["max_depth"]
+    conda:
+        "../envs/bwa-samtools.yaml"
+    shell: """
+        samtools mpileup -l -d {params.maxdepth} -q {params.bq} -Q {params.mq} -f {output} {input.bams}
+    """
+
+rule parse_mpup:
+    input:
+        "data/mpup/{mother}-{inducer}-mpup.txt"
+    output:
+        "data/parsed_mpup/parsed-{mother}-{inducer}-mpup.txt"
+    threads: 12
+    shell: """
+        python2 scripts/mpileup-parser-v2.py -f {input} -o {output} -t {threads}
+    """
+
+rule call_alleles:
+    input:
+        pmpup="data/parsed_mpup/parsed-{mother}-{inducer}-mpup.txt",
+        snplist="../1_parent_snps/data/snplists/{mother}-{inducer}-hom-SNP.tsv"
+    output:
+        "data/alleles/{mother}-{inducer}-alleles.txt"
+    log:
+        "logs/call_alleles/{mother}-{inducer}.log"
+    shell: """
+        python2 scripts/CallAllelesAB.py {input.pmpup} {output} {input.snplist} > {log} 2>&1
+    """
+
+rule bin_by_geno:
+    input:
+        alleles="data/alleles/{mother}-{inducer}-alleles.txt",
+        snplist="../1_parent_snps/data/snplists/{mother}-{inducer}-hom-SNP.tsv"
+    output:
+        "data/bin_alleles/{mother}-{inducer}-1Mb-alleles.txt"
+    log:
+        "logs/bin_by_geno/{mother}-{inducer}.log"
+    params:
+        binsize=config["params"]["binsize"]
+    shell: """
+        python2 scripts/bin-by-genotypeC.py {input.alleles} {output} {params.binsize} {input.snplist} > {log} 2>&1
+    """

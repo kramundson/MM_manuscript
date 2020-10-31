@@ -117,19 +117,288 @@ rule all:
         ["data/calls/{}-MM-filtered-calls.vcf.gz".format(x) for x in config["good_chroms"]],
         expand(["data/snplists/{mom}-{pop}-hom-SNP.tsv"], mom=config["moms"], pop=config["pops"])
     
-include: "rules/make_snp_lists.rules"
-include: "rules/vcf_site_filters.rules"
-include: "rules/merge_MM_vcfs.rules"
-include: "rules/freebayes_interval_MM.rules"
-include: "rules/samtools_q20_depth.rules"
-include: "rules/samtools_q0_depth.rules"
-include: "rules/realign_indels.rules" # testing placement at this point in the workflow, rule rewritten
-include: "rules/realigner_target_creator.rules" # testing placement at this point in the workflow, rule rewritten
-include: "rules/samtools_index_pe.rules" # change for later indel realign
-include: "rules/samtools_merge.rules" # change for later indel realign
-include: "rules/clip_overlap.rules" # changed for later indel realign
-include: "rules/filter_good_pairs.rules"
-include: "rules/mark_duplicates.rules"
-include: "rules/align.rules"
-include: "rules/cutadapt_pe.rules"
-include: "rules/cutadapt.rules"
+# include: "rules/make_snp_lists.rules"
+# include: "rules/vcf_site_filters.rules"
+# include: "rules/merge_MM_vcfs.rules"
+# include: "rules/freebayes_interval_MM.rules"
+# include: "rules/samtools_q20_depth.rules"
+# include: "rules/samtools_q0_depth.rules"
+# include: "rules/realign_indels.rules" # testing placement at this point in the workflow, rule rewritten
+# include: "rules/realigner_target_creator.rules" # testing placement at this point in the workflow, rule rewritten
+# include: "rules/samtools_index_pe.rules" # change for later indel realign
+# include: "rules/samtools_merge.rules" # change for later indel realign
+# include: "rules/clip_overlap.rules" # changed for later indel realign
+# include: "rules/filter_good_pairs.rules"
+# include: "rules/mark_duplicates.rules"
+# include: "rules/align.rules"
+# include: "rules/cutadapt_pe.rules"
+# include: "rules/cutadapt.rules"
+
+rule cutadapt:
+    input:
+        get_fastq
+    output:
+        fastq="data/trimmed/{sample}-{unit}.fastq.gz",
+        qc="data/trimmed/{sample}-{unit}.qc.txt"
+    threads: config["params"]["cutadapt-se"]["threads"]
+    params:
+        "-a {} {}".format(config["adapter"], config["params"]["cutadapt-se"]["qual"])
+    log:
+        "logs/cutadapt/{sample}-{unit}.log"
+    conda:
+        "../envs/cutadapt.yaml"
+    wrapper:
+        "0.17.4/bio/cutadapt/se"
+
+rule cutadapt_pe:
+    input:
+        get_fastq
+    output:
+        fastq1="data/trimmed/{sample}-{unit}-1.fastq.gz",
+        fastq2="data/trimmed/{sample}-{unit}-2.fastq.gz",
+        qc="data/trimmed/{sample}-{unit}.qc.txt"
+    threads: config["params"]["cutadapt-pe"]["threads"]
+    params:
+        "-a {} -A {} {}".format(config["adapter"], config["adapter"], config["params"]["cutadapt-pe"]["qual"])
+    log:
+        "logs/cutadapt/{sample}-{unit}.log"
+    conda:
+        "../envs/cutadapt.yaml"
+    wrapper:
+        "0.17.4/bio/cutadapt/pe"
+
+rule align:
+    input:
+        reads=get_trimmed,
+        ref=config["genome"],
+        index=config["genome"]+'.bwt'
+    output:
+        "data/aligned_reads/{sample}-{unit}.bam"
+    log:
+        "logs/bwa_mem/{sample}-{unit}.log"
+    conda:
+        "../envs/bwa-samtools.yaml"
+    threads:
+        config["params"]["align"]["threads"]
+    params:
+        rg="'@RG\\tID:{unit}\\tSM:{sample}'",
+        bwa_threads=3*config["params"]["align"]["threads"] // 4,
+        sort_threads=config["params"]["align"]["threads"] // 4,
+        sort_mem=config["params"]["align"]["sort_mem"]
+    shell: """
+        bwa mem -R {params.rg} -t {params.bwa_threads} {input.ref} {input.reads} 2> {log} | \
+        samtools sort -@{params.sort_threads} -m {params.sort_mem} -o {output} -
+    """
+    
+rule mark_duplicates:
+    input:
+        "data/aligned_reads/{sample}-{unit}.bam"
+    output:
+        bam="data/dedup/{sample}-{unit}.bam",
+        metrics="data/dedup/{sample}-{unit}-metrics.txt"
+    params:
+        jarpath=config["params"]["mark_duplicates"]["jarpath"],
+        java_heap=config["params"]["mark_duplicates"]["java_heap"],
+        opt=config["params"]["mark_duplicates"]["opt"]
+    log:
+        "logs/picard/{sample}-{unit}.log"
+    conda:
+        "../envs/picard.yaml"
+    shell:
+        "java {params.java_heap} -jar {params.jarpath} MarkDuplicates INPUT={input} "
+        "OUTPUT={output.bam} METRICS_FILE={output.metrics} {params.opt} 2> {log}"
+
+rule filter_good_pairs:
+    input:
+        "data/dedup/{sample}-{unit}.bam"
+    output:
+        "data/pairfilt/{sample}-{unit}.bam"
+    conda:
+        "../envs/bwa-samtools.yaml"
+    shell: """
+        samtools view -h {input} | awk '{{if ($7 == "=" || $7 == "*" || $1 ~ /@[A-Za-z]{{2}}/) print $0}}' | \
+            samtools view -b -o {output} -
+        """
+    
+# Applies soft clip to overlapping mates
+rule clip_overlap:
+    input:
+        "data/pairfilt/{sample}-{unit}.bam"
+    output:
+        "data/clipOverlap/{sample}-{unit}.bam"
+    log:
+        "logs/clipOverlap/{sample}-{unit}.log"
+    conda:
+        "../envs/clipOverlap.yaml"
+    shell: """
+        bam clipOverlap --in {input} --out {output} --stats --unmapped 2> {log}
+    """
+        
+rule samtools_merge:
+    input:
+        lambda x: samples[x.sample] # this accesses all files and wildcards properly
+    output:
+        "data/merged/{sample}.bam"
+    conda:
+        "../envs/bwa-samtools.yaml"
+    shell:
+        "samtools merge {output} {input}"
+        
+rule samtools_index_pe:
+    input:
+        "data/merged/{sample}.bam"
+    output:
+        "data/merged/{sample}.bam.bai"
+    conda:
+        "../envs/bwa-samtools.yaml"
+    shell:
+        "samtools index {input}"
+
+rule realigner_target_creator:
+    input:
+        ref=config["genome"],
+        dict=re.sub("(\.fasta$|\.fa$)", ".dict", config["genome"]),
+        # bam="data/pairfilt/{sample}-{unit}.bam" 
+        bam="data/merged/{sample}.bam"
+    output:
+        # "data/intervals/{sample}-{unit}.intervals"
+        "data/intervals/{sample}.intervals"
+    params:
+        jvm=config["params"]["gatk"]["jvm"],
+        jar=config["params"]["gatk"]["jar"]
+    threads: config["params"]["gatk"]["threads"]
+    log:
+        "logs/gatk3/realigntarget-{sample}.log"
+    conda:
+        "../envs/bwa-samtools.yaml"
+    shell: """
+         samtools index {input.bam}
+         java {params.jvm} -jar {params.jar} \
+             -T RealignerTargetCreator \
+             -R {input.ref} \
+             -I {input.bam} \
+             -o {output} \
+             2> {log}
+    """
+    
+rule realign_indels:
+    input:
+        ref=config["genome"],
+        dict=re.sub("(\.fasta$|\.fa$)", ".dict", config["genome"]),
+        bam="data/merged/{sample}.bam",
+        intervals="data/intervals/{sample}.intervals"
+    output:
+        "data/realigned/{sample}.bam",
+        "data/realigned/{sample}.bam.bai"
+    params:
+        jvm=config['params']['gatk']['jvm'],
+        jar=config['params']['gatk']['jar']
+    log:
+        "logs/realigned/{sample}.log"
+    conda:
+        "../envs/bwa-samtools.yaml"
+    threads: config['params']['gatk']['threads']
+    shell: """
+        java {params.jvm} -jar {params.jar} \
+            -T IndelRealigner \
+            -R {input.ref} \
+            -I {input.bam} \
+            -targetIntervals {input.intervals} \
+            -o {output[0]} \
+            2> {log}
+        samtools index {output[0]}
+        """
+        
+rule samtools_q0_depth:
+    input:
+        "data/realigned/{sample}.bam"
+    output:
+        "data/depths/{sample}_q0_depth.bed"
+    conda:
+        "../envs/bwa-samtools.yaml"
+    shell: """
+        samtools depth -a {input} > {output[0]}
+    """
+
+rule samtools_q20_depth:
+    input:
+        "data/realigned/{sample}.bam"
+    output:
+        "data/depths/{sample}_q20_depth.bed"
+    params:
+        MQ=config["params"]["depth"]["mq"]
+    conda:
+        "../envs/bwa-samtools.yaml"
+    shell: """
+        samtools depth -a -Q {params.MQ} {input} > {output[0]}
+    """
+    
+rule freebayes_interval_MM:
+    input:
+        ref=config["genome"],
+        bam=["data/realigned/{}.bam".format(x) for x in units.index.levels[0]],
+        bai=["data/realigned/{}.bam.bai".format(x) for x in units.index.levels[0]],
+        parent_bams=["../1_parent_snps/data/realigned/{}.bam".format(x) for x in config["parent_samples"]],
+        parent_bais=["../1_parent_snps/data/realigned/{}.bam.bai".format(x) for x in config["parent_samples"]]
+    output:
+        "data/calls/interval_MM/{interval}-calls.vcf"
+    params:
+        interval=lambda wildcards: re.sub(r"_(\d+)_", r":\1-", wildcards.interval),
+        options=config["params"]["freebayes"]
+    log:
+        "logs/freebayes/{interval}.log"
+    conda:
+        "../envs/freebayes.yaml"
+    shell: """
+        freebayes \
+            -r {params.interval} \
+            --fasta-reference {input.ref} \
+            --bam {input.bam} {input.parent_bams} \
+            --vcf {output} \
+            {params.options} \
+            2> {log}
+    """
+    
+rule merge_MM_vcfs:
+    input:
+        vcfs=["data/calls/interval_MM/{}-calls.vcf".format(re.sub("\t", "_", x)) for x in intervals],
+        intervals=config["intervals"]
+    output:
+        "data/calls/{chrom}-MM-calls.vcf"
+    params:
+        jarpath=config["params"]["mark_duplicates"]["jarpath"],
+        java_heap=config["params"]["mark_duplicates"]["java_heap"]
+    log:
+        "logs/vcf_merge/{chrom}_MM_vcfs.log"
+    shell: """
+        sed -e 's/^/data\/calls\/interval_MM\//g' \
+            -e 's/$/-calls.vcf/g' {input.intervals} | \
+        grep {wildcards.chrom} | \
+        tr "\t" "-" > {wildcards.chrom}_scaffold_calls.list
+        java {params.java_heap} -jar {params.jarpath} MergeVcfs \
+            I={wildcards.chrom}_scaffold_calls.list \
+            O={output} \
+            2> {log}
+    """
+    
+rule vcf_site_filters:
+    input:
+        "data/calls/{chrom}-MM-calls.vcf"
+    output:
+        "data/calls/{chrom}-MM-filtered-calls.vcf.gz"
+    conda:
+        "../envs/r_tidyverse.yaml"
+    shell: """
+        Rscript scripts/2019_0225_filter_cheat_MM.R {input}
+    """
+    
+rule make_snp_lists:
+    input:
+        ["data/calls/{}-filtered-MM-calls.vcf.gz".format(x) for x in config["good_chroms"]]
+    output:
+        expand(["data/snplists/{mom}-{pop}-hom-SNP.tsv"], pop=config["pops"], mom=config["moms"])
+    conda:
+        "../envs/r_tidyverse.yaml"
+    shell: """
+        Rscript analysis/MM_parent_snps.R
+    """
