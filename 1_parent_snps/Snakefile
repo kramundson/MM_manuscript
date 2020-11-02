@@ -241,7 +241,6 @@ rule realigner_target_creator:
     input:
         ref=config["genome"],
         dict=re.sub("(\.fasta$|\.fa$)", ".dict", config["genome"]),
-        # bam="data/pairfilt/{sample}-{unit}.bam" 
         bam="data/merged/{sample}.bam"
     output:
         # "data/intervals/{sample}-{unit}.intervals"
@@ -256,7 +255,7 @@ rule realigner_target_creator:
         "../envs/bwa-samtools.yaml"
     shell: """
          samtools index {input.bam}
-         java {params.jvm} -jar {params.jar} \
+         java {params.jvm} -jar {params.jar} -Djava.io.tmpdir=./tmp \
              -T RealignerTargetCreator \
              -R {input.ref} \
              -I {input.bam} \
@@ -282,7 +281,7 @@ rule realign_indels:
         "../envs/bwa-samtools.yaml"
     threads: config['params']['gatk']['threads']
     shell: """
-        java {params.jvm} -jar {params.jar} \
+        java {params.jvm} -jar {params.jar} -Djava.io.tmpdir=./tmp \
             -T IndelRealigner \
             -R {input.ref} \
             -I {input.bam} \
