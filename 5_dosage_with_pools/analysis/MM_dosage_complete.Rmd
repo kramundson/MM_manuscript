@@ -14,6 +14,7 @@ library(grid)
 library(ggpubr)
 library(ggbeeswarm)
 library(viridis)
+library(svglite)
 ```
 
 ## Functions:
@@ -173,7 +174,7 @@ tidy_dosage_plot <- function(df, sample_to_plot, spacer_size=30, chroms=sprintf(
     scale_y_continuous(limits = c(0,5)) +
     labs(x = "Chromosome", y = "Relative Coverage") +
     ggtitle(sample_to_plot) +
-    theme_bw() +
+    theme_minimal() +
     theme(panel.grid.major.x = element_blank(),
           panel.grid.minor.x = element_blank(),
           panel.grid.major.y = element_line(linetype="dashed", color = "black"),
@@ -227,7 +228,7 @@ tidy_snp_plot <- function(df, sample_to_plot, spacer_size=30, chroms=sprintf("ch
     scale_y_continuous(limits = c(0,100)) +
     labs(x = "", y = "% HI allele") +
     # ggtitle(paste(sample_to_plot, plot_title, sep = " ")) +
-    theme_bw() +
+    theme_minimal() +
     theme(panel.grid.minor.x=element_blank(),
           panel.grid.minor.y=element_blank(),
           panel.grid.major.x=element_blank(),
@@ -268,7 +269,7 @@ family_overlay <- function(dataset, non_inducer, ploidy = "2x", minimum_count = 
     geom_line(size = 0.4, alpha = 0.4) +
     facet_wrap(~chrom, nrow = 6, strip.position = "r") +
     guides(fill = F) +
-    theme_bw()
+    theme_minimal()
   
   return(plt)
   # wig <- ggplotly(plt)
@@ -359,7 +360,7 @@ underlay_one_bbs <- function(df, overlay_guy, nhi, ploidy = "2x", readcount_min 
     labs(x="",y="") +
     facet_wrap(~facet_strip, strip.position = "r") +
     guides(fill = F, color = F) +
-    theme_bw() +
+    theme_minimal() +
     theme(
       panel.grid.minor.x = element_blank(),
       strip.background = element_rect(fill = "white"),
@@ -404,7 +405,7 @@ bin_snp_plot <- function(df, sample_to_plot, new_binsize = 4e6, chroms = sprintf
     scale_y_continuous(limits = c(0,100)) +
     labs(x = "", y = "% HI allele") +
     # ggtitle(paste(sample_to_plot, plot_title, sep = " ")) +
-    theme_bw() +
+    theme_minimal() +
     theme(panel.grid.minor.x=element_blank(),
           panel.grid.minor.y=element_blank(),
           panel.grid.major.x=element_blank(),
@@ -500,6 +501,7 @@ bed <- plyr::ldply(bedfiles, function(x) read_tsv(x, col_names = bedcols, col_ty
     )
   )
 ```
+
 ### Remove organellar sequences before computing total and bin read counts for each individual
 ```{r}
 # remove counts corresponding to organellar DNA
@@ -636,31 +638,32 @@ fig2a <- fig2a_data %>%
   ggplot(., aes(x = sample_num_recode, y = chrom_normcov)) +
     geom_vline(xintercept = tris, color = "gray70") +
     geom_vline(xintercept = mons, color = "gray70") +
-    geom_point(size = 0.3) +
-    geom_text(data = filter(fig2a_data, chrom_normcov <= cut_lo), aes(label = chromshort), size = 2.8) +
-    geom_text(data = filter(fig2a_data, chrom_normcov >= cut_hi & UCD_Sample_Code != "MM1114"), aes(label = chromshort), size = 2.8) +
+    geom_point(size = 0.5) +
+    geom_text(data = filter(fig2a_data, chrom_normcov <= cut_lo), aes(label = chromshort), size = 3.5, color = "black") +
+    geom_text(data = filter(fig2a_data, chrom_normcov >= cut_hi & UCD_Sample_Code != "MM1114"), aes(label = chromshort), size = 3.5, color = "black") +
     geom_point(data = filter(fig2a_data, chrom_normcov >= cut_hi & UCD_Sample_Code == "MM1114"), size = 0.5) +
     geom_line(y = mean(fig2a_data$chrom_normcov), color = "green") +
     geom_line(y = cut_hi, color = "red") +
     geom_line(y = cut_lo, color = "red") +
     # geom_vline(xintercept = 160) +
     annotate("segment", x=209, y=2.68, xend=217, yend=2.629554, linetype = "dashed") + # chromosome 3
-    annotate("text", x=207, y=2.7, label="3", size=2.8) + # chromosome 3
+    annotate("text", x=207, y=2.7, label="3", size=4, color = "black") + # chromosome 3
     annotate("segment", x=209, y=2.82, xend=217, yend=2.646788, linetype = "dashed") + # chromosome 8
-    annotate("text", x=207, y=2.84, label="8", size=2.8) + # chromosome 8  
+    annotate("text", x=207, y=2.84, label="8", size=4, color = "black") + # chromosome 8  
     annotate("segment", x=209, y =2.54, xend=217, yend=2.618737, linetype = "dashed") + # chromosome 9
-    annotate("text", x =207, y =2.55, label="9", size=2.8) + # chromosome 9
+    annotate("text", x =207, y =2.55, label="9", size=4, color = "black") + # chromosome 9
     # ggtitle(paste0(unique(snpfam$ctrl_CIP), " Dihaploids")) +
     scale_x_continuous(limits = c(0,length(unique(fig2a_data$UCD_Sample_Code))-1),
                        breaks = c(0,length(unique(fig2a_data$UCD_Sample_Code))-1),
                        labels = c(1,length(unique(fig2a_data$UCD_Sample_Code))),
                        expand = c(0.01,0.01)) +
     labs(x = "Individual", y = "Standardized Chrom.\nCopy Number") +
-    theme_bw() +
+    theme_minimal() +
     theme(
       panel.grid.minor = element_blank(),
       panel.grid.major.x = element_blank(),
-      panel.background=element_rect(fill="white",color="black"),
+      panel.background=element_rect(fill="white"),
+      # panel.background=element_rect(fill="white",color="black"),
       # axis.title.x=element_text(size=18, margin = margin(-10,5,0,0)),
       # axis.title.y=element_text(size=18,angle= 90, vjust=2),
       # plot.title=element_text(size=20,face="bold",hjust=0,color="black"),
@@ -674,8 +677,9 @@ fig2a
 ```{r}
 fig2b_data <- with_cen %>%
   filter(sample_tot >= 2e4) %>% 
-  filter(snp_ploidy == "2x" | is.na(snp_ploidy)) %>%
-  filter(Monica_ploidy == "2x" | is.na(Monica_ploidy)) %>% 
+  # filter(snp_ploidy == "2x" | is.na(snp_ploidy)) %>% # changed per reviewer request
+  # filter(Monica_ploidy == "2x" | is.na(Monica_ploidy)) %>% # changed per reviewer request
+  filter(snp_ploidy == "2x") %>% 
   filter(!is.na(ctrl_CIP)) %>%
   select(chrom,
                 UCD_Sample_Code,
@@ -701,16 +705,17 @@ fig2b_data <- with_cen %>%
 
 fig2b <- ggplot(fig2b_data, aes(x = factor(chrnum), fill = factor(chrnum))) +
   geom_bar() +
-  geom_text(stat='count', aes(label=..count..), vjust=-0.2, size = 3) +
+  geom_text(stat='count', aes(label=..count..), vjust=-0.2, size = 3.5, color = "black") +
   scale_fill_viridis(discrete = T) +
   scale_y_continuous(limits = c(0, 1000)) +
   guides(fill = F) +
   labs(x = "Chromosome Number", y = "Count") +
-  theme_bw() +
+  theme_minimal() +
   theme(
       panel.grid.minor = element_blank(),
       panel.grid.major = element_blank(),
-      panel.background=element_rect(fill="white",color="black"),
+      panel.background=element_rect(fill="white"),
+      # panel.background=element_rect(fill="white",color="black"),
       axis.ticks = element_blank(),
       plot.margin=margin(20, 20, 5.5, 5.5, "pt")
   )
@@ -726,34 +731,35 @@ fig2c <- fig2a_data %>%
   
   # MM246 chromosome 11 annotation
   annotate("segment", x=84, y = 34.032912, xend=90, yend=34.032912, linetype="dashed") +
-  annotate("text", x=81, y=34.032912, label="11", size=2.8) +
+  annotate("text", x=81, y=34.032912, label="11", size=3.5, color = "black") +
 
   # MM247 chromosome 8 annotation
   annotate("segment", x=167, y = 28.616813, xend=161, yend=28.616813, linetype="dashed") +
-  annotate("text", x=170, y=28.616813, label="8", size=2.8) +
+  annotate("text", x=170, y=28.616813, label="8", size=3.5, color = "black") +
   annotate("segment", x=167, y = 7.196475, xend=161, yend=7.196475, linetype="dashed") +
-  annotate("text", x=170, y=7.196475, label="1", size=2.8) +
+  annotate("text", x=170, y=7.196475, label="1", size=3.5, color = "black") +
   
   # MM1114 chromosome annotations
   annotate("segment", x=209, y=6.716918, xend=217, yend=6.716918, linetype = "dashed") + # chromosome 1
-  annotate("text", x=207, y=6.716918, label="1", size = 2.8) + # chromosome 1
+  annotate("text", x=207, y=6.716918, label="1", size = 3.5, color = "black") + # chromosome 1
   annotate("segment", x=209, y=35.627298, xend=217, yend=35.627298, linetype = "dashed") + # chromosome 3
-  annotate("text", x=207, y=35.627298, label="3", size = 2.8) + # chromosome 3
+  annotate("text", x=207, y=35.627298, label="3", size = 3.5, color = "black") + # chromosome 3
   annotate("segment", x=209, y=46.362805, xend=217, yend=46.362805, linetype = "dashed") + # chromosome 8
-  annotate("text", x=207, y=46.362805, label="8", size=2.8) + # chromosome 8
+  annotate("text", x=207, y=46.362805, label="8", size=3.5, color="black") + # chromosome 8
   annotate("segment", x=209, y=32, xend=217, yend=34.716599, linetype = "dashed") + # chromosome 9
-  annotate("text", x=207, y=32, label="9", size=2.8) + # chromosome 9
+  annotate("text", x=207, y=32, label="9", size=3.5, color="black") + # chromosome 9
 
   scale_x_continuous(limits = c(0,length(unique(fig2a_data$UCD_Sample_Code))-1), 
                      breaks = c(0,length(unique(fig2a_data$UCD_Sample_Code))-1), 
                      labels = c(1,length(unique(fig2a_data$UCD_Sample_Code))),
                      expand = c(0.01,0.01)) +
   labs(x = "Individual", y = "Percent HI Allele", shape = "Aneuploidy Type") +
-  theme_bw() +
+  theme_minimal() +
   theme(
       panel.grid.minor = element_blank(),
       panel.grid.major.x = element_blank(),
-      panel.background=element_rect(fill="white",color="black"),
+      panel.background=element_rect(fill="white"),
+      # panel.background=element_rect(fill="white",color="black"),
       plot.margin = margin(5.5, 5.5, 5.5, 5.5, "pt"),
       legend.position = c(0.002, 0.82),
       legend.justification = "left",
@@ -770,8 +776,9 @@ fig2c
 ```{r}
 fig2d_data <- with_cen %>% 
   filter(sample_tot >= 2e4) %>% 
-  filter(snp_ploidy == "2x") %>%
-  filter(Monica_ploidy != "5x") %>% 
+  # filter(snp_ploidy == "2x") %>%
+  # filter(Monica_ploidy != "5x") %>%
+  filter(snp_ploidy == "2x") %>% 
   filter(!is.na(ctrl_CIP)) %>% # gets rid of skim sequenced MM parents
   filter(manual_fp != "fp") %>% 
   dplyr::select(chrom,
@@ -802,7 +809,7 @@ fig2d_data %>%
 
 fig2d <- ggplot(fig2d_data, aes(x = factor(chrnum), fill = factor(Parent_assoc_aneuploidy))) +
     geom_bar(stat = "count", position = position_dodge2(preserve = "single")) +
-    geom_text(stat='count', aes(label=..count..), vjust=-0.4, position = position_dodge2(preserve = "single", width = 0.9), size = 3) +
+    geom_text(stat='count', aes(label=..count..), vjust=-0.4, position = position_dodge2(preserve = "single", width = 0.9), size = 3.5, color = "black") +
     labs(x = "Chromosome Number", y = "Count", fill = "Parent") +
     scale_fill_manual(values = c("#440154FF", "#73D055FF"), na.value = "#969696") +
     scale_y_continuous(limits = c(0,75)) +
@@ -810,7 +817,8 @@ fig2d <- ggplot(fig2d_data, aes(x = factor(chrnum), fill = factor(Parent_assoc_a
     theme(
       panel.grid.minor = element_blank(),
       panel.grid.major = element_blank(),
-      panel.background=element_rect(fill="white",color="black"),
+      panel.background=element_rect(fill="white"),
+      # panel.background=element_rect(fill="white",color="black"),
       plot.margin=margin(20, 5.5, 5.5, 5.5, "pt"),
       axis.ticks = element_blank(), # this plot doesn't show axis ticks by default anyway
       legend.position = c(0.33, 0.94),
@@ -835,6 +843,27 @@ fig2 <- ggarrange(
 )
 fig2
 # ggsave(paste0(Sys.Date(), "-fig2.png"), plot = fig2, width = 7, height = 5, units = "in", device = "png") # need to get the dimensions right here
+# ggsave("2021-01-06-fig2.png", plot = fig2, width = 7, height = 5, units = "in", device = "png")
+# ggsave("fig2.svg", plot = fig2, width = 7, height = 5, units = "in", device = "svg") # segments not drawn correctly
+ggsave("fig2.eps", plot = fig2, width = 7, height = 5, units = "in", device = "eps") # segments drawn correctly; use this
+```
+
+```{r}
+fig2_com <- ggarrange(
+  ggarrange(fig2a, fig2c,  align = "hv", nrow = 2, ncol = 1, hjust = 0, vjust = 1.5, widths = c(1,1)),
+  ggarrange(fig2b, fig2d,  align = "hv", nrow = 2, ncol = 1, hjust = 0, vjust = 1.5, widths = c(1,1)),
+  nrow = 1,
+  ncol = 2,
+  heights = c(1,1),
+  widths = c(2.5,1)
+)
+fig2_com
+ggsave("fig2_com.png", plot = fig2_com, width = 9, height = 5, units = "in", device = "png")
+```
+
+```{r}
+fig2_committee_part2 <- ggarrange(fig2b, fig2d, align = "v", nrow = 2, ncol = 1)
+ggsave("fig2b_committee_part2.png", plot = fig2_committee_part2, width = 3, height = 4, units = "in", device = "png")# ggsave("fig2d_committee.png", plot = fig2d, width = 4, height = 3, units = "in", device = "png")
 ```
 
 ## Basic stats accompanying Figure 2:
@@ -852,8 +881,9 @@ fisher.test(table(fs$Inducer, fs$hi_intro))
 ## Figure S1: Chromosome gains and losses by homolog
 ```{r}
 fig_S1_data <- with_cen %>% 
-  filter(snp_ploidy == "2x" | is.na(snp_ploidy)) %>%
-  filter(Monica_ploidy == "2x" | is.na(Monica_ploidy)) %>% 
+  # filter(snp_ploidy == "2x" | is.na(snp_ploidy)) %>% # removed per reviewer request
+  # filter(Monica_ploidy == "2x" | is.na(Monica_ploidy)) %>% # removed per reviewer request
+  filter(snp_ploidy == "2x") %>% # only keeps the dihaploids for which we had SNP information
   filter(!is.na(ctrl_CIP)) %>%
   filter(manual_fp != "fp") %>% 
   filter(sample_tot >= 2e4) %>% 
@@ -868,7 +898,7 @@ fig_S1 <- fig_S1_data %>%
   scale_fill_manual(values = c("#1F78B4", "#33A02C")) + # uses 2nd and 4th color of Paired palette, 1st and 2nd too close
   scale_y_continuous(limits = c(0,15), breaks = seq(0,15,by=5), minor_breaks = seq(0,15,by=1)) +
   labs(x = "Chromosome", y = "Count", fill = "Chromosome State") +
-  theme_bw() +
+  theme_minimal() +
   theme(
     legend.position = "bottom",
     panel.grid.minor.x = element_blank(),
@@ -885,6 +915,8 @@ fig_S1 <- fig_S1_data %>%
   )
 fig_S1
 # ggsave("2020-10-23-fig-S1.png", plot = fig_S1, width = 10, height = 4, units = "in", device = "png")
+# ggsave("2021-01-06-figS1.png", plot = fig_S1, width = 10, height = 4, units = "in", device = "png")
+ggsave("figS1.svg", plot = fig_S1, width = 10, height = 4, units = "in", device = "svg")
 ```
 
 ```{r}
@@ -902,25 +934,47 @@ fig_S1_data %>%
 ```
 
 > chisq is 15. Is this significant at df=11?
+After removing the SNP set, chisq is now 18.39.
 
 ```{r}
-dchisq(15, df=11)
+head(fig_S1_data)
 ```
 
-## Figure S2: Chromosome number by HI parent:
+```{r}
+# post hoc chromosome gains
+fig_S1_data %>% 
+  filter(`Chromosome State` == "Gain") %>% 
+  group_by(chrom) %>% 
+  tally() %>% 
+  select(n) %>% 
+  chisq.test()
+```
+
+```{r}
+# post hoc gains and losses
+fig_S1_data %>% 
+  group_by(chrom) %>% 
+  tally() %>% 
+  select(n) %>% 
+  chisq.test()
+```
+
+## Figure S3: Chromosome number by HI parent:
 ```{r}
 propHI <- fig2b_data %>% 
   group_by(Inducer, chrnum) %>% 
   tally() %>% 
   mutate(Inducer_sum = sum(n)) %>% 
   mutate(chrnum = factor(chrnum, levels = c("23", "24", "25", "26", "27"))) %>%
-  ungroup()
+  ungroup() %>% 
+  mutate(Inducer = str_replace(Inducer, "PL4", "PL-4"))
 head(propHI)
 ```
 ```{r}
 labHI <- propHI %>% 
   select(Inducer, Inducer_sum) %>% 
-  distinct()
+  distinct() %>% 
+  mutate(Inducer = str_replace(Inducer, "PL4", "PL-4"))
 head(labHI)
 ```
 
@@ -941,7 +995,7 @@ fig_S2 <- ggplot(propHI) +
     # ymin = 0.025,
     ymin = 1.02,
     ymax = Inf) +
-  theme_bw() +
+  theme_minimal() +
   theme(
    panel.grid.minor = element_blank(),
    panel.grid.major = element_blank(),
@@ -963,10 +1017,13 @@ p2 <- ggplot_gtable(ggplot_build(fig_S2))
 p2$layout$clip[p2$layout$name == "panel"] <- "off"
 grid.newpage()
 grid.draw(p2)
-ggsave("2020-10-26-fig-S2.png", plot = p2, width = 6, height = 3, units = "in", device = "png")
+# ggsave("2020-10-26-fig-S2.png", plot = p2, width = 6, height = 3, units = "in", device = "png")
+# ggsave("2021-01-06-fig-S2.png", plot = p2, width = 6, height = 3, units = "in", device = "png")
+ggsave("figS3.png", plot = p2, width = 6, height = 3, units = "in", device = "png")
+ggsave("figS3.svg", plot = p2, width = 6, height = 3, units = "in", device = "svg")
 ```
 
-## Figure S3: Chromosome number by maternal parent. Include data from previous studies.
+## Figure S2: Chromosome number by maternal parent. Include data from previous studies.
 ```{r}
 # make data frame that groups by non inducer and chromosome number
 prop_data <- fig2b_data %>% 
@@ -1022,7 +1079,7 @@ plt <- prop_data %>%
     ymin = 1.12,
     ymax = Inf) +
   labs(x = "Tetraploid Parent", y = "Fraction", fill = "Chromosome Number") +
-  theme_bw() +
+  theme_minimal() +
   theme(
    panel.grid.minor = element_blank(),
    panel.grid.major = element_blank(),
@@ -1044,11 +1101,13 @@ p <- ggplot_gtable(ggplot_build(plt))
 p$layout$clip[p$layout$name == "panel"] <- "off"
 grid.newpage()
 grid.draw(p)
-ggsave("2020-10-23-fig-S3.png", plot = p, width = 6, height = 6, units = "in", device = "png")
+# ggsave("2020-10-23-fig-S3.png", plot = p, width = 6, height = 6, units = "in", device = "png")
+# ggsave("2021-01-06-fig-S3.png", plot = p, width = 6, height = 6, units = "in", device = "png")
+ggsave("figS2.svg", plot = p, width = 6, height = 6, units = "in", device = "svg")
 ```
 
 ```{r}
-fig2c_data %>% 
+fig2b_data %>% 
   mutate(aneu = ifelse(chrnum == 24, "euploid", "aneuploid")) %>% 
   group_by(Non_inducer, aneu) %>% 
   tally() %>% 
@@ -1077,14 +1136,17 @@ fig_S4 <- ggarrange(stack_plots("MM246", with_cen, with_cen),
                     ncol=2, nrow = 4, align = "hv")
 
 fig_S4
-ggsave("2020-10-23-fig-S4.png", plot = fig_S4, width = 16, height = 16, units = "in", device = "png")
+# ggsave("2020-10-23-fig-S4.png", plot = fig_S4, width = 16, height = 16, units = "in", device = "png")
+ggsave("figS4.eps", plot = fig_S4, width = 16, height = 16, units = "in", device = "eps")
 ```
 ## Figure 3: Combined dosage/SNP plots of 2 HI addition dihaploids. Karyotype interpretation drawn in Affinity Designer
 ```{r}
 fig3_top <- stack_plots("MM246", dosage_dataset = with_cen, snp_dataset = with_cen)
-ggsave("Fig3_top.png", plot = fig3_top, width = 12, height = 5, units = "in", device = "png")
+# ggsave("Fig3_top.png", plot = fig3_top, width = 12, height = 5, units = "in", device = "png")
+ggsave("fig3_top.eps", plot = fig3_top, width = 12, height = 5, units = "in", device = "eps")
 fig3_bottom <- stack_plots("MM247", dosage_dataset = with_cen, snp_dataset = with_cen)
-ggsave("Fig3_bottom.png", plot = fig3_top, width = 12, height = 5, units = "in", device = "png")
+# ggsave("Fig3_bottom.png", plot = fig3_top, width = 12, height = 5, units = "in", device = "png")
+ggsave("fig3_bottom.eps", plot = fig3_bottom, width = 12, height = 5, units = "in", device = "eps")
 ```
 
 ## Figure 4B: Representative Hybrids
@@ -1202,6 +1264,18 @@ fig4c <- hybs_long %>%
         legend.margin = margin(2,0,2,2, unit = "pt"))
 fig4c
 ```
+
+```{r}
+hybs_long %>% 
+  filter(only_parental_origin_unknown == "known") %>% 
+  filter(snp_ploidy %in% c("3x", "4x")) %>% 
+  dplyr::select(UCD_Sample_Code, Non_inducer, Inducer, snp_ploidy, parent_summary, Phureja_marker_phenotype) %>% 
+  distinct() %>% 
+  group_by(Phureja_marker_phenotype, snp_ploidy) %>% 
+  tally %>% 
+  arrange(snp_ploidy, Phureja_marker_phenotype)
+```
+
 
 ## Figure 4D: Aneuploidy type (chromosomal vs. segmental) by parental origin and ploidy
 ```{r}

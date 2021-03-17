@@ -13,6 +13,7 @@ for each tetraploid hybrid. Triploid hybrids were evaluated as a control.
 library(tidyverse)
 library(ggbeeswarm)
 library(viridis)
+library(svglite)
 ```
 
 ## Functions:
@@ -184,7 +185,9 @@ fig5c_data_match <- full_join(hybs_long, match) %>%
   group_by(Inducer, Non_inducer, UCD_Sample_Code, chrom, parent_summary, scored_chrom_aneuploid) %>% 
   summarize(cen_cov = sum(Cov, na.rm = T),
             cen_calls = sum(HIcalls, na.rm = T)) %>% 
-  mutate(cen_per = 100 * cen_calls / cen_cov)
+  mutate(cen_per = 100 * cen_calls / cen_cov) %>% 
+  mutate(Inducer = str_replace(Inducer, "PL4", "PL-4")) %>% 
+  mutate(HI_unstable = ifelse(parent_summary %in% c("HI only", "Both"), "unstable", "stable"))
 ```
 
 ## Figure 5C: Average representation of phased HI allele across the centromere of 4x hybrids
@@ -209,17 +212,19 @@ fig5c_data_nonmatch <- full_join(hybs_long, nonmatch) %>%
   group_by(Inducer, Non_inducer, UCD_Sample_Code, chrom, parent_summary, scored_chrom_aneuploid) %>% 
   summarize(cen_cov = sum(Cov, na.rm = T),
             cen_calls = sum(HIcalls, na.rm = T)) %>% 
-  mutate(cen_per = 100 * cen_calls / cen_cov)
+  mutate(cen_per = 100 * cen_calls / cen_cov) %>% 
+  mutate(Inducer = str_replace(Inducer, "PL4", "PL-4")) %>% 
+  mutate(HI_unstable = ifelse(parent_summary %in% c("HI only", "Both"), "unstable", "stable"))
 ```
 
 ```{r}
-fig5c_nonmatch <- ggplot(fig5c_data_nonmatch, aes(x = Inducer, y = cen_per, shape = scored_chrom_aneuploid, color = Non_inducer)) +
+fig5c_nonmatch <- ggplot(fig5c_data_nonmatch, aes(x = Inducer, y = cen_per, shape = scored_chrom_aneuploid, color = HI_unstable)) +
   geom_quasirandom() +
-  labs(x = "Haploid Inducer", y = "% H' allele", color = "Tetraploid Parent", shape = "Assayed Chrom. Aneuploidy") +
+  labs(x = "Haploid Inducer", y = "% H' allele", color = "HI Genome Stability", shape = "Assayed Chrom. Aneuploidy") +
   scale_y_continuous(limits = c(0,100)) +
   # guides(shape = F) +
   theme_bw() +
-  theme(legend.position = c(0.354, 0.828),
+  theme(legend.position = c(0.321, 0.828),
         legend.justification = "left",
         legend.title = element_text(size = 6, face = "bold"),
         legend.title.align = 0.5,
@@ -232,6 +237,7 @@ fig5c_nonmatch
 
 ```{r}
 ggsave("fig5c.png", plot = fig5c_nonmatch, width = 3.746, height = 2.352, units = "in", device = "png")
+ggsave("fig5c.svg", plot = fig5c_nonmatch, width = 3.746, height = 2.352, units = "in", device = "svg")
 ```
 
 ## Supplementary Figure S7: Average representation of phased HI allele across the centromere of 3x hybrids
@@ -247,7 +253,8 @@ triploids <- full_join(hybs_long, nonmatch) %>%
 ```{r}
 figS7 <- triploids %>% 
   filter(chrom == "chr11",
-         Inducer == "IVP35") %>% 
+         Inducer == "IVP35",
+         UCD_Sample_Code != "MM670") %>% 
   ggplot(., aes(x = Start, y = ObsPerHI)) +
   annotate(geom = "rect", xmin = bourke_cen$start[11], xmax = bourke_cen$end[11], ymin = 0, ymax = 100, alpha = 0.2, color = "red") +
   geom_point() +
@@ -259,16 +266,17 @@ figS7 <- triploids %>%
   theme_bw()
 figS7
 ggsave("figS7.png", plot = figS7, width = 5, height = 2.5, units = "in", device = "png")
+ggsave("figS7.svg", plot = figS7, width = 5, height = 2.5, units = "in", device = "svg")
 ```
 
 ## Supplementary Figure S8: Average representation of phased HI alleles across the centromere of 4x hybrids:
 ```{r}
-fig5c_match <- ggplot(fig5c_data_match, aes(x = Inducer, y = cen_per, shape = scored_chrom_aneuploid, color = Non_inducer)) +
-  geom_quasirandom(size = 0.9) +
-  labs(x = "Haploid Inducer", y = "% H' allele", shape = "Assayed Chrom. Aneuploidy", color = "Tetraploid Parent") +
+fig5c_match <- ggplot(fig5c_data_match, aes(x = Inducer, y = cen_per, shape = scored_chrom_aneuploid, color = HI_unstable)) +
+  geom_quasirandom() +
+  labs(x = "Haploid Inducer", y = "% H' allele", shape = "Assayed Chrom. Aneuploidy", color = "HI Genome Stability") +
   scale_y_continuous(limits = c(0,100)) +
   theme_bw() +
-  theme(legend.position = c(0.354, 0.174),
+  theme(legend.position = c(0.515, 0.128),
         legend.justification = "left",
         legend.title = element_text(size = 6, face = "bold"),
         legend.title.align = 0.5,
@@ -278,4 +286,5 @@ fig5c_match <- ggplot(fig5c_data_match, aes(x = Inducer, y = cen_per, shape = sc
         legend.background = element_rect(color = "black", fill = "white", size = 0.2, linetype = "solid"))
 fig5c_match
 ggsave("figS8.png", plot = fig5c_match, width = 5, height = 3, units = "in", device = "png")
+ggsave("figS8.svg", plot = fig5c_match, width = 5, height = 3, units = "in", device = "svg")
 ```
