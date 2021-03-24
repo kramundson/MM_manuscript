@@ -15,6 +15,8 @@ library(ggpubr)
 library(ggbeeswarm)
 library(viridis)
 library(svglite)
+library(aod)
+library(multcomp)
 ```
 
 ## Functions:
@@ -603,7 +605,7 @@ with_cen <- left_join(with_aneu_calls, bourke_cen) %>%
   mutate(is_cen = ifelse(start >= cen_start & end <= cen_end, "cen", "not_cen"))
 ```
 
-## Figure 2A Estimated chromosome copy number of 229 dihaploids extracted from WA.077: 
+### Figure 2A Estimated chromosome copy number of 229 dihaploids extracted from WA.077: 
 ```{r}
 fig2a_data <- with_cen %>% 
   filter(Non_inducer == "WA077") %>% 
@@ -673,7 +675,7 @@ fig2a <- fig2a_data %>%
 fig2a
 ```
 
-## Figure 2B: Bar chart of chromosome counts, MM hybrids excluded
+### Figure 2B: Bar chart of chromosome counts, MM hybrids excluded
 ```{r}
 fig2b_data <- with_cen %>%
   filter(sample_tot >= 2e4) %>% 
@@ -722,7 +724,7 @@ fig2b <- ggplot(fig2b_data, aes(x = factor(chrnum), fill = factor(chrnum))) +
 fig2b
 ```
 
-## Figure 2C Estimated chromosomes parental origin of 229 dihaploids extracted from WA.077:
+### Figure 2C Estimated chromosomes parental origin of 229 dihaploids extracted from WA.077:
 ```{r}
 fig2c <- fig2a_data %>% 
   ggplot(., aes(x = sample_num_recode, y = chrom_ObsPerHI, shape = trisomic)) +
@@ -772,7 +774,7 @@ fig2c <- fig2a_data %>%
     )
 fig2c
 ```
-## Figure 2D: Barchart of aneuploid parental origin, MM hybrids excluded
+### Figure 2D: Barchart of aneuploid parental origin, MM hybrids excluded
 ```{r}
 fig2d_data <- with_cen %>% 
   filter(sample_tot >= 2e4) %>% 
@@ -831,7 +833,7 @@ fig2d <- ggplot(fig2d_data, aes(x = factor(chrnum), fill = factor(Parent_assoc_a
 fig2d
 ```
 
-## Combine Fig. 2 panels:
+### Combine Fig. 2 panels:
 ```{r}
 fig2 <- ggarrange(
   ggarrange(fig2a, fig2c, labels = c("A", "C"), align = "hv", nrow = 2, ncol = 1, hjust = 0, vjust = 1.5, widths = c(1,1)),
@@ -866,7 +868,7 @@ fig2_committee_part2 <- ggarrange(fig2b, fig2d, align = "v", nrow = 2, ncol = 1)
 ggsave("fig2b_committee_part2.png", plot = fig2_committee_part2, width = 3, height = 4, units = "in", device = "png")# ggsave("fig2d_committee.png", plot = fig2d, width = 4, height = 3, units = "in", device = "png")
 ```
 
-## Basic stats accompanying Figure 2:
+### Basic stats accompanying Figure 2:
 ```{r}
 # Fisher exact of dihaploid introgression count
 fs <- fig2b_data %>% 
@@ -878,7 +880,7 @@ table(fs$Inducer, fs$hi_intro)
 fisher.test(table(fs$Inducer, fs$hi_intro))
 ```
 
-## Figure S1: Chromosome gains and losses by homolog
+### Figure S1: Chromosome gains and losses by homolog
 ```{r}
 fig_S1_data <- with_cen %>% 
   # filter(snp_ploidy == "2x" | is.na(snp_ploidy)) %>% # removed per reviewer request
@@ -959,7 +961,7 @@ fig_S1_data %>%
   chisq.test()
 ```
 
-## Figure S3: Chromosome number by HI parent:
+### Figure S3: Chromosome number by HI parent:
 ```{r}
 propHI <- fig2b_data %>% 
   group_by(Inducer, chrnum) %>% 
@@ -1023,7 +1025,7 @@ ggsave("figS3.png", plot = p2, width = 6, height = 3, units = "in", device = "pn
 ggsave("figS3.svg", plot = p2, width = 6, height = 3, units = "in", device = "svg")
 ```
 
-## Figure S2: Chromosome number by maternal parent. Include data from previous studies.
+### Figure S2: Chromosome number by maternal parent. Include data from previous studies.
 ```{r}
 # make data frame that groups by non inducer and chromosome number
 prop_data <- fig2b_data %>% 
@@ -1123,7 +1125,7 @@ fig2b_data %>%
   prop.test()
 ```
 
-## Figure S4: Combined dosage/SNP plots of eight HI addition dihaploids:
+### Figure S4: Combined dosage/SNP plots of eight HI addition dihaploids:
 ```{r}
 fig_S4 <- ggarrange(stack_plots("MM246", with_cen, with_cen),
                     stack_plots("MM247", with_cen, with_cen),
@@ -1139,7 +1141,7 @@ fig_S4
 # ggsave("2020-10-23-fig-S4.png", plot = fig_S4, width = 16, height = 16, units = "in", device = "png")
 ggsave("figS4.eps", plot = fig_S4, width = 16, height = 16, units = "in", device = "eps")
 ```
-## Figure 3: Combined dosage/SNP plots of 2 HI addition dihaploids. Karyotype interpretation drawn in Affinity Designer
+### Figure 3: Combined dosage/SNP plots of 2 HI addition dihaploids. Karyotype interpretation drawn in Affinity Designer
 ```{r}
 fig3_top <- stack_plots("MM246", dosage_dataset = with_cen, snp_dataset = with_cen)
 # ggsave("Fig3_top.png", plot = fig3_top, width = 12, height = 5, units = "in", device = "png")
@@ -1149,7 +1151,7 @@ fig3_bottom <- stack_plots("MM247", dosage_dataset = with_cen, snp_dataset = wit
 ggsave("fig3_bottom.eps", plot = fig3_bottom, width = 12, height = 5, units = "in", device = "eps")
 ```
 
-## Figure 4B: Representative Hybrids
+### Figure 4B: Representative Hybrids
 
 Figure 4A shows the concept for scoring chromosome dosage in hybrids. These were more difficult to score computationally,
 so I scored them manually as whole/partial gains/losses from inducer/non-inducer parent using the style of plots shown
@@ -1235,7 +1237,7 @@ cts2 <- table(ploidy_level_counts$snp_ploidy)
 cts2
 ```
 
-## Figure 4C: Hybrid aneuploidy origin by ploidy level:
+### Figure 4C: Hybrid aneuploidy origin by ploidy level:
 ```{r}
 fig4c <- hybs_long %>% 
   filter(only_parental_origin_unknown == "known") %>% 
@@ -1277,7 +1279,7 @@ hybs_long %>%
 ```
 
 
-## Figure 4D: Aneuploidy type (chromosomal vs. segmental) by parental origin and ploidy
+### Figure 4D: Aneuploidy type (chromosomal vs. segmental) by parental origin and ploidy
 ```{r}
 fig4d <- hybs_long %>% 
   filter(only_parental_origin_unknown == "known") %>%
@@ -1298,7 +1300,7 @@ fig4d <- hybs_long %>%
 fig4d
 ```
 
-## Figure 4E: Number of novel events (whole or segmental aneuploidy) per hybrid, by parental origin and hybrid context:
+### Figure 4E: Number of novel events (whole or segmental aneuploidy) per hybrid, by parental origin and hybrid context:
 ```{r}
 fig4e <- hybs_long %>% 
   filter(only_parental_origin_unknown == "known") %>%
@@ -1327,7 +1329,7 @@ fig4e <- hybs_long %>%
 fig4e
 ```
 
-## Combine Figure 4 panels:
+### Combine Figure 4 panels:
 ```{r}
 fig4 <- ggarrange(ggarrange("", fig_4b_t, fig_4b_m, fig_4b_b, nrow = 4, align = "v", heights = c(1.8,1,1,1), labels = c("A", "B", "", ""), hjust = 0, vjust = c(1.5,-0.8,0.5,0.5)),
           ggarrange(fig4c, fig4d, fig4e, nrow = 1, ncol = 3, align = "v", heights = c(1,1,1), widths = c(1, 1, 1), labels = c("C", "D", "E"), hjust = 0, vjust = 0.5),
@@ -1337,4 +1339,29 @@ fig4 <- ggarrange(ggarrange("", fig_4b_t, fig_4b_m, fig_4b_b, nrow = 4, align = 
           ncol = 1)
 fig4
 ggsave("Fig4_without_A.png", plot = fig4, width = 7, height = 8.793, units = "in", device = "png")
+```
+
+### Logistic regression model of HI-derived genome instability:
+```{r}
+ßhybs_for_model <- hybs_long %>% 
+  filter(snp_ploidy %in% c("3x", "4x")) %>% 
+  group_by(UCD_Sample_Code) %>% 
+  mutate(paternal_unstable = ifelse(paternal_lesion_count >= 1, 1, 0),
+         maternal_unstable = ifelse(maternal_lesion_count >= 1, 1, 0)) %>% 
+  dplyr::select(UCD_Sample_Code, snp_ploidy, paternal_unstable, maternal_unstable,
+                parent_summary, Phureja_marker_phenotype,
+                Inducer, Non_inducer) %>% 
+  distinct() %>% 
+  ungroup() %>% 
+  mutate(Inducer = factor(Inducer, levels = c("PL4", "IVP35", "IVP101"))) %>% 
+  rename(ploidy = snp_ploidy)
+head(hybs_for_model)
+```
+
+```{r}
+result <- glm(paternal_unstable ~ ploidy + maternal_unstable + Inducer, data = hybs_for_model, family = binomial("logit"))
+summary(result)
+anova(result)
+confint.default(result)
+wald.test(b = coef(result), Sigma = vcov(result), Terms=1)
 ```
