@@ -41,42 +41,42 @@ conda env create -n MM -f environment.yaml
 
 ```
 cd ref
-snakemake
+snakemake --cores <cores> --use-conda
 ```
 
 4. Short read QC, alignment and variant calling for tetraploid parents and haploid inducers
 
 ```
 cd ../1_parent_snps
-snakemake
+snakemake --cores <cores> --use-conda
 ```
 
 5. Short read QC and alignment for 1,001 dihaploids, 134 hybrids and 14 tetraploid selfs
 
 ```
 cd ../2_dosage
-snakemake
+snakemake --cores <cores> --use-conda
 ```
 
 6. Evaluate pooled low coverage sequencing for HI addition lines
 
 ```
 cd ../3_dihaploid_sub_test
-snakemake
+snakemake --cores <cores> --use-conda
 ```
 
 7. Variant calling including dihaploid pools
 
 ```
 cd ../4_dihaploid_pools
-snakemake
+snakemake --cores <cores> --use-conda
 ```
 
 8. Chromosome dosage including dihaploid pools
 
 ```
 cd ../5_dosage_with_pools
-snakemake
+snakemake --cores <cores> --use-conda
 ```
 
 9. Short read QC, alignment and variant calling for HI addition lines. Add in pooled 
@@ -84,12 +84,12 @@ snakemake
 
 ```
 cd ../6_offchrom
-snakemake
+snakemake --cores <cores> --use-conda
 ```
 
 10. Haplotype extraction from addition lines and analyses in hybrids.
 
 ```
 cd ../7_haplotypes
-snakemake
+snakemake --cores <cores> --use-conda
 ```
