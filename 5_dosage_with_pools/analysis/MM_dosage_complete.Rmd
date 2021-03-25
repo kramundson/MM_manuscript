@@ -1341,9 +1341,9 @@ fig4
 ggsave("Fig4_without_A.png", plot = fig4, width = 7, height = 8.793, units = "in", device = "png")
 ```
 
-### Logistic regression model of HI-derived genome instability:
+### Extract hybrids for logistic regression model of HI-derived genome instability:
 ```{r}
-ßhybs_for_model <- hybs_long %>% 
+hybs_for_model <- hybs_long %>% 
   filter(snp_ploidy %in% c("3x", "4x")) %>% 
   group_by(UCD_Sample_Code) %>% 
   mutate(paternal_unstable = ifelse(paternal_lesion_count >= 1, 1, 0),
@@ -1358,6 +1358,7 @@ ggsave("Fig4_without_A.png", plot = fig4, width = 7, height = 8.793, units = "in
 head(hybs_for_model)
 ```
 
+### Logistic regression model of HI genome instability:
 ```{r}
 result <- glm(paternal_unstable ~ ploidy + maternal_unstable + Inducer, data = hybs_for_model, family = binomial("logit"))
 summary(result)
@@ -1365,3 +1366,31 @@ anova(result)
 confint.default(result)
 wald.test(b = coef(result), Sigma = vcov(result), Terms=1)
 ```
+
+> Significant effect of ploidy (more likely to have paternal chromosome instabililty if tetraploid).
+Effects of maternal aneuploidy and HI genotype not significant.
+
+> Estimated ploidy effect size: 3.02579, (95% CI: [1.513420,  4.5381682]).
+
+> How well does the model fit?
+If the model is correct and when ni's are large,
+the residual deviance D has a chi-square distribution approximately:
+
+residual D ~ X**2 dfresid
+
+```{r}
+pchisq(154.84, df=131, lower.tail = F)
+```
+
+> Here, the large residual deviance indicates a bad fit. Typical diagnostics:
+1. Correct predictors may not be included.
+2. Predictors not transformed appropriately (not applicable with categorical predictors).
+3. Outliers or points with undue influence.
+4. Small predictors: residual deviance not chi-square distributed so it is useless for assessing goodness of fit.
+
+```{r}
+layout(matrix(1:4,2,2))
+plot(result)
+```
+
+> Here, data look nearly bimodal. This may explain the bad fit.
