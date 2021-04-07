@@ -362,8 +362,10 @@ underlay_one_bbs <- function(df, overlay_guy, nhi, ploidy = "2x", readcount_min 
     labs(x="",y="") +
     facet_wrap(~facet_strip, strip.position = "r") +
     guides(fill = F, color = F) +
-    theme_minimal() +
+    # theme_minimal() +
+    theme_bw() +
     theme(
+      panel.background=element_rect(fill="white",color="black"),
       panel.grid.minor.x = element_blank(),
       strip.background = element_rect(fill = "white"),
       plot.margin = margin(0.1,2,0.1,6, "pt")
@@ -683,7 +685,7 @@ fig2b_data <- with_cen %>%
   # filter(Monica_ploidy == "2x" | is.na(Monica_ploidy)) %>% # changed per reviewer request
   filter(snp_ploidy == "2x") %>% 
   filter(!is.na(ctrl_CIP)) %>%
-  select(chrom,
+  dplyr::select(chrom,
                 UCD_Sample_Code,
                 manual_fp,
                 # call,
@@ -1278,12 +1280,20 @@ hybs_long %>%
   arrange(snp_ploidy, Phureja_marker_phenotype)
 ```
 
+```{r}
+hybs_long %>% 
+  filter(only_parental_origin_unknown == "known") %>%
+  filter(parental_origin != "unknown") %>% 
+  filter(gain_loss != "neither") %>% 
+  filter(snp_ploidy %in% c("3x", "4x")) %>% 
+  View
+```
 
 ### Figure 4D: Aneuploidy type (chromosomal vs. segmental) by parental origin and ploidy
 ```{r}
 fig4d <- hybs_long %>% 
   filter(only_parental_origin_unknown == "known") %>%
-  filter(parental_origin != "unknown") %>% 
+  filter(parental_origin != "unknown") %>%
   filter(gain_loss != "neither") %>% 
   filter(snp_ploidy %in% c("3x", "4x")) %>% 
   ggplot(., aes(x = snp_ploidy, fill = parental_origin)) +
@@ -1300,13 +1310,17 @@ fig4d <- hybs_long %>%
 fig4d
 ```
 
+```{r}
+hybs_long %>% 
+  View()
+```
+
+
 ### Figure 4E: Number of novel events (whole or segmental aneuploidy) per hybrid, by parental origin and hybrid context:
 ```{r}
 fig4e <- hybs_long %>% 
-  filter(only_parental_origin_unknown == "known") %>%
-  filter(parental_origin != "unknown") %>% 
-  filter(gain_loss != "neither") %>% 
-  filter(snp_ploidy %in% c("3x", "4x")) %>% 
+  filter(only_parental_origin_unknown == "known") %>% 
+  filter(snp_ploidy %in% c("3x","4x")) %>% 
   dplyr::select(UCD_Sample_Code, snp_ploidy, maternal_lesion_count, paternal_lesion_count) %>% 
   distinct() %>% 
   gather(lesion_origin, lesion_count, -UCD_Sample_Code, -snp_ploidy) %>% 
