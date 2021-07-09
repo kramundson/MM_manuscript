@@ -70,3 +70,4 @@ MM627	fp	chr07	mistyped hybrid
 MM1141	fp	chr03	mistyped hybrid
 MM319	fp	chr12
 MM379	fp	chr12
+MM464	fp	chr12

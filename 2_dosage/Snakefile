@@ -218,6 +218,8 @@ rule parse_mpup:
     output:
         "data/parsed_mpup/parsed-{mother}-{inducer}-mpup.txt"
     threads: 12
+    conda:
+        "../envs/py2.yaml"
     shell: """
         python2 scripts/mpileup-parser-v2.py -f {input} -o {output} -t {threads}
     """
@@ -230,6 +232,8 @@ rule call_alleles:
         "data/alleles/{mother}-{inducer}-alleles.txt"
     log:
         "logs/call_alleles/{mother}-{inducer}.log"
+    conda:
+        "../envs/py2.yaml"
     shell: """
         python2 scripts/CallAllelesAB.py {input.pmpup} {output} {input.snplist} > {log} 2>&1
     """
@@ -242,6 +246,8 @@ rule bin_by_geno:
         "data/bin_alleles/{mother}-{inducer}-1Mb-alleles.txt"
     log:
         "logs/bin_by_geno/{mother}-{inducer}.log"
+    conda:
+        "../envs/py2.yaml"
     params:
         binsize=config["params"]["binsize"]
     shell: """

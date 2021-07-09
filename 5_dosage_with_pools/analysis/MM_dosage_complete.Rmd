@@ -607,6 +607,7 @@ with_cen <- left_join(with_aneu_calls, bourke_cen) %>%
   mutate(is_cen = ifelse(start >= cen_start & end <= cen_end, "cen", "not_cen"))
 ```
 
+## Figures and stats:
 ### Figure 2A Estimated chromosome copy number of 229 dihaploids extracted from WA.077: 
 ```{r}
 fig2a_data <- with_cen %>% 
@@ -1309,12 +1310,6 @@ fig4d <- hybs_long %>%
         strip.background = element_rect(fill = "white"))
 fig4d
 ```
-
-```{r}
-hybs_long %>% 
-  View()
-```
-
 
 ### Figure 4E: Number of novel events (whole or segmental aneuploidy) per hybrid, by parental origin and hybrid context:
 ```{r}
